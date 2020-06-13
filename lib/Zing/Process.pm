@@ -21,6 +21,7 @@ use Zing::Mailbox;
 use Zing::Message;
 use Zing::Metadata;
 use Zing::Node;
+use Zing::Queue;
 use Zing::Step;
 
 # VERSION
@@ -174,6 +175,16 @@ fun deploy($class, @args) {
 
 # METHODS
 
+method dequeue(Str $name) {
+
+  return $self->queue($name)->recv;
+}
+
+method enqueue(Str $name, HashRef $data) {
+
+  return $self->queue($name)->send($self->message($data));
+}
+
 method execute() {
   $self->started(time);
 
@@ -197,6 +208,11 @@ method notify(Process $proc, HashRef $data) {
 method perform() {
 
   return $self;
+}
+
+method queue(Str $name) {
+
+  return Zing::Queue->new(name => $name);
 }
 
 method receive() {
