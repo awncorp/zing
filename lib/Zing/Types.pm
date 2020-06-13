@@ -60,6 +60,11 @@ register
   validation => is_instance_of('Zing::Process'),
 },
 {
+  name => 'Queue',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Queue'),
+},
+{
   name => 'Redis',
   parent => 'Object',
   validation => is_instance_of('Redis'),
@@ -68,6 +73,11 @@ register
   name => 'Repo',
   parent => 'Object',
   validation => is_instance_of('Zing::Repo'),
+},
+{
+  name => 'Server',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Server'),
 },
 {
   name => 'Space',

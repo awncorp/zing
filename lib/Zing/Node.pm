@@ -11,22 +11,11 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use Socket;
-use Sys::Hostname;
+use Zing::Server;
 
 # VERSION
 
 # ATTRIBUTES
-
-has 'host' => (
-  is => 'ro',
-  isa => 'Str',
-  new => 1,
-);
-
-fun new_host($self) {
-  inet_ntoa(scalar(gethostbyname(hostname || 'localhost')))
-}
 
 my ($i, $t) = (0, time);
 
@@ -55,10 +44,21 @@ fun new_pid($self) {
   $$
 }
 
+has 'server' => (
+  is => 'ro',
+  isa => 'Server',
+  new => 1,
+);
+
+fun new_server($self) {
+  Zing::Server->new
+}
+
 # METHODS
 
 method identifier() {
-  return join ':', map $self->$_, qw(host pid name);
+
+  return join ':', $self->server->name, $self->pid, $self->name;
 }
 
 1;
