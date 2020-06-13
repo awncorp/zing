@@ -36,7 +36,7 @@ method dump(HashRef $data) {
 }
 
 method keys(Str $key) {
-  return [$self->redis->keys($self->term('*'))];
+  return [$self->redis->keys($self->term($key, '*'))];
 }
 
 method pull(Str $key) {
@@ -74,6 +74,11 @@ method size(Str $key) {
 
 method term(Str @keys) {
   return join(':', @keys);
+}
+
+method test(Str $key) {
+
+  return int $self->redis->exists($key);
 }
 
 1;
