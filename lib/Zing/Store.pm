@@ -1,0 +1,79 @@
+package Zing::Store;
+
+use 5.014;
+
+use strict;
+use warnings;
+
+use registry 'Zing::Types';
+use routines;
+
+use Data::Object::Class;
+use Data::Object::ClassHas;
+
+use JSON ();
+
+use Redis;
+
+# VERSION
+
+# ATTRIBUTES
+
+has 'redis' => (
+  is => 'ro',
+  isa => 'Redis',
+  new => 1,
+);
+
+fun new_redis($self) {
+  Redis->new
+}
+
+# METHODS
+
+method dump(HashRef $data) {
+  return JSON::encode_json($data);
+}
+
+method keys(Str $key) {
+  return [$self->redis->keys($self->term('*'))];
+}
+
+method pull(Str $key) {
+  my $get = $self->redis->lpop($key);
+
+  return $get ? $self->load($get) : $get;
+}
+
+method push(Str $key, HashRef $val) {
+  my $set = $self->dump($val);
+
+  return $self->redis->rpush($key, $set);
+}
+
+method load(Str $data) {
+  return JSON::decode_json($data);
+}
+
+method recv(Str $key) {
+  my $get = $self->redis->get($key);
+
+  return $get ? $self->load($get) : $get;
+}
+
+method send(Str $key, HashRef $val) {
+  my $set = $self->dump($val);
+
+  return $self->redis->set($key, $set);
+}
+
+method size(Str $key) {
+
+  return $self->redis->llen($key);
+}
+
+method term(Str @keys) {
+  return join(':', @keys);
+}
+
+1;
