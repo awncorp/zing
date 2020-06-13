@@ -18,6 +18,7 @@ use POSIX;
 use Zing::Data;
 use Zing::Loop;
 use Zing::Mailbox;
+use Zing::Message;
 use Zing::Metadata;
 use Zing::Node;
 use Zing::Step;
@@ -183,12 +184,22 @@ method execute() {
   return $self;
 }
 
-method receive() {
+method message(HashRef $data) {
+
+  return Zing::Message->new(from => $self->name, payload => $data);
+}
+
+method notify(Process $proc, HashRef $data) {
+
+  return $proc->mailbox->send($self->message($data));
+}
+
+method perform() {
 
   return $self;
 }
 
-method perform() {
+method receive() {
 
   return $self;
 }
