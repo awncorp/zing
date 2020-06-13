@@ -16,12 +16,18 @@ extends 'Exporter';
 
 # VERSION
 
+our @EXPORT = qw(error);
+
 # FUNCTIONS
 
-fun error() {
-  # do something ...
+fun error($self, $type) {
 
   return;
+}
+
+fun unknown_error(Object :$context) {
+
+  return Zing::Error->new(context => $context);
 }
 
 1;

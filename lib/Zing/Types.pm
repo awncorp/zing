@@ -33,6 +33,11 @@ register
   name => 'Space',
   parent => 'Object',
   validation => is_instance_of('Data::Object::Space'),
+},
+{
+  name => 'Step',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Step'),
 };
 
 1;
