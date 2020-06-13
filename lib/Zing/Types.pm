@@ -15,11 +15,6 @@ extends 'Types::Standard';
 
 register
 {
-  name => 'Cmd',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Cmd'),
-},
-{
   name => 'Data',
   parent => 'Object',
   validation => is_instance_of('Zing::Data'),
@@ -43,6 +38,11 @@ register
   name => 'Mailbox',
   parent => 'Object',
   validation => is_instance_of('Zing::Mailbox'),
+},
+{
+  name => 'Message',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Message'),
 },
 {
   name => 'Metadata',
@@ -83,6 +83,11 @@ register
   name => 'Store',
   parent => 'Object',
   validation => is_instance_of('Zing::Store'),
+},
+{
+  name => 'Task',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Task'),
 };
 
 1;

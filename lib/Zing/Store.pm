@@ -11,7 +11,7 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use JSON ();
+use JSON -convert_blessed_universally;
 
 use Redis;
 
@@ -32,7 +32,7 @@ fun new_redis($self) {
 # METHODS
 
 method dump(HashRef $data) {
-  return JSON::encode_json($data);
+  return JSON->new->allow_nonref->convert_blessed->encode($data);
 }
 
 method keys(Str $key) {
@@ -52,7 +52,7 @@ method push(Str $key, HashRef $val) {
 }
 
 method load(Str $data) {
-  return JSON::decode_json($data);
+  return JSON->new->allow_nonref->convert_blessed->decode($data);
 }
 
 method recv(Str $key) {
