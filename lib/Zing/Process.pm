@@ -113,16 +113,12 @@ has 'start' => (
 
 fun new_start($self) {
   my $mail = Zing::Step->new(
-    name => 'mailbox',
+    name => 'on_mailbox',
     code => fun($step, $loop) { $self->on_mailbox }
   );
   my $meta = $mail->next(Zing::Step->new(
-    name => 'metadata',
+    name => 'on_metadata',
     code => fun($step, $loop) { $self->on_metadata }
-  ));
-  my $perform = $meta->next(Zing::Step->new(
-    name => 'perform',
-    code => fun($step, $loop) { $self->on_perform }
   ));
 
   $mail
@@ -145,6 +141,19 @@ has 'stopped' => (
   isa => 'Int',
   def => 0,
 );
+
+# BUILD
+
+fun BUILD($self, $args) {
+  my $perform = Zing::Step->new(
+    name => 'on_perform',
+    code => fun($step, $loop) { $self->on_perform }
+  );
+
+  $self->start->append($perform);
+
+  return $self;
+}
 
 # FUNCTION
 
@@ -195,17 +204,22 @@ method execute() {
   return $self;
 }
 
+method manage(Process $proc) {
+
+  return $self;
+}
+
 method message(HashRef $data) {
 
   return Zing::Message->new(from => $self->name, payload => $data);
 }
 
-method notify(Process $proc, HashRef $data) {
+method notify(Str $name, HashRef $data) {
 
-  return $proc->mailbox->send($self->message($data));
+  return Zing::Mailbox->new(name => $name)->send($self->message($data));
 }
 
-method perform() {
+method perform(Any @args) {
 
   return $self;
 }
@@ -215,7 +229,7 @@ method queue(Str $name) {
   return Zing::Queue->new(name => $name);
 }
 
-method receive() {
+method receive(Any @args) {
 
   return $self;
 }
