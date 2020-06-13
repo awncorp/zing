@@ -35,8 +35,16 @@ fun new_store($self) {
 
 # METHODS
 
+method keys() {
+  return $self->store->keys($self->term);
+}
+
 method term(Str @keys) {
   return join(':', $self->name, @keys);
+}
+
+method test(Str $key) {
+  return $self->store->test($self->term($key));
 }
 
 1;

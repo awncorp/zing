@@ -18,23 +18,37 @@ use Sys::Hostname;
 
 # ATTRIBUTES
 
+my ($i, $t) = (0, time);
+
 has 'name' => (
   is => 'ro',
   isa => 'Str',
-  def => time,
+  new => 1,
 );
+
+fun new_name($self) {
+  join(':', time, sprintf('%04d', ($i = ($t == time ? $i + 1 : 1))))
+}
 
 has 'host' => (
   is => 'ro',
   isa => 'Str',
-  def => inet_ntoa(scalar(gethostbyname(hostname || 'localhost'))),
+  new => 1,
 );
+
+fun new_host($self) {
+  inet_ntoa(scalar(gethostbyname(hostname || 'localhost')))
+}
 
 has 'pid' => (
   is => 'ro',
   isa => 'Str',
-  def => $$,
+  new => 1,
 );
+
+fun new_pid($self) {
+  $$
+}
 
 # METHODS
 

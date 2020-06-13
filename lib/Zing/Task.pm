@@ -27,7 +27,7 @@ has 'log' => (
 );
 
 fun new_log($self) {
-  FlightRecorder->new(level => 'info');
+  FlightRecorder->new(auto => undef, level => 'info')
 }
 
 method execute() {

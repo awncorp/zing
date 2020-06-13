@@ -17,11 +17,15 @@ extends 'Zing::Repo';
 # METHODS
 
 method recv(Str $key) {
-  return $self->store->pull($self->term('queue', $key));
+  return $self->store->pull($self->term($key));
 }
 
 method send(Str $key, HashRef $val) {
-  return $self->store->push($self->term('queue', $key), $val);
+  return $self->store->push($self->term($key), $val);
+}
+
+method term(Str @keys) {
+  return join(':', $self->name, 'pubsub', @keys);
 }
 
 1;

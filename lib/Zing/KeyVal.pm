@@ -24,4 +24,8 @@ method send(Str $key, HashRef $val) {
   return $self->store->send($self->term($key), $val);
 }
 
+method term(Str @keys) {
+  return join(':', $self->name, 'keyval', @keys);
+}
+
 1;

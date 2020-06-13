@@ -20,14 +20,44 @@ register
   validation => is_instance_of('Zing::Cmd'),
 },
 {
+  name => 'Data',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Data'),
+},
+{
   name => 'Error',
   parent => 'Object',
   validation => is_instance_of('Zing::Error'),
 },
 {
+  name => 'Loop',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Loop'),
+},
+{
   name => 'Logger',
   parent => 'Object',
   validation => is_capable_of(qw(debug info warn error fatal)),
+},
+{
+  name => 'Mailbox',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Mailbox'),
+},
+{
+  name => 'Metadata',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Metadata'),
+},
+{
+  name => 'Node',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Node'),
+},
+{
+  name => 'Process',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Process'),
 },
 {
   name => 'Redis',
