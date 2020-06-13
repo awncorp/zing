@@ -30,6 +30,16 @@ register
   validation => is_capable_of(qw(debug info warn error fatal)),
 },
 {
+  name => 'Redis',
+  parent => 'Object',
+  validation => is_instance_of('Redis'),
+},
+{
+  name => 'Repo',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Repo'),
+},
+{
   name => 'Space',
   parent => 'Object',
   validation => is_instance_of('Data::Object::Space'),
@@ -38,6 +48,11 @@ register
   name => 'Step',
   parent => 'Object',
   validation => is_instance_of('Zing::Step'),
+},
+{
+  name => 'Store',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Store'),
 };
 
 1;

@@ -32,9 +32,8 @@ has 'stop' => (
 method execute(Any @args) {
   my $step = my $head = $self->start;
 
-  while ($step) {
+  until ($self->stop) {
     $step->execute($self, @args);
-    last if $self->stop;
     $step = $step->next || $head;
   }
 
