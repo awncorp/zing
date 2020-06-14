@@ -23,6 +23,16 @@ has 'name' => (
   req => 1,
 );
 
+has 'server' => (
+  is => 'ro',
+  isa => 'Server',
+  new => 1,
+);
+
+fun new_server($self) {
+  Zing::Server->new
+}
+
 has 'store' => (
   is => 'ro',
   isa => 'Store',
@@ -40,7 +50,7 @@ method keys() {
 }
 
 method term(Str @keys) {
-  return join(':', $self->name, @keys);
+  return join(':', $self->server->name, $self->name, @keys);
 }
 
 method test(Str $key) {

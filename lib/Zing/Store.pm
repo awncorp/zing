@@ -41,13 +41,11 @@ method keys(Str $key) {
 
 method pull(Str $key) {
   my $get = $self->redis->lpop($key);
-
   return $get ? $self->load($get) : $get;
 }
 
 method push(Str $key, HashRef $val) {
   my $set = $self->dump($val);
-
   return $self->redis->rpush($key, $set);
 }
 
@@ -57,18 +55,15 @@ method load(Str $data) {
 
 method recv(Str $key) {
   my $get = $self->redis->get($key);
-
   return $get ? $self->load($get) : $get;
 }
 
 method send(Str $key, HashRef $val) {
   my $set = $self->dump($val);
-
   return $self->redis->set($key, $set);
 }
 
 method size(Str $key) {
-
   return $self->redis->llen($key);
 }
 
@@ -77,7 +72,6 @@ method term(Str @keys) {
 }
 
 method test(Str $key) {
-
   return int $self->redis->exists($key);
 }
 

@@ -15,24 +15,6 @@ extends 'Zing::PubSub';
 
 # VERSION
 
-# ATTRIBUTES
-
-has 'name' => (
-  is => 'ro',
-  isa => 'Str',
-  req => 1,
-);
-
-has 'server' => (
-  is => 'ro',
-  isa => 'Server',
-  new => 1,
-);
-
-fun new_server($self) {
-  Zing::Server->new
-}
-
 # METHODS
 
 method recv() {
@@ -47,7 +29,7 @@ method size() {
   return $self->store->size($self->term);
 }
 
-method term(Str @keys) {
+method term() {
   return join(':', $self->server->name, 'queue', $self->name);
 }
 

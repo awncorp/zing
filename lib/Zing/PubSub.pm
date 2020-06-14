@@ -25,7 +25,7 @@ method send(Str $key, HashRef $val) {
 }
 
 method term(Str @keys) {
-  return join(':', $self->name, 'pubsub', @keys);
+  return $self->next::method('pubsub', @keys);
 }
 
 1;
