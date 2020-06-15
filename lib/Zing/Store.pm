@@ -31,6 +31,10 @@ fun new_redis($self) {
 
 # METHODS
 
+method drop(Str $key) {
+  return $self->redis->del($key);
+}
+
 method dump(HashRef $data) {
   return JSON->new->allow_nonref->convert_blessed->encode($data);
 }
