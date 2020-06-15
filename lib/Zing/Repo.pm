@@ -50,7 +50,7 @@ method ids() {
 }
 
 method keys() {
-  return [map {my$re = quotemeta $self->term; s/^$re://; $_} @{$self->ids}];
+  return [map {my $re = quotemeta $self->term; s/^$re://r} @{$self->ids}];
 }
 
 method term(Str @keys) {
