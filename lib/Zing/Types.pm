@@ -25,6 +25,16 @@ register
   validation => is_instance_of('Zing::Error'),
 },
 {
+  name => 'Flow',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Flow'),
+},
+{
+  name => 'Logic',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Logic'),
+},
+{
   name => 'Loop',
   parent => 'Object',
   validation => is_instance_of('Zing::Loop'),
@@ -83,11 +93,6 @@ register
   name => 'Space',
   parent => 'Object',
   validation => is_instance_of('Data::Object::Space'),
-},
-{
-  name => 'Step',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Step'),
 },
 {
   name => 'Store',

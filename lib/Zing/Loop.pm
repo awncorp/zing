@@ -15,9 +15,9 @@ use Data::Object::ClassHas;
 
 # ATTRIBUTES
 
-has 'start' => (
+has 'flow' => (
   is => 'rw',
-  isa => 'Step',
+  isa => 'Flow',
   req => 1,
 );
 
@@ -30,11 +30,22 @@ has 'stop' => (
 # METHODS
 
 method execute(Any @args) {
-  my $step = my $head = $self->start;
+  my $step = my $head = $self->flow;
 
   until ($self->stop) {
     $step->execute($self, @args);
     $step = $step->next || $head;
+  }
+
+  return $self;
+}
+
+method runonce(Any @args) {
+  my $step = my $head = $self->flow;
+
+  until (!$step) {
+    $step->execute($self, @args);
+    $step = $step->next;
   }
 
   return $self;

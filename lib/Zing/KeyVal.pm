@@ -25,7 +25,7 @@ method send(Str $key, HashRef $val) {
 }
 
 method term(Str @keys) {
-  return join(':', $self->name, 'keyval', @keys);
+  return $self->next::method('keyval', @keys);
 }
 
 1;

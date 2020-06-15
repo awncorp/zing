@@ -28,8 +28,8 @@ method size() {
   return $self->store->size($self->term);
 }
 
-method term(Str @keys) {
-  return join(':', $self->name, 'pubsub', 'mailbox');
+method term() {
+  return $self->next::method('mailbox');
 }
 
 1;

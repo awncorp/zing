@@ -1,4 +1,4 @@
-package Zing::Step;
+package Zing::Flow;
 
 use 5.014;
 
@@ -23,7 +23,7 @@ has 'name' => (
 
 has 'next' => (
   is => 'rw',
-  isa => 'Step',
+  isa => 'Flow',
   opt => 1,
 );
 
@@ -35,30 +35,30 @@ has 'code' => (
 
 # METHODS
 
-method append(Step $step) {
-  $self->bottom->next($step);
+method append(Flow $flow) {
+  $self->bottom->next($flow);
 
   return $self;
 }
 
 method bottom() {
-  my $step = $self;
+  my $flow = $self;
 
-  while (my $next = $step->next) {
-    $step = $next;
+  while (my $next = $flow->next) {
+    $flow = $next;
   }
 
-  return $step;
+  return $flow;
 }
 
 method execute(Any @args) {
   return $self->code->($self, @args);
 }
 
-method prepend(Step $step) {
-  $step->bottom->next($self);
+method prepend(Flow $flow) {
+  $flow->bottom->next($self);
 
-  return $step;
+  return $flow;
 }
 
 1;

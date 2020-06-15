@@ -9,43 +9,16 @@ use registry 'Zing::Types';
 use routines;
 
 use Data::Object::Class;
-
-use Zing::Step;
+use Zing::Logic::Waiter;
 
 extends 'Zing::Process';
 
 # VERSION
 
-# BUILD
+# BUILDERS
 
-fun BUILD($self, $args) {
-  my $perform = Zing::Step->new(
-    name => 'on_perform',
-    code => fun($step, $loop) { $self->on_perform }
-  );
-  my $process = $perform->next(Zing::Step->new(
-    name => 'on_process',
-    code => fun($step, $loop) { $self->on_process },
-  ));
-
-  $self->start->append($perform);
-
-  return $self;
-}
-
-method on_perform(Any @args) {
-  warn 'perform handler';
-  $self->perform;
-}
-
-method on_process(Any @args) {
-  my $data = $self->mailbox->recv or return;
-
-  $self->receive($data->{payload});
-
-  $self->shutdown;
-
-  return $self;
+fun new_logic($self) {
+  Zing::Logic::Waiter->new(process => $self)
 }
 
 1;
