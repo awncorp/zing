@@ -154,6 +154,18 @@ method execute() {
   return $self;
 }
 
+method registration() {
+  {
+    name => $self->name,
+    data => $self->data->term,
+    mailbox => $self->mailbox->term,
+    metadata => $self->metadata->term,
+    node => $self->node->name,
+    pid => $self->node->pid,
+    server => $self->server->name,
+  }
+}
+
 method shutdown() {
   $self->loop->stop(1);
 

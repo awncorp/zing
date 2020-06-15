@@ -45,8 +45,12 @@ fun new_store($self) {
 
 # METHODS
 
-method keys() {
+method ids() {
   return $self->store->keys($self->term);
+}
+
+method keys() {
+  return [map {my$re = quotemeta $self->term; s/^$re://; $_} @{$self->ids}];
 }
 
 method term(Str @keys) {
