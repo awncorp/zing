@@ -47,7 +47,11 @@ has 'process' => (
 # METHODS
 
 method flow() {
-  my $step_1 = Zing::Flow->new(
+  my $step_0 = Zing::Flow->new(
+    name => 'on_reset',
+    code => fun($step, $loop) { $self->process->log->reset }
+  );
+  my $step_1 = $step_0->next(
     name => 'on_register',
     code => fun($step, $loop) { $self->on_register->($self) }
   );
@@ -56,7 +60,7 @@ method flow() {
     code => fun($step, $loop) { $self->on_perform->($self) }
   ));
 
-  $step_1
+  $step_0
 }
 
 method handle_perform_event() {
