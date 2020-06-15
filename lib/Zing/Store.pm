@@ -67,6 +67,10 @@ method size(Str $key) {
   return $self->redis->llen($key);
 }
 
+method slot(Str $key, Int $pos) {
+  return $self->redis->lindex($key, $pos);
+}
+
 method term(Str @keys) {
   return join(':', @keys);
 }

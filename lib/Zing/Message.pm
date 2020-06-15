@@ -13,14 +13,6 @@ use Data::Object::ClassHas;
 
 # VERSION
 
-# BUILD
-
-fun BUILD($self, $args) {
-  $self->created;
-  $self->updated;
-  $self->payload;
-}
-
 # ATTRIBUTES
 
 has 'from' => (
@@ -63,6 +55,14 @@ has 'payload' => (
 
 fun new_payload($self) {
   {}
+}
+
+# BUILD
+
+fun BUILD($self, $args) {
+  $self->created;
+  $self->updated;
+  $self->payload;
 }
 
 # METHODS
