@@ -9,7 +9,6 @@ use registry 'Zing::Types';
 use routines;
 
 use Data::Object::Class;
-use Data::Object::ClassHas;
 
 extends 'Zing::PubSub';
 

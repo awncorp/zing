@@ -30,6 +30,11 @@ register
   validation => is_instance_of('Zing::Flow'),
 },
 {
+  name => 'Fork',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Fork'),
+},
+{
   name => 'Logic',
   parent => 'Object',
   validation => is_instance_of('Zing::Logic'),

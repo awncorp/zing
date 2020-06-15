@@ -11,6 +11,7 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
+use Zing::Server;
 use Zing::Store;
 
 # VERSION
