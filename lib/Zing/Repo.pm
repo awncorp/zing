@@ -46,6 +46,10 @@ fun new_store($self) {
 
 # METHODS
 
+method drop(Str @keys) {
+  return $self->store->drop($self->term(@keys));
+}
+
 method ids() {
   return $self->store->keys($self->term);
 }
