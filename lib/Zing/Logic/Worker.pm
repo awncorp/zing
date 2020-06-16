@@ -14,19 +14,20 @@ use Data::Object::ClassHas;
 extends 'Zing::Logic';
 
 use Zing::Flow;
+use Zing::Queue;
 
 # VERSION
 
 # ATTRIBUTES
 
-has 'on_receipt' => (
+has 'on_handle' => (
   is => 'ro',
   isa => 'CodeRef',
   new => 1,
 );
 
-fun new_on_receipt($self) {
-  $self->can('handle_receipt_event')
+fun new_on_handle($self) {
+  $self->can('handle_handle_event')
 }
 
 has 'queues' => (
@@ -36,44 +37,51 @@ has 'queues' => (
 );
 
 fun new_queues($self) {
-  $self->process->can('queues') ? $self->process->queues : []
+  $self->process->queues
+}
+
+has 'relays' => (
+  is => 'ro',
+  isa => 'HashRef[Queue]',
+  new => 1
+);
+
+fun new_relays($self) {
+  +{map {$_, Zing::Queue->new(name => $_)} @{$self->queues}}
 }
 
 # METHODS
 
 method flow() {
-  my $step_1 = $self->next::method;
+  my $step_0 = $self->next::method;
 
-  my ($first, $last);
+  my ($step_f, $step_l);
 
   for my $name (@{$self->queues}) {
+    my $label = $name =~ s/\W+/_/g;
     my $step_x = Zing::Flow->new(
-      name => "on_receipt_${name}",
-      code => fun($step, $loop) { $self->on_receipt->($self, $name) },
+      name => "on_handle_${label}",
+      code => fun($step, $loop) { $self->on_handle->($self, $name) },
     );
-    if ($last) {
-      $last->next($step_x);
-    }
-    $last = $step_x;
-    $first = $last if !$first;
+    $step_l->next($step_x) if $step_l;
+    $step_l = $step_x;
+    $step_f = $step_l if !$step_f;
   }
 
-  $step_1->next($first) if $first;
-  $step_1
+  $step_0->append($step_f) if $step_f;
+  $step_0
 }
 
-method handle_receipt_event($name) {
+method handle_handle_event($name) {
   my $process = $self->process;
 
-  warn 'do handle_receipt_event';
+  return unless $process->can('handle');
 
-  return unless $process->can('receipt');
+  my $data = $self->relays->{$name}->recv or return;
 
-  my $data = $process->queue($name)->recv or return;
+  $process->handle($name, $data);
 
-  $process->receipt($name, $data);
-
-  return $self;
+  return $data;
 }
 
 1;

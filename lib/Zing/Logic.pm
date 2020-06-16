@@ -28,6 +28,16 @@ fun new_on_perform($self) {
   $self->can('handle_perform_event')
 }
 
+has 'on_receive' => (
+  is => 'ro',
+  isa => 'CodeRef',
+  new => 1,
+);
+
+fun new_on_receive($self) {
+  $self->can('handle_receive_event')
+}
+
 has 'on_register' => (
   is => 'ro',
   isa => 'CodeRef',
@@ -51,13 +61,17 @@ method flow() {
     name => 'on_reset',
     code => fun($step, $loop) { $self->process->log->reset }
   );
-  my $step_1 = $step_0->next(
+  my $step_1 = $step_0->next(Zing::Flow->new(
     name => 'on_register',
     code => fun($step, $loop) { $self->on_register->($self) }
-  );
+  ));
   my $step_2 = $step_1->next(Zing::Flow->new(
     name => 'on_perform',
     code => fun($step, $loop) { $self->on_perform->($self) }
+  ));
+  my $step_3 = $step_2->next(Zing::Flow->new(
+    name => 'on_receive',
+    code => fun($step, $loop) { $self->on_receive->($self) }
   ));
 
   $step_0
@@ -66,9 +80,20 @@ method flow() {
 method handle_perform_event() {
   my $process = $self->process;
 
-  $process->perform($self) if $process->can('perform');
+  return if !$process->can('perform');
 
-  return $self;
+  return $process->perform();
+}
+
+method handle_receive_event() {
+  my $process = $self->process;
+
+  return if !$process->can('mailbox');
+  return if !$process->can('receive');
+
+  my $data = $process->mailbox->recv or return;
+
+  return $process->receive($data->{from}, $data->{payload});
 }
 
 method handle_register_event() {
