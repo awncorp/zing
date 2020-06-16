@@ -148,19 +148,22 @@ method signals() {
 
   $trapped->{INT} = sub {
     $self->{interupt} = 'int';
-    do { $fork->terminate($self->{interupt}) } while $fork->sanitize;
+    $fork->terminate($self->{interupt});
+    do {0} while ($fork->sanitize); # reaping children
     $self->process->shutdown;
   };
 
   $trapped->{QUIT} = sub {
     $self->{interupt} = 'quit';
-    do { $fork->terminate($self->{interupt}) } while $fork->sanitize;
+    $fork->terminate($self->{interupt});
+    do {0} while ($fork->sanitize); # reaping children
     $self->process->shutdown;
   };
 
   $trapped->{TERM} = sub {
     $self->{interupt} = 'term';
-    do { $fork->terminate($self->{interupt}) } while $fork->sanitize;
+    $fork->terminate($self->{interupt});
+    do {0} while ($fork->sanitize); # reaping children
     $self->process->shutdown;
   };
 
