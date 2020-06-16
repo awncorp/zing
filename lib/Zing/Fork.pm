@@ -12,7 +12,6 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 use Data::Object::Space;
 
-use Carp ();
 use POSIX ();
 
 use Config;
@@ -21,16 +20,16 @@ use Config;
 
 # ATTRIBUTES
 
-has 'class' => (
+has 'scheme' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Tuple[Str, ArrayRef, Int]',
   req => 1,
 );
 
-has 'args' => (
-  is => 'ro',
-  isa => 'ArrayRef',
-  def => sub{[]},
+has 'parent' => (
+  is => 'rw',
+  isa => 'Process',
+  req => 1,
 );
 
 has 'processes' => (
@@ -46,7 +45,7 @@ has 'space' => (
 );
 
 fun new_space($self) {
-  Data::Object::Space->new($self->class)
+  Data::Object::Space->new($self->scheme->[0])
 }
 
 # METHODS
@@ -54,6 +53,7 @@ fun new_space($self) {
 method execute() {
   my $pid;
   my $process;
+  my $sid = $$;
 
   $self->space->load;
 
@@ -68,7 +68,9 @@ method execute() {
   # parent
   if ($pid) {
     $process = $self->processes->{$pid} = $self->space->build(
-      @{$self->args}, node => Zing::Node->new(pid => $pid)
+      @{$self->scheme->[1]},
+      node => Zing::Node->new(pid => $pid),
+      parent => $self->parent,
     );
     return $process;
   }
@@ -76,7 +78,10 @@ method execute() {
   else {
     $pid = $$;
     $process = $self->space->build(
-      @{$self->args}, node => Zing::Node->new(pid => $pid)
+      @{$self->scheme->[1]},
+      node => Zing::Node->new(pid => $pid),
+      parent => $self->parent,
+
     );
     $process->execute;
   }
@@ -103,14 +108,14 @@ method sanitize() {
     }
   }
 
-  return $self;
+  return scalar(keys %{$self->processes});
 }
 
-method terminate($signal = 'HUP') {
+method terminate($signal = 'KILL') {
   my $result = {};
 
   for my $pid (sort keys %{$self->processes}) {
-    $result->{$pid} = kill $signal, $pid;
+    $result->{$pid} = kill uc($signal), $pid;
   }
 
   return $result;

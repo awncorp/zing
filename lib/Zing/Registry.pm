@@ -26,12 +26,16 @@ has 'name' => (
 
 # METHODS
 
-method recv(Str $key) {
-  return $self->store->recv($self->term($key));
+method drop(Process $proc) {
+  return $self->store->drop($self->term($proc->name));
 }
 
-method send(Process $val) {
-  return $self->store->send($self->term($val->name), $val->registration);
+method recv(Process $proc) {
+  return $self->store->recv($self->term($proc->name));
+}
+
+method send(Process $proc) {
+  return $self->store->send($self->term($proc->name), $proc->registration);
 }
 
 method term(Str @keys) {

@@ -40,7 +40,7 @@ method execute(Any @args) {
   return $self;
 }
 
-method runonce(Any @args) {
+method exercise(Any @args) {
   my $step = my $head = $self->flow;
 
   until (!$step) {

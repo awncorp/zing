@@ -24,6 +24,7 @@ use Zing::Loop;
 use Zing::Mailbox;
 use Zing::Metadata;
 use Zing::Node;
+use Zing::Registry;
 
 # VERSION
 
@@ -110,6 +111,12 @@ fun new_node($self) {
   Zing::Node->new
 }
 
+has 'parent' => (
+  is => 'ro',
+  isa => 'Maybe[Process]',
+  opt => 1,
+);
+
 has 'server' => (
   is => 'ro',
   isa => 'Server',
@@ -118,6 +125,16 @@ has 'server' => (
 
 fun new_server($self) {
   Zing::Server->new
+}
+
+has 'signals' => (
+  is => 'ro',
+  isa => 'HashRef[Str|CodeRef]',
+  new => 1,
+);
+
+fun new_signals($self) {
+  $self->logic->signals
 }
 
 has 'started' => (
@@ -137,7 +154,19 @@ has 'stopped' => (
 method exercise() {
   $self->started(time);
 
-  $self->loop->runonce($self);
+  local $SIG{CHLD};
+  local $SIG{HUP};
+  local $SIG{INT};
+  local $SIG{QUIT};
+  local $SIG{TERM};
+  local $SIG{USR1};
+  local $SIG{USR2};
+
+  my $signals = $self->signals;
+
+  $SIG{$_} = $self->signals->{$_} for keys %{$signals};
+
+  $self->loop->exercise($self);
 
   $self->stopped(time);
 
@@ -147,7 +176,27 @@ method exercise() {
 method execute() {
   $self->started(time);
 
+  local $SIG{CHLD};
+  local $SIG{HUP};
+  local $SIG{INT};
+  local $SIG{QUIT};
+  local $SIG{TERM};
+  local $SIG{USR1};
+  local $SIG{USR2};
+
+  my $signals = $self->signals;
+
+  $SIG{$_} = $self->signals->{$_} for keys %{$signals};
+
   $self->loop->execute($self);
+
+  # cleanup
+  $self->data->drop;
+  $self->mailbox->drop;
+  $self->metadata->drop;
+
+  # deregister
+  Zing::Registry->new->drop($self);
 
   $self->stopped(time);
 
@@ -161,7 +210,8 @@ method registration() {
     mailbox => $self->mailbox->term,
     metadata => $self->metadata->term,
     node => $self->node->name,
-    pid => $self->node->pid,
+    parent => ($self->parent ? $self->parent->node->pid : undef),
+    process => $self->node->pid,
     server => $self->server->name,
   }
 }
