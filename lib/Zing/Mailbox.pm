@@ -25,7 +25,7 @@ has 'name' => (
 );
 
 fun new_name($self) {
-  join(':', map $self->process->node->$_, qw(pid name))
+  $self->process->name
 }
 
 has 'process' => (
@@ -36,10 +36,8 @@ has 'process' => (
 
 # BUILDERS
 
-fun BUILD($self) {
-  $self->{name} = $self->new_name;
-
-  return $self;
+fun new_target($self) {
+  'global'
 }
 
 # METHODS
@@ -48,16 +46,24 @@ method recv() {
   return $self->store->pull($self->term);
 }
 
-method send(Message $val) {
-  return $self->store->push($self->term, $val->serialize);
+method message(HashRef $val) {
+  +{ data => $val, from => $self->name };
+}
+
+method reply(HashRef $bag, HashRef $val) {
+  return $self->store->push($self->term($bag->{from}), $self->message($val));
+}
+
+method send(Str $key, HashRef $val) {
+  return $self->store->push($self->term($key), $self->message($val));
 }
 
 method size() {
   return $self->store->size($self->term);
 }
 
-method term() {
-  return $self->next::method('mailbox');
+method term(Maybe[Str] $name) {
+  return $self->global($name || $self->name, 'mailbox');
 }
 
 1;

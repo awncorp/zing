@@ -53,7 +53,7 @@ method send(HashRef $val) {
 }
 
 method term() {
-  return $self->next::method('data');
+  return $self->global($self->name, 'data');
 }
 
 1;

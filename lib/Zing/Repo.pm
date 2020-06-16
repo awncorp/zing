@@ -44,10 +44,24 @@ fun new_store($self) {
   Zing::Store->new;
 }
 
+has 'target' => (
+  is => 'ro',
+  isa => 'Enum[qw(global local)]',
+  new => 1,
+);
+
+fun new_target($self) {
+  'local'
+}
+
 # METHODS
 
 method drop(Str @keys) {
   return $self->store->drop($self->term(@keys));
+}
+
+method global (Str @keys) {
+  return join(':', 'zing', @keys);
 }
 
 method ids() {
@@ -58,12 +72,16 @@ method keys() {
   return [map {my $re = quotemeta $self->term; s/^$re://r} @{$self->ids}];
 }
 
-method term(Str @keys) {
-  return join(':', 'zing', $self->server->name, $self->name, @keys);
+method local(Str @keys) {
+  return join(':', 'zing', $self->server->name, @keys);
 }
 
-method test(Str $key) {
-  return $self->store->test($self->term($key));
+method term(Str @keys) {
+  return join(':', $self->${\"@{[$self->target]}"}, @keys, $self->name);
+}
+
+method test(Str @keys) {
+  return $self->store->test($self->term(@keys));
 }
 
 1;

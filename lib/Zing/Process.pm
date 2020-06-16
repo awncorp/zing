@@ -114,7 +114,7 @@ has 'parent' => (
 
 has 'registry' => (
   is => 'ro',
-  isa => 'Server',
+  isa => 'Registry',
   new => 1,
 );
 
@@ -161,8 +161,6 @@ method destroy() {
 
   $self->data->drop;
   $self->mailbox->drop;
-  $self->metadata->drop;
-
   $self->registry->drop($self);
 
   return $self;
@@ -221,7 +219,6 @@ method metadata() {
     name => $self->name,
     data => $self->data->term,
     mailbox => $self->mailbox->term,
-    metadata => $self->metadata->term,
     node => $self->node->name,
     parent => ($self->parent ? $self->parent->node->pid : undef),
     process => $self->node->pid,
