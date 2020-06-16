@@ -21,9 +21,6 @@ Multi-Process Management System
 
 =includes
 
-method: data
-method: space
-
 =cut
 
 =synopsis
@@ -100,18 +97,18 @@ $subs->synopsis(fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'data', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
+# $subs->example(-1, 'data', 'method', fun($tryable) {
+#   ok my $result = $tryable->result;
 
-  $result
-});
+#   $result
+# });
 
-$subs->example(-1, 'space', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-  ok $result->isa('Data::Object::Space');
-  is $result->package, 'Zing';
+# $subs->example(-1, 'space', 'method', fun($tryable) {
+#   ok my $result = $tryable->result;
+#   ok $result->isa('Data::Object::Space');
+#   is $result->package, 'Zing';
 
-  $result
-});
+#   $result
+# });
 
 ok 1 and done_testing;
