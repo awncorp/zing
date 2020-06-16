@@ -48,6 +48,16 @@ fun new_on_register($self) {
   $self->can('handle_register_event')
 }
 
+has 'on_suicide' => (
+  is => 'ro',
+  isa => 'CodeRef',
+  new => 1,
+);
+
+fun new_on_suicide($self) {
+  $self->can('handle_suicide_event')
+}
+
 has 'process' => (
   is => 'ro',
   isa => 'Process',
@@ -72,6 +82,10 @@ method flow() {
   my $step_3 = $step_2->next(Zing::Flow->new(
     name => 'on_receive',
     code => fun($step, $loop) { $self->on_receive->($self) }
+  ));
+  my $step_4 = $step_3->next(Zing::Flow->new(
+    name => 'on_suicide',
+    code => fun($step, $loop) { $self->on_suicide->($self) }
   ));
 
   $step_0
@@ -104,6 +118,34 @@ method handle_register_event() {
   $self->{registered} = Zing::Registry->new->send($process);
 
   return $self;
+}
+
+method handle_suicide_event() {
+  my $process = $self->process;
+
+  return if !$process->parent;
+
+  $process->shutdown unless kill 0, $process->parent->node->pid;
+
+  return $self;
+}
+
+method signals() {
+  my $trapped = {};
+
+  $trapped->{INT} = sub {
+    $self->process->shutdown;
+  };
+
+  $trapped->{QUIT} = sub {
+    $self->process->shutdown;
+  };
+
+  $trapped->{TERM} = sub {
+    $self->process->shutdown;
+  };
+
+  return $trapped;
 }
 
 1;

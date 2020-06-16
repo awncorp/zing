@@ -27,7 +27,7 @@ has 'fork' => (
 );
 
 fun new_fork($self) {
-  Zing::Fork->new(class => $self->scheme->[0], args => $self->scheme->[1])
+  Zing::Fork->new(parent => $self->process, scheme => $self->scheme)
 }
 
 has 'on_launch' => (
@@ -104,6 +104,15 @@ method flow() {
 
 method handle_launch_event() {
   my $fork = $self->fork;
+  my $process = $self->process;
+
+  if ($self->{interupt}) {
+    return 0;
+  }
+
+  if ($process->loop->stop) {
+    return 0;
+  }
 
   my $max_forks = $self->size;
   my $has_forks = keys %{$fork->processes};
@@ -131,6 +140,31 @@ method handle_sanitize_event() {
   my $fork = $self->fork;
 
   return $fork->sanitize;
+}
+
+method signals() {
+  my $trapped = {};
+  my $fork = $self->fork;
+
+  $trapped->{INT} = sub {
+    $self->{interupt} = 'int';
+    do { $fork->terminate($self->{interupt}) } while $fork->sanitize;
+    $self->process->shutdown;
+  };
+
+  $trapped->{QUIT} = sub {
+    $self->{interupt} = 'quit';
+    do { $fork->terminate($self->{interupt}) } while $fork->sanitize;
+    $self->process->shutdown;
+  };
+
+  $trapped->{TERM} = sub {
+    $self->{interupt} = 'term';
+    do { $fork->terminate($self->{interupt}) } while $fork->sanitize;
+    $self->process->shutdown;
+  };
+
+  return $trapped;
 }
 
 1;
