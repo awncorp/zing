@@ -22,13 +22,18 @@ use Zing::Data;
 use Zing::Logic;
 use Zing::Loop;
 use Zing::Mailbox;
-use Zing::Metadata;
 use Zing::Node;
 use Zing::Registry;
 
 # VERSION
 
 # ATTRIBUTES
+
+has 'cleanup' => (
+  is => 'ro',
+  isa => 'Bool',
+  def => 1,
+);
 
 has 'data' => (
   is => 'ro',
@@ -81,16 +86,6 @@ fun new_mailbox($self) {
   Zing::Mailbox->new(process => $self)
 }
 
-has 'metadata' => (
-  is => 'ro',
-  isa => 'Metadata',
-  new => 1,
-);
-
-fun new_metadata($self) {
-  Zing::Metadata->new(process => $self)
-}
-
 has 'name' => (
   is => 'ro',
   isa => 'Str',
@@ -116,6 +111,16 @@ has 'parent' => (
   isa => 'Maybe[Process]',
   opt => 1,
 );
+
+has 'registry' => (
+  is => 'ro',
+  isa => 'Server',
+  new => 1,
+);
+
+fun new_registry($self) {
+  Zing::Registry->new
+}
 
 has 'server' => (
   is => 'ro',
@@ -151,6 +156,18 @@ has 'stopped' => (
 
 # METHODS
 
+method destroy() {
+  return $self if !$self->cleanup;
+
+  $self->data->drop;
+  $self->mailbox->drop;
+  $self->metadata->drop;
+
+  $self->registry->drop($self);
+
+  return $self;
+}
+
 method exercise() {
   $self->started(time);
 
@@ -167,6 +184,8 @@ method exercise() {
   $SIG{$_} = $self->signals->{$_} for keys %{$signals};
 
   $self->loop->exercise($self);
+
+  $self->destroy;
 
   $self->stopped(time);
 
@@ -190,20 +209,14 @@ method execute() {
 
   $self->loop->execute($self);
 
-  # cleanup
-  $self->data->drop;
-  $self->mailbox->drop;
-  $self->metadata->drop;
-
-  # deregister
-  Zing::Registry->new->drop($self);
+  $self->destroy;
 
   $self->stopped(time);
 
   return $self;
 }
 
-method registration() {
+method metadata() {
   {
     name => $self->name,
     data => $self->data->term,

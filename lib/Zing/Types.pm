@@ -70,11 +70,6 @@ register
   validation => is_instance_of('Zing::Message'),
 },
 {
-  name => 'Metadata',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Metadata'),
-},
-{
   name => 'Node',
   parent => 'Object',
   validation => is_instance_of('Zing::Node'),
