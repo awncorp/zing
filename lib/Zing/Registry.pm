@@ -35,7 +35,7 @@ method send(Process $val) {
 }
 
 method term(Str @keys) {
-  return join(':', $self->server->name, 'registry', $self->name, @keys);
+  return $self->next::method('registry', @keys);
 }
 
 1;

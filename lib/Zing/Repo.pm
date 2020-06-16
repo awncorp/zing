@@ -59,7 +59,7 @@ method keys() {
 }
 
 method term(Str @keys) {
-  return join(':', $self->server->name, $self->name, @keys);
+  return join(':', 'zing', $self->server->name, $self->name, @keys);
 }
 
 method test(Str $key) {
