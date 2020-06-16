@@ -26,7 +26,7 @@ has 'redis' => (
 );
 
 fun new_redis($self) {
-  Redis->new
+  state $redis = Redis->new;
 }
 
 # METHODS
