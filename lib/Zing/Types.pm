@@ -15,6 +15,11 @@ extends 'Types::Standard';
 
 register
 {
+  name => 'Channel',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Channel'),
+},
+{
   name => 'Data',
   parent => 'Object',
   validation => is_instance_of('Zing::Data'),
@@ -33,6 +38,11 @@ register
   name => 'Fork',
   parent => 'Object',
   validation => is_instance_of('Zing::Fork'),
+},
+{
+  name => 'KeyVal',
+  parent => 'Object',
+  validation => is_instance_of('Zing::KeyVal'),
 },
 {
   name => 'Logic',
@@ -75,9 +85,19 @@ register
   validation => is_instance_of('Zing::Process'),
 },
 {
+  name => 'PubSub',
+  parent => 'Object',
+  validation => is_instance_of('Zing::PubSub'),
+},
+{
   name => 'Queue',
   parent => 'Object',
   validation => is_instance_of('Zing::Queue'),
+},
+{
+  name => 'Registry',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Registry'),
 },
 {
   name => 'Redis',
@@ -108,6 +128,16 @@ register
   name => 'Task',
   parent => 'Object',
   validation => is_instance_of('Zing::Task'),
+},
+{
+  name => 'Watcher',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Watcher'),
+},
+{
+  name => 'Worker',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Worker'),
 };
 
 1;

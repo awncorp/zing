@@ -36,7 +36,7 @@ has 'data' => (
 );
 
 fun new_data($self) {
-  Zing::Data->new(name => $self->node->name)
+  Zing::Data->new(process => $self)
 }
 
 has 'log' => (
@@ -77,7 +77,7 @@ has 'mailbox' => (
 );
 
 fun new_mailbox($self) {
-  Zing::Mailbox->new(name => $self->node->name)
+  Zing::Mailbox->new(process => $self)
 }
 
 has 'metadata' => (
@@ -87,7 +87,7 @@ has 'metadata' => (
 );
 
 fun new_metadata($self) {
-  Zing::Metadata->new(name => $self->node->name)
+  Zing::Metadata->new(process => $self)
 }
 
 has 'name' => (

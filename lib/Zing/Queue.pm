@@ -29,7 +29,7 @@ method size() {
 }
 
 method term() {
-  return join(':', $self->server->name, 'queue', $self->name);
+  return $self->next::method('queue');
 }
 
 1;

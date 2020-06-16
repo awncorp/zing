@@ -49,7 +49,7 @@ method size() {
 }
 
 method term() {
-  return join(':', $self->server->name, 'channel', $self->name);
+  return $self->next::method('channel');
 }
 
 1;
