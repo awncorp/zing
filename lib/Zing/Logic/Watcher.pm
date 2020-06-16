@@ -14,85 +14,123 @@ use Data::Object::ClassHas;
 extends 'Zing::Logic';
 
 use Zing::Flow;
+use Zing::Fork;
 
 # VERSION
 
 # ATTRIBUTES
 
-has 'on_manage' => (
+has 'fork' => (
+  is => 'ro',
+  isa => 'Fork',
+  new => 1
+);
+
+fun new_fork($self) {
+  Zing::Fork->new(class => $self->scheme->[0], args => $self->scheme->[1])
+}
+
+has 'on_launch' => (
   is => 'ro',
   isa => 'CodeRef',
   new => 1,
 );
 
-fun new_on_manage($self) {
-  $self->can('handle_manage_event')
+fun new_on_launch($self) {
+  $self->can('handle_launch_event')
 }
 
-has 'processes' => (
+has 'on_monitor' => (
   is => 'ro',
-  isa => 'ArrayRef[Process]',
+  isa => 'CodeRef',
+  new => 1,
+);
+
+fun new_on_monitor($self) {
+  $self->can('handle_monitor_event')
+}
+
+has 'on_sanitize' => (
+  is => 'ro',
+  isa => 'CodeRef',
+  new => 1,
+);
+
+fun new_on_sanitize($self) {
+  $self->can('handle_sanitize_event')
+}
+
+has 'scheme' => (
+  is => 'ro',
+  isa => 'Tuple[Str, ArrayRef, Int]',
   new => 1
 );
 
-fun new_processes($self) {
-  $self->process->can('processes') ? $self->process->processes : []
+fun new_scheme($self) {
+  $self->process->scheme
+}
+
+has 'size' => (
+  is => 'ro',
+  isa => 'Int',
+  new => 1
+);
+
+fun new_size($self) {
+  $self->scheme->[2]
 }
 
 # METHODS
 
 method flow() {
-  my $step_1 = $self->next::method;
+  my $step_0 = $self->next::method;
 
-  my ($first, $last);
+  my $step_1 = Zing::Flow->new(
+    name => 'on_launch',
+    code => fun($step, $loop) { $self->on_launch->($self) }
+  );
+  my $step_2 = $step_1->next(Zing::Flow->new(
+    name => 'on_monitor',
+    code => fun($step, $loop) { $self->on_monitor->($self) }
+  ));
+  my $step_3 = $step_2->next(Zing::Flow->new(
+    name => 'on_sanitize',
+    code => fun($step, $loop) { $self->on_sanitize->($self) }
+  ));
 
-  for my $process (@{$self->processes}) {
-    my $name = (
-      $process->name =~ s/\W+/_/gr
-    );
-    my $step_x = Zing::Flow->new(
-      name => "on_manage_${name}",
-      code => fun($step, $loop) { $self->on_manage->($self, $process) },
-    );
-    if ($last) {
-      $last->next($step_x);
-    }
-    $last = $step_x;
-    $first = $last if !$first;
+  $step_0->append($step_1);
+  $step_0
+}
+
+method handle_launch_event() {
+  my $fork = $self->fork;
+
+  my $max_forks = $self->size;
+  my $has_forks = keys %{$fork->processes};
+
+  if ($has_forks > $max_forks) {
+    return 0; # wtf
   }
-
-  $step_1->next($first) if $first;
-  $step_1
+  if (my $needs = $max_forks - $has_forks) {
+    for (1..$needs) {
+      $fork->execute;
+    }
+  }
+  else {
+    return 0;
+  }
 }
 
-method handle_manage_event($process) {
-  my $process = $self->process;
+method handle_monitor_event() {
+  my $fork = $self->fork;
 
-  warn 'do handle_manage_event';
-
-  return unless $process->can('manage');
-
-  my $data = $process->mailbox->recv or return;
-
-  $process->manage($process);
-
-  return $self;
+  return $fork->monitor;
 }
 
-method handle_process_event() {
-  my $process = $self->process;
+method handle_sanitize_event() {
+  my $fork = $self->fork;
 
-  warn 'do handle_process_event';
-
-  return unless $process->can('receive');
-
-  my $data = $process->mailbox->recv or return;
-
-  $process->receive($data->{payload});
-
-  $process->shutdown;
-
-  return $self;
+  return $fork->sanitize;
 }
 
 1;
