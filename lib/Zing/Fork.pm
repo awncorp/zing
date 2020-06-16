@@ -22,7 +22,7 @@ use Config;
 
 has 'scheme' => (
   is => 'ro',
-  isa => 'Tuple[Str, ArrayRef, Int]',
+  isa => 'Scheme',
   req => 1,
 );
 

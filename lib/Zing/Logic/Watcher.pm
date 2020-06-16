@@ -62,7 +62,7 @@ fun new_on_sanitize($self) {
 
 has 'scheme' => (
   is => 'ro',
-  isa => 'Tuple[Str, ArrayRef, Int]',
+  isa => 'Scheme',
   new => 1
 );
 
