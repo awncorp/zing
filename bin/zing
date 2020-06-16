@@ -4,11 +4,11 @@ use strict;
 use warnings;
 
 require App::Spec;
-require Zing;
+require Zing::Cli;
 
 @ARGV=qw(help) unless @ARGV;
 
-App::Spec->read(\Zing->data)->runner->run;
+App::Spec->read(\Zing::Cli->data)->runner->run;
 
 print "\n";
 
