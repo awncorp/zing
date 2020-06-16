@@ -35,7 +35,7 @@ method recv(Process $proc) {
 }
 
 method send(Process $proc) {
-  return $self->store->send($self->term($proc->name), $proc->registration);
+  return $self->store->send($self->term($proc->name), $proc->metadata);
 }
 
 method term(Str @keys) {

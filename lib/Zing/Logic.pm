@@ -12,7 +12,6 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 
 use Zing::Flow;
-use Zing::Registry;
 
 # VERSION
 
@@ -115,7 +114,7 @@ method handle_register_event() {
 
   return if $self->{registered};
 
-  $self->{registered} = Zing::Registry->new->send($process);
+  $self->{registered} = $process->registry->send($process);
 
   return $self;
 }
