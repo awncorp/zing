@@ -43,6 +43,9 @@ register {
   validation => is_instance_of('Zing::Fork'),
 };
 
+declare 'Interupt',
+  as Enum([qw(CHLD HUP INT QUIT TERM USR1 USR2)]);
+
 register {
   name => 'KeyVal',
   parent => 'Object',

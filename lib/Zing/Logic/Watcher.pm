@@ -106,7 +106,7 @@ method handle_launch_event() {
   my $fork = $self->fork;
   my $process = $self->process;
 
-  if ($self->{interupt}) {
+  if ($self->interupt) {
     return 0;
   }
 
@@ -147,22 +147,22 @@ method signals() {
   my $fork = $self->fork;
 
   $trapped->{INT} = sub {
-    $self->{interupt} = 'int';
-    $fork->terminate($self->{interupt});
+    $self->interupt('INT');
+    $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reaping children
     $self->process->shutdown;
   };
 
   $trapped->{QUIT} = sub {
-    $self->{interupt} = 'quit';
-    $fork->terminate($self->{interupt});
+    $self->interupt('QUIT');
+    $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reaping children
     $self->process->shutdown;
   };
 
   $trapped->{TERM} = sub {
-    $self->{interupt} = 'term';
-    $fork->terminate($self->{interupt});
+    $self->interupt('TERM');
+    $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reaping children
     $self->process->shutdown;
   };
