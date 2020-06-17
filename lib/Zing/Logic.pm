@@ -17,6 +17,12 @@ use Zing::Flow;
 
 # ATTRIBUTES
 
+has 'interupt' => (
+  is => 'rw',
+  isa => 'Interupt',
+  opt => 1
+);
+
 has 'on_perform' => (
   is => 'ro',
   isa => 'CodeRef',
@@ -133,14 +139,17 @@ method signals() {
   my $trapped = {};
 
   $trapped->{INT} = sub {
+    $self->interupt('INT');
     $self->process->shutdown;
   };
 
   $trapped->{QUIT} = sub {
+    $self->interupt('QUIT');
     $self->process->shutdown;
   };
 
   $trapped->{TERM} = sub {
+    $self->interupt('TERM');
     $self->process->shutdown;
   };
 

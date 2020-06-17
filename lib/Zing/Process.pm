@@ -134,7 +134,7 @@ fun new_server($self) {
 
 has 'signals' => (
   is => 'ro',
-  isa => 'HashRef[Str|CodeRef]',
+  isa => 'Map[Interupt, Str|CodeRef]',
   new => 1,
 );
 
