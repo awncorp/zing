@@ -11,9 +11,6 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-with 'Zing::Role::Messageability';
-with 'Zing::Role::Queueability';
-
 use Config;
 use FlightRecorder;
 use POSIX;

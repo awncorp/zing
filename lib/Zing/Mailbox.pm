@@ -51,7 +51,7 @@ method message(HashRef $val) {
 }
 
 method reply(HashRef $bag, HashRef $val) {
-  return $self->store->push($self->term($bag->{from}), $self->message($val));
+  return $self->send($bag->{from}, $$val);
 }
 
 method send(Str $key, HashRef $val) {
