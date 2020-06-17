@@ -25,7 +25,7 @@ has 'name' => (
 );
 
 fun new_name($self) {
-  join(':', map $self->process->node->$_, qw(pid name))
+  $self->process->name
 }
 
 has 'process' => (
