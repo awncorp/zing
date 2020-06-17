@@ -1,4 +1,4 @@
-package Zing;
+package Zing::Kernel;
 
 use 5.014;
 
@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Watcher';
 
-use Zing::Kernel;
-
 # VERSION
 
 # ATTRIBUTES
@@ -27,8 +25,8 @@ has 'scheme' => (
 
 # METHODS
 
-method start() {
-  Zing::Kernel->new(scheme => $self->scheme)->execute;
+sub perform {
+  warn time, ' ', 'kernel running';
 }
 
 1;

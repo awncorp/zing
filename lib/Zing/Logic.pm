@@ -130,6 +130,7 @@ method handle_suicide_event() {
 
   return if !$process->parent;
 
+  # children who don't known their parents kill themeselves :)
   $process->shutdown unless kill 0, $process->parent->node->pid;
 
   return $self;
