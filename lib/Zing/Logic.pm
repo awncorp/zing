@@ -112,7 +112,7 @@ method handle_receive_event() {
 
   my $data = $process->mailbox->recv or return;
 
-  return $process->receive($data->{from}, $data->{payload});
+  return $process->receive($data->{from}, $data->{data});
 }
 
 method handle_register_event() {

@@ -153,6 +153,12 @@ has 'stopped' => (
 
 # METHODS
 
+method defer(HashRef $data) {
+  $self->mailbox->send($self->name, $data);
+
+  return $self;
+}
+
 method destroy() {
   return $self if !$self->cleanup;
 
