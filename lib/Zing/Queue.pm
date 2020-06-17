@@ -20,8 +20,8 @@ method recv() {
   return $self->store->pull($self->term);
 }
 
-method send(Message $val) {
-  return $self->store->push($self->term, $val->serialize);
+method send(HashRef $val) {
+  return $self->store->push($self->term, $val);
 }
 
 method size() {

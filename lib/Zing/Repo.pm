@@ -77,7 +77,7 @@ method local(Str @keys) {
 }
 
 method term(Str @keys) {
-  return join(':', $self->${\"@{[$self->target]}"}, @keys, $self->name);
+  return join(':', $self->${\"@{[$self->target]}"}, $self->name, @keys);
 }
 
 method test(Str @keys) {
