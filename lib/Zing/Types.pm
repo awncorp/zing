@@ -47,6 +47,12 @@ declare 'Interupt',
   as Enum([qw(CHLD HUP INT QUIT TERM USR1 USR2)]);
 
 register {
+  name => 'Kernel',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Kernel'),
+};
+
+register {
   name => 'KeyVal',
   parent => 'Object',
   validation => is_instance_of('Zing::KeyVal'),
@@ -155,6 +161,12 @@ register {
   name => 'Worker',
   parent => 'Object',
   validation => is_instance_of('Zing::Worker'),
+};
+
+register {
+  name => 'Zing',
+  parent => 'Object',
+  validation => is_instance_of('Zing'),
 };
 
 1;
