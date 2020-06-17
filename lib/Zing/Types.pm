@@ -77,12 +77,6 @@ register {
 };
 
 register {
-  name => 'Message',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Message'),
-};
-
-register {
   name => 'Node',
   parent => 'Object',
   validation => is_instance_of('Zing::Node'),
