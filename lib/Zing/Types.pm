@@ -73,7 +73,7 @@ register {
 register {
   name => 'Logger',
   parent => 'Object',
-  validation => is_capable_of(qw(debug info warn error fatal)),
+  validation => is_instance_of('FlightRecorder'),
 };
 
 register {

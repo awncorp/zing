@@ -15,6 +15,7 @@ use Config;
 use FlightRecorder;
 use POSIX;
 
+use Zing::Channel;
 use Zing::Data;
 use Zing::Logic;
 use Zing::Loop;
@@ -40,6 +41,16 @@ has 'data' => (
 
 fun new_data($self) {
   Zing::Data->new(process => $self)
+}
+
+has 'journal' => (
+  is => 'ro',
+  isa => 'Channel',
+  new => 1,
+);
+
+fun new_journal($self) {
+  Zing::Channel->new(name => 'journal')
 }
 
 has 'log' => (
