@@ -27,7 +27,7 @@ Multi-Process Management System
 
   use Zing;
 
-  my $z = Zing->new;
+  my $z = Zing->new(scheme => ['MyApp', [], 1]);
 
 =cut
 
