@@ -72,7 +72,8 @@ method size(Str $key) {
 }
 
 method slot(Str $key, Int $pos) {
-  return $self->redis->lindex($key, $pos);
+  my $get = $self->redis->lindex($key, $pos);
+  return $get ? $self->load($get) : $get;
 }
 
 method term(Str @keys) {

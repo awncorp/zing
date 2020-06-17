@@ -53,6 +53,16 @@ fun new_on_register($self) {
   $self->can('handle_register_event')
 }
 
+has 'on_reset' => (
+  is => 'ro',
+  isa => 'CodeRef',
+  new => 1,
+);
+
+fun new_on_reset($self) {
+  $self->can('handle_reset_event')
+}
+
 has 'on_suicide' => (
   is => 'ro',
   isa => 'CodeRef',
@@ -74,7 +84,7 @@ has 'process' => (
 method flow() {
   my $step_0 = Zing::Flow->new(
     name => 'on_reset',
-    code => fun($step, $loop) { $self->process->log->reset }
+    code => fun($step, $loop) { $self->on_reset->($self) }
   );
   my $step_1 = $step_0->next(Zing::Flow->new(
     name => 'on_register',
@@ -121,6 +131,21 @@ method handle_register_event() {
   return if $self->{registered};
 
   $self->{registered} = $process->registry->send($process);
+
+  return $self;
+}
+
+method handle_reset_event() {
+  my $process = $self->process;
+
+  if ($process->journal && $process->log->count) {
+    $process->journal->send({
+      from => $process->name,
+      data => $process->log->serialize
+    });
+  }
+
+  $process->log->reset;
 
   return $self;
 }
