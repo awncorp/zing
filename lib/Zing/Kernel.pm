@@ -59,7 +59,9 @@ method perform() {
 
     my $logger = FlightRecorder->new($data);
 
-    print STDOUT $from, ' ', $logger->simple->generate, "\n";
+    if (my $lines = $logger->simple->generate) {
+      print STDOUT $from, ' ', $lines, "\n";
+    }
   }
 }
 
