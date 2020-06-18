@@ -5,67 +5,91 @@ use 5.014;
 use strict;
 use warnings;
 
-use registry;
-use routines;
+use lib '.';
 
-use Data::Object::Class;
+use parent 'Data::Object::Cli';
 
-extends 'App::Spec::Run::Cmd';
+use Zing;
+use Zing::Daemon;
+
+use File::Spec;
 
 # VERSION
 
-# BUILD
-
-sub data {
-  my ($self) = @_;
-
-  my $space = $self->space;
-
-  $space->data;
-}
-
-sub space {
-  require Data::Object::Space;
-
-  return Data::Object::Space->new(ref $_[0] || $_[0]);
-}
+our $name = 'zing <{app}> [options]';
 
 # METHODS
 
-method init($run) {
-  require Zing::Task::Init;
+sub main {
+  my ($self) = @_;
 
-  my $task = Zing::Task::Init->new;
+  my $app = $self->args->app;
 
-  return $task->execute;
+  if ($self->opts->help || !$app) {
+    print $self->help, "\n";
+    return $self->okay;
+  }
+
+  my $appdir = $self->opts->appdir;
+  my $piddir = $self->opts->piddir;
+  my $libdir = $self->opts->libdir;
+
+  unshift @INC, @$libdir if $libdir;
+
+  $appdir ||= File::Spec->curdir;
+
+  my $appfile = File::Spec->catfile($appdir, $app);
+
+  if (! -e $appfile) {
+    print "Can't find app: $appfile\n";
+    return $self->fail;
+  }
+
+  my $scheme = do { local $@; eval { do $appfile } };
+
+  if (ref $scheme ne 'ARRAY') {
+    print "File didn't return an app scheme: $appfile\n";
+    return $self->fail;
+  }
+
+  my $daemon = Zing::Daemon->new(
+    name => $app,
+    app => Zing->new(scheme => $scheme),
+    ($piddir ? (pid_dir => $piddir) : ()),
+  );
+
+  $daemon->start;
+}
+
+sub spec {
+  {
+    appdir => {
+      desc => 'Directory of the app file',
+      type => 'string',
+      flag => 'a',
+    },
+    libdir => {
+      desc => 'Directory for @INC',
+      type => 'string',
+      flag => 'I',
+      args => '@',
+    },
+    piddir => {
+      desc => 'Directory for the pid file',
+      type => 'string',
+      flag => 'd',
+    },
+  }
 }
 
 1;
 
 __DATA__
 
-name: zing
+zing - multi-process management system
 
-title: |
-  multi-process management system
+Usage: {name}
 
-abstract: |
+Options:
 
-  @@@@@@@@  @@@  @@@@  @@  @@@@@@@@@
-       @@!  @@!  @@!@! @@  !@@
-      !@!   !@!  !@!!@!@!  !@!
-     @!!    !!@  @!@ !!@!  !@! @!@!@
-    !!!     !!!  !@!  !!!  !!! !!@!!
-   :!:      :!:  :!:  !:!  :!:   !::
-  ::: ::::  :!:  :::   ::  :::: ::::
-
-class: Zing
-
-plugins:
-- -Format
-- -Meta
-
-subcommands:
-  init:
-    op: init
-    summary: Initialize workspace
+{options}

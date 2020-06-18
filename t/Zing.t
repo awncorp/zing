@@ -39,7 +39,7 @@ Zing::Types
 
 =inherits
 
-App::Spec::Run::Cmd
+Zing::Watcher
 
 =cut
 
