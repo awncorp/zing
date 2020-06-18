@@ -36,7 +36,7 @@ has 'on_receive' => (
 method receive(@args) {
   return $self if !$self->on_receive;
 
-  $self->on_receive->(@args);
+  $self->on_receive->($self, @args);
 
   return $self;
 }
@@ -44,7 +44,7 @@ method receive(@args) {
 method perform(@args) {
   return $self if !$self->on_perform;
 
-  $self->on_perform->(@args);
+  $self->on_perform->($self, @args);
 
   return $self;
 }
