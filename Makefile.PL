@@ -17,10 +17,10 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.014",
   "NAME" => "Zing",
   "PREREQ_PM" => {
-    "App::Spec" => "0.013",
     "Data::Object" => "2.05",
     "Data::Object::Class" => "2.02",
     "Data::Object::ClassHas" => "2.01",
+    "Data::Object::Cli" => "2.03",
     "Data::Object::Exception" => "2.02",
     "Data::Object::Role" => "2.01",
     "Data::Object::RoleHas" => "2.01",
@@ -35,10 +35,10 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
-    "App::Spec" => "0.013",
     "Data::Object" => "2.05",
     "Data::Object::Class" => "2.02",
     "Data::Object::ClassHas" => "2.01",
+    "Data::Object::Cli" => "2.03",
     "Data::Object::Exception" => "2.02",
     "Data::Object::Role" => "2.01",
     "Data::Object::RoleHas" => "2.01",
@@ -61,10 +61,10 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "App::Spec" => "0.013",
   "Data::Object" => "2.05",
   "Data::Object::Class" => "2.02",
   "Data::Object::ClassHas" => "2.01",
+  "Data::Object::Cli" => "2.03",
   "Data::Object::Exception" => "2.02",
   "Data::Object::Role" => "2.01",
   "Data::Object::RoleHas" => "2.01",

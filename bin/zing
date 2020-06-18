@@ -3,14 +3,9 @@
 use strict;
 use warnings;
 
-require App::Spec;
 require Zing::Cli;
 
-@ARGV=qw(help) unless @ARGV;
-
-App::Spec->read(\Zing::Cli->data)->runner->run;
-
-print "\n";
+run Zing::Cli;
 
 =encoding utf8
 
@@ -26,25 +21,13 @@ Multi-Process Management System
 
   zing - multi-process management system
 
-  @@@@@@@   @@@  @@@@  @@  @@@@@@@@
-       @@!  @@!  @@!@! @@  !@@
-      !@!   !@!  !@!!@!@!  !@!
-     @!!    !!@  @!@ !!@!  !@! @!@!@
-    !!!     !!!  !@!  !!!  !!! !!@!!
-   :!:      :!:  :!:  !:!  :!:   !::
-  ::: ::::  :!:  :::   ::  :::: ::::
-
-  Usage: zing <subcommands> [options]
-
-  Subcommands:
-  edit  Edit source spec (generate unless exists)
-  init  Initialize workspace
-  make  Generate source code
-  spec  Generate source spec
-  help  Show command help
+  Usage: zing <app> [options]
 
   Options:
-  --help -h         Show command help (flag)
+
+    -I,--libdir, +1  [string] Directory for @INC
+    -a,--appdir      [string] Directory of the app file
+    -d,--piddir      [string] Directory for the pid file
 
 =head1 DESCRIPTION
 
