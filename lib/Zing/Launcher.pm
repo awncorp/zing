@@ -9,7 +9,6 @@ use registry 'Zing::Types';
 use routines;
 
 use Data::Object::Class;
-use Zing::Logic::Watcher;
 
 extends 'Zing::Worker';
 
@@ -18,7 +17,20 @@ extends 'Zing::Worker';
 # METHODS
 
 method handle(Str $name, HashRef $data) {
-  $self->spawn($data->{scheme}) if $data->{scheme};
+  return $self if !$data->{scheme};
+
+  $self->spawn($data->{scheme});
+
+  my $class = $data->{scheme}[0];
+
+  ($self->{launched}{$class} ||= 0)++;
+
+  # due to the unforeseen (but expected) consequences of loading too many
+  # packages into memory, a launcher should kill itself after loading some
+  # arbitrary number of packages
+  $self->shutdown if keys %{$self->{launched}} > 50;
+
+  return $self;
 }
 
 1;
