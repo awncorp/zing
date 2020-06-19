@@ -17,6 +17,7 @@ use POSIX;
 
 use Zing::Channel;
 use Zing::Data;
+use Zing::Fork;
 use Zing::Logic;
 use Zing::Loop;
 use Zing::Mailbox;
@@ -183,17 +184,15 @@ method destroy() {
 method exercise() {
   $self->started(time);
 
-  local $SIG{CHLD};
-  local $SIG{HUP};
-  local $SIG{INT};
-  local $SIG{QUIT};
-  local $SIG{TERM};
-  local $SIG{USR1};
-  local $SIG{USR2};
-
   my $signals = $self->signals;
 
-  $SIG{$_} = $self->signals->{$_} for keys %{$signals};
+  local $SIG{CHLD} = $signals->{CHLD} if $signals->{CHLD};
+  local $SIG{HUP}  = $signals->{HUP}  if $signals->{HUP};
+  local $SIG{INT}  = $signals->{INT}  if $signals->{INT};
+  local $SIG{QUIT} = $signals->{QUIT} if $signals->{QUIT};
+  local $SIG{TERM} = $signals->{TERM} if $signals->{TERM};
+  local $SIG{USR1} = $signals->{USR1} if $signals->{USR1};
+  local $SIG{USR2} = $signals->{USR2} if $signals->{USR2};
 
   $self->loop->exercise($self);
 
@@ -207,17 +206,15 @@ method exercise() {
 method execute() {
   $self->started(time);
 
-  local $SIG{CHLD};
-  local $SIG{HUP};
-  local $SIG{INT};
-  local $SIG{QUIT};
-  local $SIG{TERM};
-  local $SIG{USR1};
-  local $SIG{USR2};
-
   my $signals = $self->signals;
 
-  $SIG{$_} = $self->signals->{$_} for keys %{$signals};
+  local $SIG{CHLD} = $signals->{CHLD} if $signals->{CHLD};
+  local $SIG{HUP}  = $signals->{HUP}  if $signals->{HUP};
+  local $SIG{INT}  = $signals->{INT}  if $signals->{INT};
+  local $SIG{QUIT} = $signals->{QUIT} if $signals->{QUIT};
+  local $SIG{TERM} = $signals->{TERM} if $signals->{TERM};
+  local $SIG{USR1} = $signals->{USR1} if $signals->{USR1};
+  local $SIG{USR2} = $signals->{USR2} if $signals->{USR2};
 
   $self->loop->execute($self);
 
@@ -244,6 +241,17 @@ method shutdown() {
   $self->loop->stop(1);
 
   return $self;
+}
+
+method spawn(Scheme $scheme) {
+  my $size = $scheme->[2];
+  my $fork = Zing::Fork->new(parent => $self, scheme => $scheme);
+
+  $SIG{CHLD} = 'IGNORE';
+
+  $fork->execute for 1..($size || 1);
+
+  return $fork;
 }
 
 1;
