@@ -11,9 +11,8 @@ use Zing::Launcher;
 =pod explain
 
 - zing-launcher is a Worker process, see ./sketches/00-zing-worker ...
-- and as such it listens to 1+ queue(s) and spawns (fork()s) apps
-- apps are "launched" in a fire-and-forget fashion but without the ...
-- possibility of creating zombie processes
+- and as such it listens to 1+ queue(s), loads, instantiates, and ...
+- and executes (e.g. execute()) the recevied app scheme
 
 =cut
 
