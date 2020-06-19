@@ -4,8 +4,13 @@ use strict;
 use warnings;
 use routines;
 
+use lib 't/lib';
+
 use Test::Auto;
 use Test::More;
+use Test::Zing;
+
+use Config;
 
 =name
 
@@ -13,13 +18,27 @@ Zing
 
 =cut
 
-=abstract
+=tagline
 
 Multi-Process Management System
 
 =cut
 
+=abstract
+
+Actor Toolkit and Multi-Process Management System
+
+=cut
+
 =includes
+
+method: start
+
+=cut
+
+=attributes
+
+scheme: ro, req, Scheme
 
 =cut
 
@@ -28,6 +47,8 @@ Multi-Process Management System
   use Zing;
 
   my $z = Zing->new(scheme => ['MyApp', [], 1]);
+
+  # $z->execute;
 
 =cut
 
@@ -45,70 +66,59 @@ Zing::Watcher
 
 =description
 
-This package provides an actor-model inspired Redis-powered multi-process
-management system that provides a simple framework for managing job queues and
-workers, supervising processes, and facilitating interprocess communication.
+This distribution includes an actor-model architecture toolkit and
+Redis-powered multi-process management system which provides primatives for
+building powerful reactive, concurrent, distributed and resilient
+message-driven applications in Perl 5.
 
 =cut
 
-=method data
+=method start
 
-The data method returns the Zing system CLI specification as a YAML string to
-be provided to L<App::Spec>.
+The start method builds a L<Zing::Kernel> and executes its event-loop.
 
-=signature data
+=signature start
 
-data() : Str
+start() : Kernel
 
-=example-1 data
+=example-1 start
 
   # given: synopsis
 
-  $z->data;
+  $z->start;
 
 =cut
 
-=method space
+package MyApp;
 
-The space method returns a L<Data::Object::Space> object representing the Zing
-namespace.
+use parent 'Zing::Single';
 
-=signature space
+our $DATA = 0;
 
-space() : Space
-
-=example-1 space
-
-  # given: synopsis
-
-  $z->space;
-
-=cut
+sub perform {
+  $DATA++
+}
 
 package main;
 
-my $test = testauto(__FILE__);
+SKIP: {
+  skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
 
-my $subs = $test->standard;
+  my $test = testauto(__FILE__);
+  my $subs = $test->standard;
 
-$subs->synopsis(fun($tryable) {
-  ok my $result = $tryable->result;
+  $subs->synopsis(fun($tryable) {
+    ok my $result = $tryable->result;
 
-  $result
-});
+    $result
+  });
 
-# $subs->example(-1, 'data', 'method', fun($tryable) {
-#   ok my $result = $tryable->result;
+  $subs->example(-1, 'start', 'method', fun($tryable) {
+    ok my $result = $tryable->result;
+    is $MyApp::DATA, 1;
 
-#   $result
-# });
-
-# $subs->example(-1, 'space', 'method', fun($tryable) {
-#   ok my $result = $tryable->result;
-#   ok $result->isa('Data::Object::Space');
-#   is $result->package, 'Zing';
-
-#   $result
-# });
+    $result
+  });
+}
 
 ok 1 and done_testing;
