@@ -15,19 +15,19 @@ use Config;
 
 =name
 
-Zing::Logic
+Zing::Logic::Kernel
 
 =cut
 
 =tagline
 
-Process Logic
+Kernel Logic
 
 =cut
 
 =abstract
 
-Process Logic Chain
+Kernel Process Logic Chain
 
 =cut
 
@@ -40,17 +40,33 @@ method: signals
 
 =synopsis
 
-  use Zing::Logic;
-  use Zing::Process;
+  package Kernel;
 
-  my $process = Zing::Process->new;
-  my $logic = Zing::Logic->new(process => $process);
+  use parent 'Zing::Process';
+
+  sub scheme {
+    ['MyApp', [], 1]
+  }
+
+  package main;
+
+  use Zing::Logic::Kernel;
+
+  my $logic = Zing::Logic::Kernel->new(process => Kernel->new);
+
+  # $logic->execute;
 
 =cut
 
 =libraries
 
 Zing::Types
+
+=cut
+
+=inherits
+
+Zing::Logic::Watcher
 
 =cut
 
@@ -68,8 +84,8 @@ process: ro, req, Process
 
 =description
 
-This package provides the logic (or logic chain) to be executed by the process
-event-loop.
+This package provides the logic (or logic chain) to be executed by the kernel
+process event-loop.
 
 =cut
 
@@ -133,14 +149,20 @@ SKIP: {
     is $step_3->name, 'on_receive';
     my $step_4 = $step_3->next;
     is $step_4->name, 'on_suicide';
-    is $result->bottom->name, 'on_suicide';
+    my $step_5 = $step_4->next;
+    is $step_5->name, 'on_launch';
+    my $step_6 = $step_5->next;
+    is $step_6->name, 'on_monitor';
+    my $step_7 = $step_6->next;
+    is $step_7->name, 'on_sanitize';
+    is $result->bottom->name, 'on_purge';
 
     $result
   });
 
   $subs->example(-1, 'signals', 'method', fun($tryable) {
     ok my $result = $tryable->result;
-    is_deeply [sort keys %{$result}], [qw(INT QUIT TERM)];
+    is_deeply [sort keys %{$result}], [qw(INT QUIT TERM USR1 USR2)];
 
     $result
   });
