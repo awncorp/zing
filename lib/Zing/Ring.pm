@@ -47,4 +47,10 @@ method shutdown() {
   return $self->next::method;
 }
 
+method winddown() {
+  $_->winddown for @{$self->processes};
+
+  return $self->next::method;
+}
+
 1;
