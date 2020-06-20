@@ -47,7 +47,7 @@ method: term
 
   my $chan = Zing::Channel->new(name => 'share');
 
-  # $chan->recv
+  # $chan->recv;
 
 =cut
 
@@ -60,6 +60,12 @@ Zing::Types
 =inherits
 
 Zing::PubSub
+
+=cut
+
+=attributes
+
+name: ro, opt, Str
 
 =cut
 
