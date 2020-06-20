@@ -118,6 +118,14 @@ our $PIDS = $$ + 1;
   my $space = Data::Object::Space->new(
     'Zing/Fork'
   );
+  $space->inject(_kill => sub {
+    $ENV{ZING_TEST_KILL} || 0;
+  });
+  $space->inject(_waitpid => sub {
+    $ENV{ZING_TEST_WAIT_ONE}
+    ? ($ENV{ZING_TEST_WAIT_ONE}++ == 1 ? 1 : -1)
+    : ($ENV{ZING_TEST_WAIT} || -1);
+  });
   $space->inject(execute => sub {
     my ($self) = @_;
     my $pid = $ENV{ZING_TEST_FORK} || $PIDS++;
@@ -130,12 +138,6 @@ our $PIDS = $$ + 1;
     $process->execute;
     $process
   });
-  $space->inject(kill => sub {
-    $ENV{ZING_TEST_KILL} || 0;
-  });
-  $space->inject(waitpid => sub {
-    $ENV{ZING_TEST_WAIT} || -1;
-  });
 }
 
 # Zing/Logic
@@ -143,7 +145,7 @@ our $PIDS = $$ + 1;
   my $space = Data::Object::Space->new(
     'Zing/Logic'
   );
-  $space->inject(kill => sub {
+  $space->inject(_kill => sub {
     $ENV{ZING_TEST_KILL} || 0;
   });
 }
