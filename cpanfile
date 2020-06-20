@@ -34,6 +34,7 @@ on 'test' => sub {
   requires "JSON" => "4.02";
   requires "Redis" => "1.996";
   requires "Test::Auto" => "0.12";
+  requires "Test::Trap" => "v0.3.4";
   requires "perl" => "5.014";
   requires "routines" => "0.02";
   requires "strict" => "0";
