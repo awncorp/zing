@@ -81,12 +81,35 @@ our $PIDS = $$ + 1;
   my $space = Data::Object::Space->new(
     'Zing/Daemon'
   );
+  $space->inject(debug => sub {
+    0 # noop
+  });
+  $space->inject(fatal => sub {
+    0 # noop
+  });
+  $space->inject(info => sub {
+    0 # noop
+  });
+  $space->inject(warn => sub {
+    0 # noop
+  });
   $space->inject(fork => sub {
     $ENV{ZING_TEST_FORK} || $PIDS++;
   });
+  my $_execute = $space->cop(
+    'execute'
+  );
+  $space->inject(execute => sub {
+    my ($self, @args) = @_;
+    my $result = $_execute->($self, @args);
+    unlink $self->pid_path;
+    $result
+  });
   $space->inject(start => sub {
     my ($self, @args) = @_;
-    $self->execute(@args);
+    my $result = $self->execute(@args);
+    unlink $self->pid_path;
+    $result
   });
 }
 

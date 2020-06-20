@@ -13,7 +13,6 @@ use Test::Trap;
 use Test::Zing;
 
 use Config;
-use File::Temp;
 
 =name
 
@@ -29,7 +28,7 @@ Command-line Interface
 
 =abstract
 
-Command-line Application Administration
+Command-line Process Management
 
 =cut
 
@@ -43,9 +42,9 @@ method: main
 
   use Zing::Cli;
 
-  my $c = Zing::Cli->new;
+  my $cli = Zing::Cli->new;
 
-  # $c->handle('main');
+  # $cli->handle('main');
 
 =cut
 
@@ -84,8 +83,9 @@ main() : Any
 
   # e.g.
   # zing once -I t/lib -a t/app
+  # pass
 
-  $c->handle('main'); # good
+  $cli->handle('main');
 
 =example-2 main
 
@@ -93,8 +93,9 @@ main() : Any
 
   # e.g.
   # zing unce -I t/lib -a t/app
+  # fail (not exist)
 
-  $c->handle('main'); # fail (not exist)
+  $cli->handle('main');
 
 =cut
 
@@ -116,9 +117,7 @@ SKIP: {
   $subs->example(-1, 'main', 'method', fun($tryable) {
     my $result;
 
-    local @ARGV = (
-      'once', '-I', 't/lib', '-a', 't/app', '-p', File::Temp->newdir
-    );
+    local @ARGV = ('once', '-I', 't/lib', '-a', 't/app');
     trap { ok !($result = $tryable->result) }; # exit 0 is good
 
     $result
@@ -127,9 +126,7 @@ SKIP: {
   $subs->example(-2, 'main', 'method', fun($tryable) {
     my $result;
 
-    local @ARGV = (
-      'unce', '-I', 't/lib', '-a', 't/app', '-p', File::Temp->newdir
-    );
+    local @ARGV = ('unce', '-I', 't/lib', '-a', 't/app');
     trap { ok ($result = $tryable->result) }; # exit 1 is fail
 
     $result

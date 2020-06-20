@@ -46,9 +46,9 @@ scheme: ro, req, Scheme
 
   use Zing;
 
-  my $z = Zing->new(scheme => ['MyApp', [], 1]);
+  my $zing = Zing->new(scheme => ['MyApp', [], 1]);
 
-  # $z->execute;
+  # $zing->execute;
 
 =cut
 
@@ -85,7 +85,7 @@ start() : Kernel
 
   # given: synopsis
 
-  $z->start;
+  $zing->start;
 
 =cut
 

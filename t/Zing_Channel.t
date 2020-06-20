@@ -45,9 +45,9 @@ method: term
 
   use Zing::Channel;
 
-  my $c = Zing::Channel->new(name => 'share');
+  my $chan = Zing::Channel->new(name => 'share');
 
-  # $c->recv
+  # $chan->recv
 
 =cut
 
@@ -80,17 +80,17 @@ recv() : Maybe[HashRef]
 
 =example-1 recv
 
-  my $c = Zing::Channel->new(name => 'recv-01');
+  my $chan = Zing::Channel->new(name => 'recv-01');
 
-  $c->recv;
+  $chan->recv;
 
 =example-2 recv
 
-  my $c = Zing::Channel->new(name => 'recv-02');
+  my $chan = Zing::Channel->new(name => 'recv-02');
 
-  $c->send({ status => 'works' });
+  $chan->send({ status => 'works' });
 
-  $c->recv;
+  $chan->recv;
 
 =cut
 
@@ -105,21 +105,21 @@ renew() : Int
 
 =example-1 renew
 
-  my $c = Zing::Channel->new(name => 'renew-01');
+  my $chan = Zing::Channel->new(name => 'renew-01');
 
-  $c->send({ status => 'works' }) for 1..5;
+  $chan->send({ status => 'works' }) for 1..5;
 
-  $c->renew;
+  $chan->renew;
 
 =example-2 renew
 
-  my $c = Zing::Channel->new(name => 'renew-02');
+  my $chan = Zing::Channel->new(name => 'renew-02');
 
-  $c->send({ status => 'works' }) for 1..5;
-  $c->recv;
-  $c->drop;
+  $chan->send({ status => 'works' }) for 1..5;
+  $chan->recv;
+  $chan->drop;
 
-  $c->renew;
+  $chan->renew;
 
 =cut
 
@@ -133,13 +133,13 @@ reset() : Int
 
 =example-1 reset
 
-  my $c = Zing::Channel->new(name => 'reset-01');
+  my $chan = Zing::Channel->new(name => 'reset-01');
 
-  $c->send({ status => 'works' }) for 1..5;
-  $c->recv;
-  $c->recv;
+  $chan->send({ status => 'works' }) for 1..5;
+  $chan->recv;
+  $chan->recv;
 
-  $c->reset;
+  $chan->reset;
 
 =cut
 
@@ -154,9 +154,9 @@ send(HashRef $value) : Int
 
 =example-1 send
 
-  my $c = Zing::Channel->new(name => 'send-01');
+  my $chan = Zing::Channel->new(name => 'send-01');
 
-  $c->send({ status => 'works' });
+  $chan->send({ status => 'works' });
 
 =cut
 
@@ -170,11 +170,11 @@ size() : Int
 
 =example-1 size
 
-  my $c = Zing::Channel->new(name => 'size-01');
+  my $chan = Zing::Channel->new(name => 'size-01');
 
-  $c->send({ status => 'works' }) for 1..5;
+  $chan->send({ status => 'works' }) for 1..5;
 
-  $c->size;
+  $chan->size;
 
 =cut
 
@@ -188,9 +188,9 @@ term() : Str
 
 =example-1 term
 
-  my $c = Zing::Channel->new(name => 'term-01');
+  my $chan = Zing::Channel->new(name => 'term-01');
 
-  $c->term;
+  $chan->term;
 
 =cut
 
