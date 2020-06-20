@@ -25,7 +25,7 @@ sub main {
 
   my $app = $self->args->app;
 
-  if ($self->opts->help || !$app) {
+  if (!$app) {
     print $self->help, "\n";
     return $self->okay;
   }
