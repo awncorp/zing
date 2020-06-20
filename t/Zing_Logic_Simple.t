@@ -15,19 +15,19 @@ use Config;
 
 =name
 
-Zing::Logic::Kernel
+Zing::Logic::Simple
 
 =cut
 
 =tagline
 
-Kernel Logic
+Simple Logic
 
 =cut
 
 =abstract
 
-Kernel Process Logic Chain
+Simple Process Logic Chain
 
 =cut
 
@@ -40,19 +40,15 @@ method: signals
 
 =synopsis
 
-  package Kernel;
+  package Simple;
 
-  use parent 'Zing::Kernel';
-
-  sub scheme {
-    ['MyApp', [], 1]
-  }
+  use parent 'Zing::Simple';
 
   package main;
 
-  use Zing::Logic::Kernel;
+  use Zing::Logic::Simple;
 
-  my $logic = Zing::Logic::Kernel->new(process => Kernel->new);
+  my $logic = Zing::Logic::Simple->new(process => Simple->new);
 
   # $logic->execute;
 
@@ -66,7 +62,7 @@ Zing::Types
 
 =inherits
 
-Zing::Logic::Watcher
+Zing::Logic
 
 =cut
 
@@ -145,24 +141,14 @@ SKIP: {
     is $step_1->name, 'on_register';
     my $step_2 = $step_1->next;
     is $step_2->name, 'on_perform';
-    my $step_3 = $step_2->next;
-    is $step_3->name, 'on_receive';
-    my $step_4 = $step_3->next;
-    is $step_4->name, 'on_suicide';
-    my $step_5 = $step_4->next;
-    is $step_5->name, 'on_launch';
-    my $step_6 = $step_5->next;
-    is $step_6->name, 'on_monitor';
-    my $step_7 = $step_6->next;
-    is $step_7->name, 'on_sanitize';
-    is $result->bottom->name, 'on_purge';
+    is $result->bottom->name, 'on_perform';
 
     $result
   });
 
   $subs->example(-1, 'signals', 'method', fun($tryable) {
     ok my $result = $tryable->result;
-    is_deeply [sort keys %{$result}], [qw(INT QUIT TERM USR1 USR2)];
+    is_deeply [sort keys %{$result}], [qw(INT QUIT TERM)];
 
     $result
   });
