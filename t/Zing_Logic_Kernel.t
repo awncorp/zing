@@ -40,19 +40,14 @@ method: signals
 
 =synopsis
 
-  package Kernel;
-
-  use parent 'Zing::Kernel';
-
-  sub scheme {
-    ['MyApp', [], 1]
-  }
-
-  package main;
-
+  use Zing::Kernel;
   use Zing::Logic::Kernel;
 
-  my $logic = Zing::Logic::Kernel->new(process => Kernel->new);
+  my $logic = Zing::Logic::Kernel->new(
+    process => Zing::Kernel->new(
+      scheme => ['MyApp', [], 1]
+    )
+  );
 
   # $logic->execute;
 
