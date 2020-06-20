@@ -43,7 +43,7 @@ method execute(Any @args) {
     $step = $step->next || do {
       last if $self->last;
       $head;
-    }
+    };
   }
 
   return $self;
@@ -55,6 +55,7 @@ method exercise(Any @args) {
   until (!$step) {
     $step->execute($self, @args);
     $step = $step->next;
+    last if $self->stop;
   }
 
   return $self;
