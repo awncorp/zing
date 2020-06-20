@@ -15,19 +15,19 @@ use Config;
 
 =name
 
-Zing::Data
+Zing::KeyVal
 
 =cut
 
 =tagline
 
-Process Data
+Key/Value Store
 
 =cut
 
 =abstract
 
-Process Key/Val Data Store
+Generic Key/Value Store
 
 =cut
 
@@ -35,17 +35,17 @@ Process Key/Val Data Store
 
 method: recv
 method: send
+method: term
 
 =cut
 
 =synopsis
 
-  use Zing::Data;
-  use Zing::Process;
+  use Zing::KeyVal;
 
-  my $data = Zing::Data->new(process => Zing::Process->new);
+  my $keyval = Zing::KeyVal->new(name => 'notes');
 
-  # $data->recv;
+  # $keyval->recv('today');
 
 =cut
 
@@ -57,20 +57,19 @@ Zing::Types
 
 =inherits
 
-Zing::KeyVal
+Zing::Repo
 
 =cut
 
 =attributes
 
 name: ro, opt, Str
-process: ro, req, Process
 
 =cut
 
 =description
 
-This package provides a process-specific key/value store for arbitrary data.
+This package provides a general-purpose key/value store abstraction.
 
 =cut
 
@@ -80,21 +79,21 @@ The recv method fetches the data (if any) from the store.
 
 =signature recv
 
-recv() : Maybe[HashRef]
+recv(Str $key) : Maybe[HashRef]
 
 =example-1 recv
 
   # given: synopsis
 
-  $data->recv;
+  $keyval->recv('today');
 
 =example-2 recv
 
   # given: synopsis
 
-  $data->send({ status => 'works' });
+  $keyval->send('today', { status => 'happy' });
 
-  $data->recv;
+  $keyval->recv('today');
 
 =cut
 
@@ -104,21 +103,37 @@ The send method commits data to the store overwriting any existing data.
 
 =signature send
 
-send(HashRef $value) : Str
+send(Str $key, HashRef $value) : Str
 
 =example-1 send
 
   # given: synopsis
 
-  $data->send({ status => 'works' });
+  $keyval->send('today', { status => 'happy' });
 
 =example-2 send
 
   # given: synopsis
 
-  $data->drop;
+  $keyval->drop;
 
-  $data->send({ status => 'works' });
+  $keyval->send('today', { status => 'happy' });
+
+=cut
+
+=method term
+
+The term method generates a term (safe string) for the datastore.
+
+=signature term
+
+term(Str @keys) : Str
+
+=example-1 term
+
+  # given: synopsis
+
+  $keyval->term('today');
 
 =cut
 
@@ -142,7 +157,7 @@ $subs->example(-1, 'recv', 'method', fun($tryable) {
 
 $subs->example(-2, 'recv', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  is_deeply $result, { status => 'works' };
+  is_deeply $result, { status => 'happy' };
 
   $result
 });
@@ -157,6 +172,13 @@ $subs->example(-1, 'send', 'method', fun($tryable) {
 $subs->example(-2, 'send', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is $result, 'OK';
+
+  $result
+});
+
+$subs->example(-1, 'term', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  like $result, qr/:today$/;
 
   $result
 });
