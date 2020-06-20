@@ -16,8 +16,6 @@ extends 'Zing::Watcher';
 use Zing::Channel;
 use Zing::Logic::Kernel;
 
-use FlightRecorder;
-
 # VERSION
 
 # ATTRIBUTES
@@ -45,24 +43,5 @@ fun new_logic($self) {
 }
 
 # METHODS
-
-method perform() {
-  if (my $info = $self->journal->recv) {
-    my $log = $self->log;
-
-    my $from = $info->{from};
-    my $data = $info->{data};
-
-    $data->{auto} = $log->auto;
-    $data->{format} = $log->format;
-    $data->{level} = $log->level;
-
-    my $logger = FlightRecorder->new($data);
-
-    if (my $lines = $logger->simple->generate) {
-      print STDOUT $from, ' ', $lines, "\n";
-    }
-  }
-}
 
 1;
