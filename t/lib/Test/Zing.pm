@@ -14,8 +14,7 @@ our $DATA = {};
 
 sub drop {
   my ($self, $key) = @_;
-  delete $DATA->{$key};
-  return 'OK';
+  return int(!!delete $DATA->{$key});
 }
 
 sub keys {
@@ -66,6 +65,10 @@ sub test {
 }
 
 package Test::Zing;
+
+BEGIN {
+  $ENV{ZING_HOST} = '0.0.0.0';
+}
 
 use Zing::Daemon;
 use Zing::Fork;
