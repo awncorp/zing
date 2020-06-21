@@ -38,19 +38,25 @@ method perform() {
 method destroy() {
   $_->destroy for @{$self->processes};
 
-  return $self->next::method;
+  $self->next::method;
+
+  return;
 }
 
 method shutdown() {
   $_->shutdown for @{$self->processes};
 
-  return $self->next::method;
+  $self->next::method;
+
+  return;
 }
 
 method winddown() {
   $_->winddown for @{$self->processes};
 
-  return $self->next::method;
+  $self->next::method;
+
+  return;
 }
 
 1;
