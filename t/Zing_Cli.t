@@ -82,7 +82,7 @@ main() : Any
   # given: synopsis
 
   # e.g.
-  # zing once -I t/lib -a t/app
+  # zing start once -I t/lib -a t/app
   # pass
 
   $cli->handle('main');
@@ -92,7 +92,7 @@ main() : Any
   # given: synopsis
 
   # e.g.
-  # zing unce -I t/lib -a t/app
+  # zing start unce -I t/lib -a t/app
   # fail (not exist)
 
   $cli->handle('main');
@@ -117,7 +117,7 @@ SKIP: {
   $subs->example(-1, 'main', 'method', fun($tryable) {
     my $result;
 
-    local @ARGV = ('once', '-I', 't/lib', '-a', 't/app');
+    local @ARGV = ('start', 'once', '-I', 't/lib', '-a', 't/app');
     trap { ok !($result = $tryable->result) }; # exit 0 is good
 
     $result
@@ -126,7 +126,7 @@ SKIP: {
   $subs->example(-2, 'main', 'method', fun($tryable) {
     my $result;
 
-    local @ARGV = ('unce', '-I', 't/lib', '-a', 't/app');
+    local @ARGV = ('start', 'unce', '-I', 't/lib', '-a', 't/app');
     trap { ok ($result = $tryable->result) }; # exit 1 is fail
 
     $result
