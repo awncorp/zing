@@ -4,8 +4,14 @@ use strict;
 use warnings;
 use routines;
 
+use lib 't/app';
+use lib 't/lib';
+
 use Test::Auto;
 use Test::More;
+use Test::Zing;
+
+use Config;
 
 =name
 

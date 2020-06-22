@@ -59,8 +59,7 @@ server: ro, opt, Server
 
 =description
 
-This package provides represents a process location within a network and
-cluster.
+This package provides represents a process within a network and cluster.
 
 =cut
 
