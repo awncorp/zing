@@ -67,7 +67,7 @@ launches applications.
   # given: synopsis
 
   # e.g.
-  # zing once -I t/lib -a t/app
+  # zing start once -I t/lib -a t/app
   # pass
 
   $cli->handle('main');
@@ -81,7 +81,7 @@ launches applications.
   # given: synopsis
 
   # e.g.
-  # zing unce -I t/lib -a t/app
+  # zing start unce -I t/lib -a t/app
   # fail (not exist)
 
   $cli->handle('main');

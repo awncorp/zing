@@ -88,6 +88,105 @@ The start method builds a L<Zing::Kernel> and executes its event-loop.
 
 =cut
 
+=head1 FEATURES
+
+While this is, at present, a proof-of-concept, the API is not expected to
+change. The documentation is a work-in-progress. Please see the examples
+included for demonstrations of the objects in action. The following is a list
+of features currently supported by the framework:
+
+=over 4
+
+=item *
+
+parallel processing
+
+=item *
+
+asynchronous programming
+
+=item *
+
+event-driven applications
+
+=item *
+
+actor-model based framework
+
+=item *
+
+process (actor) mailboxes
+
+=item *
+
+distributed processes (actors)
+
+=item *
+
+erlang-style supervision trees
+
+=item *
+
+hot-reloadable processes (actors)
+
+=item *
+
+automated multi-process management
+
+=item *
+
+atomicity without lock management
+
+=item *
+
+multitasking processes (event-loop actors)
+
+=item *
+
+chainable/extendable process (actor) event-loops
+
+=item *
+
+none-blocking yieldable routines
+
+=item *
+
+high performance message queues
+
+=item *
+
+high performance message channels
+
+=item *
+
+high performance message passing
+
+=item *
+
+built-in high performance log shipping
+
+=item *
+
+operable as a cluster or single-node
+
+=item *
+
+resilient to memory leaks
+
+=item *
+
+no new funcs/idioms
+
+=item *
+
+no callbacks, futures or promises
+
+=item *
+
+no zombie processes
+
+=back
+
 =head1 SEE ALSO
 
 L<The Actor Model|https://en.wikipedia.org/wiki/Actor_model>

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Zing::Process;
 use Zing::Registry;
@@ -12,7 +12,7 @@ use Zing::Registry;
 
 - zing-registry is a key/val data store specifically for registering processes
 - the default registry name is "default" but can be anything you like ...
-- in the event that you need a seperate registry for some other work
+- in the event that you need a separate registry for some other work
 
 =cut
 

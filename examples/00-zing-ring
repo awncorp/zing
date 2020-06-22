@@ -3,14 +3,14 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Zing::Ring;
 use Zing::Zang;
 
 =pod explain
 
-- see ./sketches/00-zing-zang
+- see ./examples/00-zing-zang
 
 - zing-ring joins process event-loops by acting as a turn-based actuator
 - the zing-ring is itself a process which can be executed and watched

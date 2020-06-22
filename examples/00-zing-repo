@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Zing::Repo;
 
@@ -11,7 +11,7 @@ use Zing::Repo;
 
 - zing-repo is the key/val and pub/sub data store superclass
 - it uses Zing/Store operations to perform its operations
-- you shouldn't use it directly, but instead use it to build other abstractions
+- you shouldn't use it directly, but instead, use it to build other abstractions
 - you may notice in the output that "repo keys present" doesn't include a key ...
 - for "actions", because the actions data-structure is a list which gets deleted ...
 - once all the elements have been removed (pop'd)

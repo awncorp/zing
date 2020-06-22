@@ -9,15 +9,15 @@ use Zing::Zang;
 
 =pod explain
 
-- see ./sketches/00-zing-zang
+- see ./examples/00-zing-zang
 
 - zing-zang is simple a Zing/Process
 - it provides on_perform() and on_receive() handlers
 - the defer() method allows a process to send a message to itself ...
-- which is a useful mechanism to creating todo task lists and chunking work
+- which is a useful mechanism for creating task lists and chunking work
 
 - in this example the process ...
-- 1) calls perform which puts a message in it's own mailbox
+- 1) calls perform which puts a message in its own mailbox
 - 2) calls receive because the mailbox has a message which prints the time
 
 =cut

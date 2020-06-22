@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Data::Dumper;
 use Zing::Process;
@@ -18,14 +18,14 @@ use Zing::Process;
 - the 'journal' attr has a log Zing/Channel used for log shipping
 - the 'log' attr has a FlightRecorder log object for structured logging
 - the 'logic' attr has the event-loop logic governing the process type
-- the 'loop' attr has the processs event-loop object
+- the 'loop' attr has the process’ event-loop object
 - the 'mailbox' attr has a Zing/Mailbox for IPC
 - the 'name' attr holds the (unique when generated) process name
 - the 'parent' attr is the (optional) object representation of the parent
 - the 'registry' attr has the Zing/Registry where all running processes are listed
 - a process doesn't fork or thread or magic async in any way
 - a process simple has the building blocks for operating in an ...
-- actor-model-based environment with message passing and log-shipping
+- an actor-model-based environment with message passing and log-shipping
 - a process is usually enacted by calling execute()
 - execute() starts the process event-loop
 

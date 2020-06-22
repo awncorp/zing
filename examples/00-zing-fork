@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Zing::Fork;
 use Zing::Process;
@@ -12,10 +12,10 @@ use Zing::Process;
 
 - zing-fork is responsible for forking processes, ...
 - and connecting forked processes to parents which is useful for monitoring
-- you'll notice that the (4) forks requested in the scheme is ignored here
+- you'll notice that the (4) forks requested in the scheme are ignored here
 - to launch 4 forks, execute() is called multiple times, this is because ...
 - elsewhere, certain process logic needs to relaunch dead forks
-- also note that terminate() sends a signal to all registered forks
+- also, note that terminate() sends a signal to all registered forks
 
 =cut
 

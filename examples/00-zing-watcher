@@ -3,14 +3,14 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Data::Dumper;
 use Zing::Watcher;
 
 =pod explain
 
-- zing-watcher is a process, see ./sketches/00-zing-process ...
+- zing-watcher is a process, see ./examples/00-zing-process ...
 - but more specifically is a supervisor process
 - it's a class which is intended to be subclassed
 - a Watcher process launches (fork()) and monitors other processes

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Zing;
 
@@ -14,7 +14,7 @@ use Zing;
 - it loads (and forks) a scheme
 - it is actually a special kind of Watcher
 - i.e. it loads a kernel process which loads the scheme
-- as a watcher it maintains the specified number of forks
+- as a watcher, it maintains the specified number of forks
 - the supervisor tree is zing -> kernel -> app
 
 =cut

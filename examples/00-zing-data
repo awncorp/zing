@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Zing::Data;
 use Zing::Process;
@@ -13,7 +13,7 @@ use Zing::Process;
 - zing-data is a key/val data store for processes
 - it's meant as a convenience for storing state during execution
 - because the store name is based on the process name ...
-- the store is not meant to be shared, and will be destroyed during ...
+- the store is not meant to be shared and will be destroyed during ...
 - cleanup if the process dies properly
 
 =cut

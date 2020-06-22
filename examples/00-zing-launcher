@@ -3,16 +3,16 @@
 use strict;
 use warnings;
 
-use lib 'sketches/lib';
+use lib 'examples/lib';
 
 use Data::Dumper;
 use Zing::Launcher;
 
 =pod explain
 
-- zing-launcher is a Worker process, see ./sketches/00-zing-worker ...
+- zing-launcher is a Worker process, see ./examples/00-zing-worker ...
 - and as such it listens to 1+ queue(s), loads, instantiates, and ...
-- and executes (e.g. execute()) the recevied app scheme
+- and executes (e.g. execute()) the received app scheme
 
 =cut
 

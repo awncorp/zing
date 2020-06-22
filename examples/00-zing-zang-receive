@@ -9,7 +9,7 @@ use Zing::Zang;
 
 =pod explain
 
-- see ./sketches/00-zing-zang
+- see ./examples/00-zing-zang
 
 - zing-zang is simple a Zing/Process
 - it provides on_perform() and on_receive() handlers
