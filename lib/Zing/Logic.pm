@@ -79,6 +79,12 @@ has 'process' => (
   req => 1,
 );
 
+# SHIMS
+
+sub _kill {
+  CORE::kill(shift, shift)
+}
+
 # METHODS
 
 method flow() {
@@ -156,7 +162,7 @@ method handle_suicide_event() {
   return if !$process->parent;
 
   # children who don't known their parents kill themeselves :)
-  $process->shutdown unless kill 0, $process->parent->node->pid;
+  $process->winddown unless _kill 0, $process->parent->node->pid;
 
   return $self;
 }
@@ -166,17 +172,17 @@ method signals() {
 
   $trapped->{INT} = sub {
     $self->interupt('INT');
-    $self->process->shutdown;
+    $self->process->winddown;
   };
 
   $trapped->{QUIT} = sub {
     $self->interupt('QUIT');
-    $self->process->shutdown;
+    $self->process->winddown;
   };
 
   $trapped->{TERM} = sub {
     $self->interupt('TERM');
-    $self->process->shutdown;
+    $self->process->winddown;
   };
 
   return $trapped;

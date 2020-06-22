@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Process';
 
-use Zing::Kernel;
-
 # VERSION
 
 # ATTRIBUTES

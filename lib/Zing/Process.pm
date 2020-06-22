@@ -254,4 +254,10 @@ method spawn(Scheme $scheme) {
   return $fork;
 }
 
+method winddown() {
+  $self->loop->last(1);
+
+  return $self;
+}
+
 1;

@@ -150,21 +150,21 @@ method signals() {
     $self->interupt('INT');
     $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reap children
-    $self->process->shutdown;
+    $self->process->winddown;
   };
 
   $trapped->{QUIT} = sub {
     $self->interupt('QUIT');
     $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reap children
-    $self->process->shutdown;
+    $self->process->winddown;
   };
 
   $trapped->{TERM} = sub {
     $self->interupt('TERM');
     $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reap children
-    $self->process->shutdown;
+    $self->process->winddown;
   };
 
   $trapped->{USR1} = $trapped->{USR2} = sub {

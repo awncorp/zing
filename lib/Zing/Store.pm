@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 use JSON -convert_blessed_universally;
 
-use Redis;
-
 # VERSION
 
 # ATTRIBUTES
@@ -26,6 +24,7 @@ has 'redis' => (
 );
 
 fun new_redis($self) {
+  require Redis;
   state $redis = Redis->new;
 }
 

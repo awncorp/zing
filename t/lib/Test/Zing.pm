@@ -1,0 +1,167 @@
+use Zing::Store;
+
+package Redis;
+
+use Carp;
+
+*{"Redis::new"} = $INC{'Redis.pm'} = sub {
+  carp "Redis disabaled while testing"; undef
+};
+
+package Zing::Store;
+
+our $DATA = {};
+
+sub drop {
+  my ($self, $key) = @_;
+  return int(!!delete $DATA->{$key});
+}
+
+sub keys {
+  my ($self, @key) = @_;
+  my $re = join('|', $self->term(@key), $self->term(@key, '.*'));
+  return [grep /$re/, keys %$DATA];
+}
+
+sub pull {
+  my ($self, $key) = @_;
+  my $get = pop @{$DATA->{$key}} if $DATA->{$key};
+  return $get ? $self->load($get) : $get;
+}
+
+sub push {
+  my ($self, $key, $val) = @_;
+  my $set = $self->dump($val);
+  return push @{$DATA->{$key}}, $set;
+}
+
+sub recv {
+  my ($self, $key) = @_;
+  my $get = $DATA->{$key};
+  return $get ? $self->load($get) : $get;
+}
+
+sub send {
+  my ($self, $key, $val) = @_;
+  my $set = $self->dump($val);
+  $DATA->{$key} = $set;
+  return 'OK';
+}
+
+sub size {
+  my ($self, $key) = @_;
+  return $DATA->{$key} ? scalar(@{$DATA->{$key}}) : 0;
+}
+
+sub slot {
+  my ($self, $key, $pos) = @_;
+  my $get = $DATA->{$key}->[$pos];
+  return $get ? $self->load($get) : $get;
+}
+
+sub test {
+  my ($self, $key) = @_;
+  return int exists $DATA->{$key};
+}
+
+package Test::Zing;
+
+BEGIN {
+  $ENV{ZING_HOST} = '0.0.0.0';
+}
+
+use Zing::Daemon;
+use Zing::Fork;
+use Zing::Logic;
+use Zing::Loop;
+
+use Data::Object::Space;
+
+our $PIDS = $$ + 1;
+
+# Zing/Daemon
+{
+  my $space = Data::Object::Space->new(
+    'Zing/Daemon'
+  );
+  $space->inject(debug => sub {
+    0 # noop
+  });
+  $space->inject(fatal => sub {
+    0 # noop
+  });
+  $space->inject(info => sub {
+    0 # noop
+  });
+  $space->inject(warn => sub {
+    0 # noop
+  });
+  $space->inject(fork => sub {
+    $ENV{ZING_TEST_FORK} || $PIDS++;
+  });
+  my $_execute = $space->cop(
+    'execute'
+  );
+  $space->inject(execute => sub {
+    my ($self, @args) = @_;
+    my $result = $_execute->($self, @args);
+    unlink $self->pid_path;
+    $result
+  });
+  $space->inject(start => sub {
+    my ($self, @args) = @_;
+    my $result = $self->execute(@args);
+    unlink $self->pid_path;
+    $result
+  });
+}
+
+# Zing/Fork
+{
+  my $space = Data::Object::Space->new(
+    'Zing/Fork'
+  );
+  $space->inject(_kill => sub {
+    $ENV{ZING_TEST_KILL} || 0;
+  });
+  $space->inject(_waitpid => sub {
+    $ENV{ZING_TEST_WAIT_ONE}
+    ? ($ENV{ZING_TEST_WAIT_ONE}++ == 1 ? 1 : -1)
+    : ($ENV{ZING_TEST_WAIT} || -1);
+  });
+  $space->inject(execute => sub {
+    my ($self) = @_;
+    my $pid = $ENV{ZING_TEST_FORK} || $PIDS++;
+    $self->space->load;
+    my $process = $self->processes->{$pid} = $self->space->build(
+      @{$self->scheme->[1]},
+      node => Zing::Node->new(pid => $pid),
+      parent => $self->parent,
+    );
+    $process->execute;
+    $process
+  });
+}
+
+# Zing/Logic
+{
+  my $space = Data::Object::Space->new(
+    'Zing/Logic'
+  );
+  $space->inject(_kill => sub {
+    $ENV{ZING_TEST_KILL} || 0;
+  });
+}
+
+# Zing/Loop
+{
+  my $space = Data::Object::Space->new(
+    'Zing/Loop'
+  );
+  $space->inject(execute => sub {
+    my ($self, @args) = @_;
+    $self->exercise(@args); # always run once
+  });
+}
+
+1;

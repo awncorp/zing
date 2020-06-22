@@ -58,7 +58,7 @@ method flow() {
   my ($step_f, $step_l);
 
   for my $name (@{$self->queues}) {
-    my $label = $name =~ s/\W+/_/g;
+    my $label = $name =~ s/\W+/_/gr;
     my $step_x = Zing::Flow->new(
       name => "on_handle_${label}",
       code => fun($step, $loop) { $self->on_handle->($self, $name) },

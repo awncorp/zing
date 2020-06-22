@@ -34,7 +34,7 @@ method handle(Str $name, HashRef $data) {
   # due to the unforeseen (but expected) consequences of loading too many
   # packages into memory, a launcher should kill itself after loading some
   # arbitrary number of packages
-  $self->shutdown if keys %{$self->{launched}} > 50;
+  $self->winddown if keys %{$self->{launched}} > 50;
 
   return $self;
 }

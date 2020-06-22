@@ -48,6 +48,16 @@ fun new_space($self) {
   Data::Object::Space->new($self->scheme->[0])
 }
 
+# SHIMS
+
+sub _kill {
+  CORE::kill(shift, shift)
+}
+
+sub _waitpid {
+  CORE::waitpid(shift, POSIX::WNOHANG)
+}
+
 # METHODS
 
 method execute() {
@@ -93,7 +103,7 @@ method monitor() {
   my $result = {};
 
   for my $pid (sort keys %{$self->processes}) {
-    $result->{$pid} = waitpid $pid, POSIX::WNOHANG;
+    $result->{$pid} = _waitpid $pid;
   }
 
   return $result;
@@ -111,11 +121,11 @@ method sanitize() {
   return scalar(keys %{$self->processes});
 }
 
-method terminate($signal = 'KILL') {
+method terminate(Str $signal = 'KILL') {
   my $result = {};
 
   for my $pid (sort keys %{$self->processes}) {
-    $result->{$pid} = kill uc($signal), $pid;
+    $result->{$pid} = _kill uc($signal), $pid;
   }
 
   return $result;

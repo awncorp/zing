@@ -21,6 +21,12 @@ has 'flow' => (
   req => 1,
 );
 
+has 'last' => (
+  is => 'rw',
+  isa => 'Bool',
+  def => 0,
+);
+
 has 'stop' => (
   is => 'rw',
   isa => 'Bool',
@@ -34,7 +40,10 @@ method execute(Any @args) {
 
   until ($self->stop) {
     $step->execute($self, @args);
-    $step = $step->next || $head;
+    $step = $step->next || do {
+      last if $self->last;
+      $head;
+    };
   }
 
   return $self;
@@ -46,6 +55,7 @@ method exercise(Any @args) {
   until (!$step) {
     $step->execute($self, @args);
     $step = $step->next;
+    last if $self->stop;
   }
 
   return $self;
