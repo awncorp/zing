@@ -1,0 +1,63 @@
+#!perl
+
+use strict;
+use warnings;
+
+require Zing::Cli;
+
+run Zing::Cli;
+
+=encoding utf8
+
+=head1 NAME
+
+zing
+
+=head1 ABSTRACT
+
+Multi-Process Management System
+
+=head1 SYNOPSIS
+
+  zing - multi-process management system
+
+  Usage: zing <app> [options]
+
+  Options:
+
+    -I,--libdir, +1  [string] Directory for @INC
+    -a,--appdir      [string] Directory of the app file
+    -d,--piddir      [string] Directory for the pid file
+
+=head1 DESCRIPTION
+
+This tool lets you manage launch, manage, and supervise Perl 5 processes using
+the L<Zing> framework from the command-line.
+
+=head1 AUTHOR
+
+Al Newkirk, C<awncorp@cpan.org>
+
+=head1 LICENSE
+
+Copyright (C) 2011-2019, Al Newkirk, et al.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the The Apache License, Version 2.0, as elucidated in the L<"license
+file"|https://github.com/iamalnewkirk/zing/blob/master/LICENSE>.
+
+=head1 PROJECT
+
+L<Wiki|https://github.com/iamalnewkirk/zing/wiki>
+
+L<Project|https://github.com/iamalnewkirk/zing>
+
+L<Initiatives|https://github.com/iamalnewkirk/zing/projects>
+
+L<Milestones|https://github.com/iamalnewkirk/zing/milestones>
+
+L<Contributing|https://github.com/iamalnewkirk/zing/blob/master/CONTRIBUTE.md>
+
+L<Issues|https://github.com/iamalnewkirk/zing/issues>
+
+=cut
