@@ -21,7 +21,13 @@ Multi-Process Management System
 
   zing - multi-process management system
 
-  Usage: zing <app> [options]
+  Usage: zing <command> <app> [options]
+
+  Commands:
+
+    logs             Tap logs and output to STDOUT
+    start            Start the specified application
+    stop             Stop the specified application
 
   Options:
 
@@ -31,8 +37,8 @@ Multi-Process Management System
 
 =head1 DESCRIPTION
 
-This tool lets you manage launch, manage, and supervise Perl 5 processes using
-the L<Zing> framework from the command-line.
+This tool lets you start, stop, and tap thee logs of Perl 5 processes using the
+L<Zing> framework from the command-line.
 
 =head1 AUTHOR
 
