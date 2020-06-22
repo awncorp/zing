@@ -1,6 +1,11 @@
 Changelog for Zing
 
-0.02 2020-06-22T20:50:27
+0.03 2020-06-22T21:15:03
+ - Add release updates
+ - Add "zing" command-line tool
+
+0.02 2020-06-22T20:50:31
+ - Built release version 0.02
  - Add release updates
  - Adjust release version
  - Include examples in release
