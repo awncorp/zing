@@ -13,6 +13,9 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => 0
   },
   "DISTNAME" => "Zing",
+  "EXE_FILES" => [
+    "bin/zing"
+  ],
   "LICENSE" => "apache",
   "MIN_PERL_VERSION" => "5.014",
   "NAME" => "Zing",
@@ -54,7 +57,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.02",
+  "VERSION" => "0.03",
   "test" => {
     "TESTS" => "t/*.t"
   }
