@@ -1,6 +1,53 @@
+
 =encoding utf8
 
-{content}
+=head1 NAME
+
+Zing::Server - Server Information
+
+=cut
+
+=head1 ABSTRACT
+
+Process Server Information
+
+=cut
+
+=head1 SYNOPSIS
+
+  use Zing::Server;
+
+  my $server = Zing::Server->new;
+
+=cut
+
+=head1 DESCRIPTION
+
+This package provides represents a server within a network and cluster.
+
+=cut
+
+=head1 LIBRARIES
+
+This package uses type constraints from:
+
+L<Zing::Types>
+
+=cut
+
+=head1 ATTRIBUTES
+
+This package has the following attributes:
+
+=cut
+
+=head2 name
+
+  name(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
 
 =head1 AUTHOR
 

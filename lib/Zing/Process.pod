@@ -1,0 +1,345 @@
+
+=encoding utf8
+
+=head1 NAME
+
+Zing::Process - Processing Unit
+
+=cut
+
+=head1 ABSTRACT
+
+Processing Unit and Actor Abstraction
+
+=cut
+
+=head1 SYNOPSIS
+
+  use Zing::Process;
+
+  my $process = Zing::Process->new;
+
+  # $process->execute;
+
+=cut
+
+=head1 DESCRIPTION
+
+This package provides an actor abstraction which serve as a cooperative
+concurrent computational unit in an actor-model architecture.
+
+=cut
+
+=head1 LIBRARIES
+
+This package uses type constraints from:
+
+L<Zing::Types>
+
+=cut
+
+=head1 ATTRIBUTES
+
+This package has the following attributes:
+
+=cut
+
+=head2 cleanup
+
+  cleanup(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 data
+
+  data(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 journal
+
+  journal(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 log
+
+  log(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 logic
+
+  logic(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 loop
+
+  loop(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 mailbox
+
+  mailbox(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 name
+
+  name(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 node
+
+  node(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 parent
+
+  parent(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 registry
+
+  registry(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 server
+
+  server(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 signals
+
+  signals(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 started
+
+  started(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 stopped
+
+  stopped(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head1 METHODS
+
+This package implements the following methods:
+
+=cut
+
+=head2 defer
+
+  defer(HashRef $data) : Object
+
+The defer method allows a process to sends a message to itself for later
+processing.
+
+=over 4
+
+=item defer example #1
+
+  # given: synopsis
+
+  $process->defer({ task => { launch => time } });
+
+=back
+
+=cut
+
+=head2 destroy
+
+  destroy() : Object
+
+The destroy method de-registers the process and drops the process-specific data
+stores.
+
+=over 4
+
+=item destroy example #1
+
+  # given: synopsis
+
+  $process->destroy;
+
+=back
+
+=cut
+
+=head2 execute
+
+  execute() : Object
+
+The execute method executes the process event-loop indefinitely.
+
+=over 4
+
+=item execute example #1
+
+  # given: synopsis
+
+  $process->execute;
+
+=back
+
+=cut
+
+=head2 exercise
+
+  exercise() : Object
+
+The exercise method executes the event-loop but stops after one iteration.
+
+=over 4
+
+=item exercise example #1
+
+  # given: synopsis
+
+  $process->exercise;
+
+=back
+
+=cut
+
+=head2 metadata
+
+  metadata() : HashRef
+
+The metadata method returns metadata specific to the process.
+
+=over 4
+
+=item metadata example #1
+
+  # given: synopsis
+
+  $process->metadata;
+
+=back
+
+=cut
+
+=head2 shutdown
+
+  shutdown() : Object
+
+The shutdown method haults the process event-loop immediately.
+
+=over 4
+
+=item shutdown example #1
+
+  # given: synopsis
+
+  $process->shutdown;
+
+=back
+
+=cut
+
+=head2 spawn
+
+  spawn(Scheme $scheme) : Fork
+
+The spawn method forks a scheme and returns a L<Zing::Fork> handler.
+
+=over 4
+
+=item spawn example #1
+
+  # given: synopsis
+
+  $process->spawn(['MyApp', [], 1]);
+
+=back
+
+=cut
+
+=head2 winddown
+
+  winddown() : Object
+
+The winddown method haults the process event-loop after the current iteration.
+
+=over 4
+
+=item winddown example #1
+
+  # given: synopsis
+
+  $process->winddown;
+
+=back
+
+=cut
+
+=head1 AUTHOR
+
+Al Newkirk, C<awncorp@cpan.org>
+
+=head1 LICENSE
+
+Copyright (C) 2011-2019, Al Newkirk, et al.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the The Apache License, Version 2.0, as elucidated in the L<"license
+file"|https://github.com/iamalnewkirk/zing/blob/master/LICENSE>.
+
+=head1 PROJECT
+
+L<Wiki|https://github.com/iamalnewkirk/zing/wiki>
+
+L<Project|https://github.com/iamalnewkirk/zing>
+
+L<Initiatives|https://github.com/iamalnewkirk/zing/projects>
+
+L<Milestones|https://github.com/iamalnewkirk/zing/milestones>
+
+L<Contributing|https://github.com/iamalnewkirk/zing/blob/master/CONTRIBUTE.md>
+
+L<Issues|https://github.com/iamalnewkirk/zing/issues>
+
+=cut

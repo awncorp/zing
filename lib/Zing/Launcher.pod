@@ -3,31 +3,38 @@
 
 =head1 NAME
 
-Zing::Cli - Command-line Interface
+Zing::Launcher - Scheme Launcher
 
 =cut
 
 =head1 ABSTRACT
 
-Command-line Process Management
+Scheme Launching Worker Process
 
 =cut
 
 =head1 SYNOPSIS
 
-  use Zing::Cli;
+  package Launcher;
 
-  my $cli = Zing::Cli->new;
+  use parent 'Zing::Launcher';
 
-  # $cli->handle('main');
+  sub queues {
+    ['schemes']
+  }
+
+  package main;
+
+  my $launcher = Launcher->new;
+
+  # $launcher->execute;
 
 =cut
 
 =head1 DESCRIPTION
 
-This package provides a command-line interface for managing L<Zing>
-applications. See the L<zing> documentation for interface arguments and
-options.
+This package provides a worker process which loads, instantiates, and executes
+schemes received as messages.
 
 =cut
 
@@ -35,7 +42,7 @@ options.
 
 This package inherits behaviors from:
 
-L<Data::Object::Cli>
+L<Zing::Worker>
 
 =cut
 
@@ -53,38 +60,30 @@ This package implements the following methods:
 
 =cut
 
-=head2 main
+=head2 handle
 
-  main() : Any
+  handle(Str $name, HashRef $data) : Object
 
-The main method executes the command-line interface and displays help text or
-launches applications.
+The handle method is executed whenever the process receive a new message, and
+receives the queue name and data as arguments.
 
 =over 4
 
-=item main example #1
+=item handle example #1
 
   # given: synopsis
 
-  # e.g.
-  # zing once -I t/lib -a t/app
-  # pass
-
-  $cli->handle('main');
+  $launcher->handle('schemes', { scheme => ['MyApp', [], 1] });
 
 =back
 
 =over 4
 
-=item main example #2
+=item handle example #2
 
   # given: synopsis
 
-  # e.g.
-  # zing unce -I t/lib -a t/app
-  # fail (not exist)
-
-  $cli->handle('main');
+  $launcher->handle('schemes', { scheme => ['MyApp', [], 4] });
 
 =back
 

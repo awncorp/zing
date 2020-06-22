@@ -68,8 +68,10 @@ Zing::Watcher
 
 This distribution includes an actor-model architecture toolkit and
 Redis-powered multi-process management system which provides primatives for
-building powerful reactive, concurrent, distributed and resilient
-message-driven applications in Perl 5.
+building powerful, reactive, concurrent, distributed, and resilient
+message-driven applications in Perl 5. If you're unfamiliar with this
+architectural pattern, learn more about L<"the actor
+model"|https://en.wikipedia.org/wiki/Actor_model>.
 
 =cut
 

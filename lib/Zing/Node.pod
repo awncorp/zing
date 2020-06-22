@@ -3,39 +3,27 @@
 
 =head1 NAME
 
-Zing::Cli - Command-line Interface
+Zing::Node - Node Information
 
 =cut
 
 =head1 ABSTRACT
 
-Command-line Process Management
+Process Node Information
 
 =cut
 
 =head1 SYNOPSIS
 
-  use Zing::Cli;
+  use Zing::Node;
 
-  my $cli = Zing::Cli->new;
-
-  # $cli->handle('main');
+  my $node = Zing::Node->new;
 
 =cut
 
 =head1 DESCRIPTION
 
-This package provides a command-line interface for managing L<Zing>
-applications. See the L<zing> documentation for interface arguments and
-options.
-
-=cut
-
-=head1 INHERITS
-
-This package inherits behaviors from:
-
-L<Data::Object::Cli>
+This package provides represents a process within a network and cluster.
 
 =cut
 
@@ -47,44 +35,55 @@ L<Zing::Types>
 
 =cut
 
+=head1 ATTRIBUTES
+
+This package has the following attributes:
+
+=cut
+
+=head2 name
+
+  name(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 pid
+
+  pid(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 server
+
+  server(Server)
+
+This attribute is read-only, accepts C<(Server)> values, and is optional.
+
+=cut
+
 =head1 METHODS
 
 This package implements the following methods:
 
 =cut
 
-=head2 main
+=head2 identifier
 
-  main() : Any
+  identifier() : Str
 
-The main method executes the command-line interface and displays help text or
-launches applications.
-
-=over 4
-
-=item main example #1
-
-  # given: synopsis
-
-  # e.g.
-  # zing once -I t/lib -a t/app
-  # pass
-
-  $cli->handle('main');
-
-=back
+The identifier method generates and returns a cross-cluster unique identifier.
 
 =over 4
 
-=item main example #2
+=item identifier example #1
 
   # given: synopsis
 
-  # e.g.
-  # zing unce -I t/lib -a t/app
-  # fail (not exist)
-
-  $cli->handle('main');
+  my $id = $node->identifier;
 
 =back
 

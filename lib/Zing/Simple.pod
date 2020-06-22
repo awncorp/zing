@@ -3,31 +3,38 @@
 
 =head1 NAME
 
-Zing::Cli - Command-line Interface
+Zing::Simple - Simple Process
 
 =cut
 
 =head1 ABSTRACT
 
-Command-line Process Management
+Simple Process
 
 =cut
 
 =head1 SYNOPSIS
 
-  use Zing::Cli;
+  package MyApp;
 
-  my $cli = Zing::Cli->new;
+  use parent 'Zing::Simple';
 
-  # $cli->handle('main');
+  sub perform {
+    time;
+  }
+
+  package main;
+
+  my $myapp = MyApp->new;
+
+  # $myapp->execute;
 
 =cut
 
 =head1 DESCRIPTION
 
-This package provides a command-line interface for managing L<Zing>
-applications. See the L<zing> documentation for interface arguments and
-options.
+This package provides a L<Zing::Process> which ignores its mailbox and only
+invokes its C<perform> method.
 
 =cut
 
@@ -35,7 +42,7 @@ options.
 
 This package inherits behaviors from:
 
-L<Data::Object::Cli>
+L<Zing::Process>
 
 =cut
 
@@ -47,46 +54,20 @@ L<Zing::Types>
 
 =cut
 
-=head1 METHODS
+=head1 SCENARIOS
 
-This package implements the following methods:
+This package supports the following scenarios:
 
 =cut
 
-=head2 main
-
-  main() : Any
-
-The main method executes the command-line interface and displays help text or
-launches applications.
-
-=over 4
-
-=item main example #1
+=head2 perform
 
   # given: synopsis
 
-  # e.g.
-  # zing once -I t/lib -a t/app
-  # pass
+  $myapp->perform;
 
-  $cli->handle('main');
-
-=back
-
-=over 4
-
-=item main example #2
-
-  # given: synopsis
-
-  # e.g.
-  # zing unce -I t/lib -a t/app
-  # fail (not exist)
-
-  $cli->handle('main');
-
-=back
+The perform method is meant to be implemented by a subclass and is
+automatically invoked iteratively by the event-loop.
 
 =cut
 
