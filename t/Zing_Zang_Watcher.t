@@ -12,33 +12,35 @@ use Test::More;
 use Test::Zing;
 
 use Config;
+use Zing::Queue;
 
 =name
 
-Zing::Zang::Single
+Zing::Zang::Watcher
 
 =cut
 
 =tagline
 
-Single-Task Process
+Watcher Process
 
 =abstract
 
-Single-Task Process Implementation
+Watcher Process Implementation
 
 =cut
 
 =synopsis
 
-  use Zing::Zang::Single;
+  use Zing::Zang::Watcher;
 
-  my $zang = Zing::Zang::Single->new(
+  my $zang = Zing::Zang::Watcher->new(
     on_perform => sub {
       my ($self) = @_;
 
       $self->{performed}++
-    }
+    },
+    scheme => ['MyApp', [], 1],
   );
 
   # $zang->execute;
@@ -53,7 +55,7 @@ Zing::Types
 
 =inherits
 
-Zing::Single
+Zing::Watcher
 
 =cut
 
@@ -61,17 +63,28 @@ Zing::Single
 
 on_perform: ro, opt, Maybe[CodeRef]
 on_receive: ro, opt, Maybe[CodeRef]
+scheme: ro, req, Scheme
 
 =cut
 
 =description
 
-This package provides a standard L<Zing::Process> which uses callbacks and
-doesn't need to be subclassd. It supports providing the standard process
-C<perform> method as C<on_perform> and C<receive> method as C<on_receive> which
-operate as expected. This process executes its loop only once.
+This package provides a L<Zing::Watcher> which uses callbacks and doesn't need
+to be subclassd. It supports providing a process C<perform> method as
+C<on_perform> and a C<receive> method as C<on_receive> which operate as
+expected, and also requires a C<scheme> to be launched on execution.
 
 =cut
+
+package MyApp;
+
+use parent 'Zing::Process';
+
+our $DATA = 0;
+
+sub perform {
+  $DATA++
+}
 
 package main;
 
@@ -82,7 +95,8 @@ my $subs = $test->standard;
 $subs->synopsis(fun($tryable) {
   ok my $result = $tryable->result;
   $result->execute;
-  is $result->{performed}, 1;
+  ok $result->{performed};
+  is $MyApp::DATA, 1;
 
   $result
 });
