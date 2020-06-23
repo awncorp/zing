@@ -68,7 +68,7 @@ on_receive: ro, opt, Maybe[CodeRef]
 This package provides a standard L<Zing::Process> which uses callbacks and
 doesn't need to be subclassd. It supports providing the standard process
 C<perform> method as C<on_perform> and C<receive> method as C<on_receive> which
-operate as expected. This process executes its loop only once..
+operate as expected. This process executes its loop only once.
 
 =cut
 
