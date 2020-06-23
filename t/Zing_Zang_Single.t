@@ -52,7 +52,6 @@ Zing::Types
 =inherits
 
 Zing::Single
-Zing::Zang
 
 =cut
 
