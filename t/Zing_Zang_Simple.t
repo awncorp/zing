@@ -66,7 +66,7 @@ on_perform: ro, opt, Maybe[CodeRef]
 This package provides a standard L<Zing::Process> which uses callbacks and
 doesn't need to be subclassd. It supports providing the standard process
 C<perform> method as C<on_perform>which operate as expected. This process does
-not check its mailbox and does't support a C<receive> handler..
+not check its mailbox and does't support a C<receive> handler.
 
 =cut
 
