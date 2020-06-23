@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib 'examples/lib';
+use lib 'definitions';
 
 use Data::Dumper;
 use Zing::Worker;
