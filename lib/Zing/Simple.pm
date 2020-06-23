@@ -13,6 +13,8 @@ use Zing::Logic::Watcher;
 
 extends 'Zing::Process';
 
+use Zing::Logic::Simple;
+
 # VERSION
 
 # BUILDERS
