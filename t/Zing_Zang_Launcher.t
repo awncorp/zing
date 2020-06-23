@@ -56,6 +56,8 @@ Zing::Launcher
 
 =attributes
 
+on_perform: ro, opt, Maybe[CodeRef]
+on_receive: ro, opt, Maybe[CodeRef]
 queues: ro, req, ArrayRef[Str]
 
 =cut
