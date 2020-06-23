@@ -57,7 +57,6 @@ fun new_journal($self) {
 has 'log' => (
   is => 'ro',
   isa => 'Logger',
-  hnd => [qw(info debug warn fatal)],
   new => 1,
 );
 
