@@ -1,1 +1,1 @@
-^(?!CHANGES|INSTALL|LICENSE|Makefile.PL|META*|README*|bin/zing|cpanfile|examples\/.*|lib\/.*|t\/.*).*$
+^(?!CHANGES|INSTALL|LICENSE|Makefile.PL|META*|README*|bin/zing|cartridges\/.*|cpanfile|definitions\/.*|examples\/.*|lib\/.*|t\/.*).*$
