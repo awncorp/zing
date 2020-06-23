@@ -34,7 +34,6 @@ has 'name' => (
 has 'log' => (
   is => 'ro',
   isa => 'Logger',
-  hnd => [qw(info debug warn fatal)],
   new => 1,
 );
 
@@ -79,12 +78,12 @@ method execute() {
   my $file = $self->pid_path;
 
   if (-e $file) {
-    $self->fatal("pid file exists: $file");
+    $self->log->fatal("pid file exists: $file");
     return 1;
   }
 
   open(my $fh, ">", "$file") or do {
-    $self->fatal("pid file error: $!");
+    $self->log->fatal("pid file error: $!");
     return 1;
   };
 
@@ -93,7 +92,7 @@ method execute() {
     (eval{chmod(0644, $file)}, $@)
   };
   if ($err) {
-    $self->fatal("pid file error: $err");
+    $self->log->fatal("pid file error: $err");
     return 1;
   }
 
@@ -104,8 +103,8 @@ method execute() {
   print $fh "$pid\n";
   close $fh;
 
-  $self->info("app created: $name");
-  $self->info("pid file created: $file");
+  $self->log->info("app created: $name");
+  $self->log->info("pid file created: $file");
 
   return 0;
 }
