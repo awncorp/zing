@@ -35,7 +35,9 @@ Single-Task Process Implementation
 
   my $zang = Zing::Zang::Single->new(
     on_perform => sub {
-      shift->{performed}++
+      my ($self) = @_;
+
+      $self->{performed}++
     }
   );
 

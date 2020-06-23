@@ -35,7 +35,9 @@ Process Implementation
 
   my $zang = Zing::Zang->new(
     on_perform => sub {
-      shift->{performed}++
+      my ($self) = @_;
+
+      $self->{performed}++
     }
   );
 
