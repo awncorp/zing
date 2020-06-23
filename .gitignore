@@ -2,6 +2,8 @@
 
 !/.github
 !/bin
+!/cartridges
+!/definitions
 !/examples
 !/lib
 !/t
