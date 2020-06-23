@@ -7,7 +7,7 @@ sub perform {
 
   my $type = (qw(debug info warn fatal))[rand(4)];
 
-  $self->$type($$, time, 'blah blah blah');
+  $self->log->$type($$, time, 'blah blah blah');
 
   return;
 }

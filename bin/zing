@@ -21,7 +21,7 @@ Multi-Process Management System
 
   zing - multi-process management system
 
-  Usage: zing <command> <app> [options]
+  Usage: zing <command> [<app>] [options]
 
   Commands:
 

@@ -18,7 +18,7 @@ use File::Spec;
 
 # VERSION
 
-our $name = 'zing <{command}> <{app}> [options]';
+our $name = 'zing <{command}> [<{app}>] [options]';
 
 # METHODS
 
