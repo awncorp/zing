@@ -1,4 +1,5 @@
-package MyApp::Time;
+package
+  MyApp::Time;
 
 use parent 'Zing::Process';
 

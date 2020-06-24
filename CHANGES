@@ -1,6 +1,11 @@
 Changelog for Zing
 
-0.04 2020-06-24T02:18:59
+0.05 2020-06-24T02:50:17
+ - Add release updates
+ - Fix definitions in release
+
+0.04 2020-06-24T02:19:04
+ - Built release version 0.04
  - Add release updates
  - Update main module POD (#108)
  - Implement Zing::Zang::Watcher (#107)

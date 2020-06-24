@@ -1,4 +1,5 @@
-package MyApp::Logger;
+package
+  MyApp::Logger;
 
 use parent 'Zing::Process';
 
