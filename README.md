@@ -17,11 +17,10 @@ Actor Toolkit and Multi-Process Management System
 # DESCRIPTION
 
 This distribution includes an actor-model architecture toolkit and
-Redis-powered multi-process management system which provides primatives for
-building powerful, reactive, concurrent, distributed, and resilient
-message-driven applications in Perl 5. If you're unfamiliar with this
-architectural pattern, learn more about ["the actor
-model"](https://en.wikipedia.org/wiki/Actor_model).
+multi-process management system which provides primatives for building
+resilient, reactive, concurrent, distributed message-driven applications in
+Perl 5. If you're unfamiliar with this architectural pattern, learn more about
+["the actor model"](https://en.wikipedia.org/wiki/Actor_model).
 
 # INHERITS
 
@@ -61,35 +60,458 @@ The start method builds a [Zing::Kernel](https://metacpan.org/pod/Zing%3A%3AKern
 
         $zing->start;
 
+# COMMANDS
+
+Given the following process (actor):
+
+    # in lib/MyApp.pm
+
+    package MyApp;
+
+    use parent 'Zing::Single';
+
+    sub perform {
+      # do something (once)
+    }
+
+    1;
+
+With an application cartridge specifying 4 forks:
+
+    # in app/myapp
+
+    ['MyApp', [], 4]
+
+The [zing](https://metacpan.org/pod/zing) command-line application lets you manage Zing applications from the
+command-line using these commands:
+
+## start
+
+    $ zing start app/myapp
+
+The `start` command loads an application _cartridge_ which returns a
+["scheme"](https://metacpan.org/pod/Zing%3A%3ATypes#scheme) and runs it as a daemon.
+
+## stop
+
+    $ zing stop app/myapp
+
+The `stop` command finds a running application by its PID (process ID) and
+terminates the process.
+
+## logs
+
+    $ zing logs
+
+The `logs` command taps the centralized log source and outputs new events to
+STDOUT (standard output).
+
+# PRIMATIVES
+
+This distribution provides a collection of actor-model primitives which can be
+used to create sophisticated and powerful distributed systems, organized within
+intricate process topologies. The following is a directory of those primitives
+listed by classification:
+
+## messaging
+
+These classes facilitate message-passing and communications:
+
+- [Zing::Channel](https://metacpan.org/pod/Zing%3A%3AChannel): Shared Communication
+- [Zing::Data](https://metacpan.org/pod/Zing%3A%3AData): Process Data
+- [Zing::KeyVal](https://metacpan.org/pod/Zing%3A%3AKeyVal): Key/Value Store
+- [Zing::Mailbox](https://metacpan.org/pod/Zing%3A%3AMailbox): Process Mailbox
+- [Zing::PubSub](https://metacpan.org/pod/Zing%3A%3APubSub): Pub/Sub Store
+- [Zing::Queue](https://metacpan.org/pod/Zing%3A%3AQueue): Message Queue
+- [Zing::Registry](https://metacpan.org/pod/Zing%3A%3ARegistry): Process Registry
+- [Zing::Repo](https://metacpan.org/pod/Zing%3A%3ARepo): Generic Store
+- [Zing::Store](https://metacpan.org/pod/Zing%3A%3AStore): Storage Abstraction
+
+## processes
+
+These base classes implement the underlying process (actor) logic:
+
+- [Zing](https://metacpan.org/pod/Zing): Process Wrapper
+- [Zing::Kernel](https://metacpan.org/pod/Zing%3A%3AKernel): Kernel Process
+- [Zing::Launcher](https://metacpan.org/pod/Zing%3A%3ALauncher): Scheme Launcher
+- [Zing::Process](https://metacpan.org/pod/Zing%3A%3AProcess): Processing Unit
+- [Zing::Ring](https://metacpan.org/pod/Zing%3A%3ARing): Process Ring
+- [Zing::Scheduler](https://metacpan.org/pod/Zing%3A%3AScheduler): Scheme Launcher
+- [Zing::Simple](https://metacpan.org/pod/Zing%3A%3ASimple): Simple Process
+- [Zing::Single](https://metacpan.org/pod/Zing%3A%3ASingle): Single Process
+- [Zing::Spawner](https://metacpan.org/pod/Zing%3A%3ASpawner): Scheme Spawner
+- [Zing::Watcher](https://metacpan.org/pod/Zing%3A%3AWatcher): Watcher Process
+- [Zing::Worker](https://metacpan.org/pod/Zing%3A%3AWorker): Worker Process
+
+## ready-made
+
+These classes are ready-made process implementations using callbacks:
+
+- [Zing::Zang](https://metacpan.org/pod/Zing%3A%3AZang): Process Implementation
+- [Zing::Zang::Launcher](https://metacpan.org/pod/Zing%3A%3AZang%3A%3ALauncher): Process Launcher
+- [Zing::Zang::Simple](https://metacpan.org/pod/Zing%3A%3AZang%3A%3ASimple): Process Performer
+- [Zing::Zang::Single](https://metacpan.org/pod/Zing%3A%3AZang%3A%3ASingle): Single-Task Process
+- [Zing::Zang::Spawner](https://metacpan.org/pod/Zing%3A%3AZang%3A%3ASpawner): Process Spawner
+- [Zing::Zang::Watcher](https://metacpan.org/pod/Zing%3A%3AZang%3A%3AWatcher): Process Watcher
+- [Zing::Zang::Worker](https://metacpan.org/pod/Zing%3A%3AZang%3A%3AWorker): Worker Process
+
 # FEATURES
 
-While this is, at present, a proof-of-concept, the API is not expected to
-change. The documentation is a work-in-progress. Please see the examples
-included for demonstrations of the objects in action. The following is a list
-of features currently supported by the framework:
+All features are implemented using classes and objects. The following is a list
+of features currently enabled by this toolkit:
 
-- parallel processing
-- asynchronous programming
-- event-driven applications
-- actor-model based framework
-- process (actor) mailboxes
-- distributed processes (actors)
-- erlang-style supervision trees
-- hot-reloadable processes (actors)
-- automated multi-process management
-- atomicity without lock management
-- multitasking processes (event-loop actors)
-- chainable/extendable process (actor) event-loops
-- none-blocking yieldable routines
-- high performance message queues
-- high performance message channels
-- high performance message passing
-- built-in high performance log shipping
-- operable as a cluster or single-node
-- resilient to memory leaks
-- no new funcs/idioms
-- no callbacks, futures or promises
-- no zombie processes
+## actor-model
+
+    use Zing::Process;
+
+    my $p1 = Zing::Process->new(name => 'p1');
+    my $p2 = Zing::Process->new(name => 'p2');
+
+    $p1->mailbox->send($p2->name, { action => 'greeting' });
+
+This distribution provides a toolkit for creating processes (actors) which can
+be run in isolation and which communicate with other processes through
+message-passing.
+
+## asynchronous
+
+    # in process (1)
+    use Zing::Process;
+
+    my $p1 = Zing::Process->new(name => 'p1');
+
+    $p1->execute;
+
+    # in process (2)
+    use Zing::Process;
+
+    my $p2 = Zing::Process->new(name => 'p2');
+
+    my $friends = $p2->registry->keys;
+
+    for my $friend (@$friends) {
+      # send each registered process a message
+      $p2->send($friend, { discovery => $p2->name });
+    }
+
+    $p2->execute;
+
+This distribution provides a multi-process management system which allows
+processes to be deployed and managed separately having the ability to
+communicate across threads of execution.
+
+## atomicity
+
+    # in process (1)
+    use Zing::KeyVal;
+
+    my $i = 0;
+    my $kv = Zing::KeyVal->new(name => 'stash');
+
+    while ($i < 1_000) {
+      $kv->send('random', { value => 1 });
+
+      # my $data = $kv->recv('random');
+    }
+
+    # in process (2)
+    use Zing::KeyVal;
+
+    my $i = 0;
+    my $kv = Zing::KeyVal->new(name => 'stash');
+
+    while ($i < 1_000) {
+      $kv->send('random', { value => 2 });
+
+      # my $data = $kv->recv('random');
+    }
+
+This distribution provides data storage abstractions which perform atomic reads
+and write by leveraging [Redis](https://redis.io) as the default data storage
+backend.
+
+## chainable
+
+    use Zing::Process;
+    use Zing::Ring;
+
+    my $p1 = Zing::Process->new(name => 'p1');
+    my $p2 = Zing::Process->new(name => 'p2');
+
+    my $ring = Zing::Ring->new(processes => [$p1, $p2]);
+
+    $ring->execute;
+
+This distribution provides a mechanism for chaining (i.e. joining) two or more
+processes together and executing them in a turn-based manner. This ability
+allows you to design complex hierarchical process topologies.
+
+## channels
+
+    # in process (1)
+    use Zing::Channel;
+
+    my $chan = Zing::Channel->new(name => 'chat');
+
+    while (1) {
+      if (my $data = $chan->recv) {
+        # broadcast received
+        warn $data->{text};
+      }
+    }
+
+    # in process (2)
+    use Zing::Channel;
+
+    my $chan = Zing::Channel->new(name => 'chat');
+
+    while (1) {
+      if (my $data = $chan->recv) {
+        # broadcast received
+        warn $data->{text};
+      }
+    }
+
+This distribution provides the means for braodcasting and communicating to
+multiple processes simulaneously through channels which are similar to FIFO
+queues.
+
+## clusterable
+
+    # in process (1) on cluster (1)
+    use Zing::Queue;
+
+    my $queue = Zing::Queue->new(name => 'tasks', target => 'global');
+
+    # pull from global queue
+    $queue->recv;
+
+    # in process (1) on cluster (2)
+    use Zing::Queue;
+
+    my $queue = Zing::Queue->new(name => 'tasks', target => 'global');
+
+    # pull from global queue
+    $queue->recv;
+
+This distribution provides support cross-cluster communication and thus
+operations. Using federated Redis as the data storage backend means you can
+scale your deployments without changing your implementations.
+
+## distributed
+
+    # in process (1..n) on cluster (1)
+    use Zing;
+
+    my $zing = Zing->new(scheme => ['MyApp', [], 16]);
+
+    $zing->execute;
+
+    # in process (1..n) on cluster (2)
+    use Zing;
+
+    my $zing = Zing->new(scheme => ['MyApp', [], 16]);
+
+    $zing->execute;
+
+    # in process (1..n) on cluster (3)
+    use Zing;
+
+    my $zing = Zing->new(scheme => ['MyApp', [], 16]);
+
+    $zing->execute;
+
+This distribution provides a collection of actor-model primitives which can be
+used to create sophisticated and powerful distributed systems, organized within
+intricate process topologies.
+
+## event-driven
+
+    # in process (1)
+    use Zing::Process;
+
+    my $p1 = Zing::Process->new(name => 'file-upload');
+
+    $p1->execute;
+
+    # in process (2)
+    use Zing::Process;
+
+    my $p2 = Zing::Process->new(name => 'text-translate');
+
+    $p2->execute;
+
+This distribution provides all the prerequisites needed to develop scalable
+reactive event-driven applications distributed across one or several servers.
+
+## fifo-queues
+
+    # in process (1)
+    use Zing::Queue;
+
+    my $queue = Zing::Queue->new(name => 'tasks');
+
+    # pull from global queue
+    $queue->send({ command => { ... } });
+    $queue->send({ command => { ... } });
+    $queue->send({ command => { ... } });
+    $queue->send({ command => { ... } });
+
+    # in process (2)
+    use Zing::Queue;
+
+    my $queue = Zing::Queue->new(name => 'tasks');
+
+    # pull from FIFO queue
+    $queue->recv;
+
+This distribution provides high-performance FIFO message queues which enhance
+messaging across processes when the order of operations and events is critical
+and where duplicates can't be tolerated.
+
+## hot-reloadable
+
+    use Zing;
+    use Zing::Daemon;
+
+    my $daemon = Zing::Daemon->new(
+      name => 'myapp-sleep',
+      app => Zing->new(scheme => ['MyApp::Sleep', [], 4])
+    );
+
+    $daemon->execute; # pid 12345
+
+    # $ kill -USR2 12345
+
+This distribution provides zero-downtime through hot-reloading which is where
+the process watchers (supervisors) keep the app running and gracefully reload
+child processes at runtime.
+
+## log-shipping
+
+    use Zing::Zang;
+
+    my $zang = Zing::Zang->new(on_perform => sub {
+      my ($self) = @_;
+
+      $self->log->fatal('something went wrong');
+
+      return;
+    });
+
+    # $zang->execute;
+
+    # tap the logs using the command-line tool
+
+    # $ zing logs
+
+This distribution provides the ability to ship the logs of individual processes
+to a specific centralized channel which can be tapped asynchronously,
+especially by the command-line tool.
+
+## mailboxes
+
+    use Zing::Process;
+
+    my $p1 = Zing::Process->new(name => 'p1');
+    my $p2 = Zing::Process->new(name => 'p2');
+
+    $p1->mailbox->send($p2->name, { say => 'ehlo' });
+
+    my $message = $p2->mailbox->recv;
+
+    $p2->mailbox->reply($message, { say => 'helo' });
+
+This distribution provides every process with its own unique mailbox which can
+receive messages from other processes as a means of cooperating through message
+passing.
+
+## management
+
+    use Zing::Kernel;
+
+    my $kernel = Zing::Kernel->new(scheme => ['MyApp::Logger', [], 2]);
+
+    $kernel->execute;
+
+This distribution provides a kernel process that can be used to manage the
+deployment of child processes and is used to wrap cartridges by the
+command-line tool when daemonizing process.
+
+## multitasking
+
+    use Zing::Zang;
+
+    my $zang = Zing::Zang->new(
+      on_perform => sub {
+        # do something
+      },
+      on_receive => sub {
+        # handle something
+      },
+    );
+
+    $zang->execute;
+
+This distribution provides all processes with an event-loop that allows them to
+perform multiple operations in sequence and supports operating in a
+non-blocking manner.
+
+## non-blocking
+
+    use Zing::Zang;
+
+    my $zang = Zing::Zang->new(
+      on_perform => sub {
+        my ($self) = @_;
+
+        $self->defer({ command => {...} });
+
+        return;
+      },
+      on_receive => sub {
+        my ($self, $from, $data) = @_;
+
+        # from myself
+        return unless $self->name eq $from;
+
+        # $data->{command} ...
+
+        return;
+      }
+    );
+
+    $zang->exercise;
+
+This distribution provides features that allow processes to operate in a
+non-blocking manner, yielding and deferring operations, and chunking workloads.
+
+## parallelism
+
+    use Zing::Process;
+
+    my $p1 = Zing::Process->new;
+
+    my $f1 = $p1->spawn(['MyApp', [id => 12345] 1]);
+    my $f2 = $p1->spawn(['MyApp', [id => 12346] 1]);
+
+This distribution provides multiple ways of executing operations in parallel,
+including spawning processes via forking with the guarantee of not creating
+zombie processes.
+
+## supervisors
+
+    use Zing::Zang::Watcher;
+
+    my $zang = Zing::Zang::Watcher->new(
+      scheme => ['MyApp', [] 8]
+    );
+
+    $zang->exercise;
+
+This distribution provides watcher processes which to supervise child processes
+but also are capable of multitasking and performing other operations while
+monitoring supervised processes.
 
 # SEE ALSO
 
