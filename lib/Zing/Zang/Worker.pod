@@ -3,26 +3,27 @@
 
 =head1 NAME
 
-Zing::Zang - Process Implementation
+Zing::Zang::Worker - Worker Process
 
 =cut
 
 =head1 ABSTRACT
 
-Process Implementation
+Worker Process Implementation
 
 =cut
 
 =head1 SYNOPSIS
 
-  use Zing::Zang;
+  use Zing::Zang::Worker;
 
-  my $zang = Zing::Zang->new(
-    on_perform => sub {
-      my ($self) = @_;
+  my $zang = Zing::Zang::Worker->new(
+    on_handle => sub {
+      my ($self, $name, $data) = @_;
 
-      $self->{performed}++
-    }
+      $self->{handled} = [$name, $data];
+    },
+    queues => ['tasks']
   );
 
   # $zang->execute;
@@ -31,10 +32,11 @@ Process Implementation
 
 =head1 DESCRIPTION
 
-This package provides a standard L<Zing::Process> which uses callbacks and
-doesn't need to be subclassed. It supports providing the standard process
-C<perform> method as C<on_perform> and C<receive> method as C<on_receive> which
-operate as expected.
+This package provides a L<Zing::Worker> which uses callbacks and doesn't need
+to be subclassd. It supports providing a process C<perform> method as
+C<on_perform> and a C<receive> method as C<on_receive> which operate as
+expected, and also a C<handle> method as C<on_handle> which is executed
+whenever a message is received from one of the queue(s).
 
 =cut
 
@@ -42,7 +44,7 @@ operate as expected.
 
 This package inherits behaviors from:
 
-L<Zing::Process>
+L<Zing::Worker>
 
 =cut
 
@@ -60,6 +62,14 @@ This package has the following attributes:
 
 =cut
 
+=head2 on_handle
+
+  on_handle(Maybe[CodeRef])
+
+This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
 =head2 on_perform
 
   on_perform(Maybe[CodeRef])
@@ -73,6 +83,14 @@ This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional
   on_receive(Maybe[CodeRef])
 
 This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
+=head2 queues
+
+  queues(ArrayRef[Str])
+
+This attribute is read-only, accepts C<(ArrayRef[Str])> values, and is required.
 
 =cut
 

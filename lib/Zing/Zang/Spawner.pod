@@ -3,26 +3,22 @@
 
 =head1 NAME
 
-Zing::Zang - Process Implementation
+Zing::Zang::Spawner - Process Spawner
 
 =cut
 
 =head1 ABSTRACT
 
-Process Implementation
+Process Spawner Implementation
 
 =cut
 
 =head1 SYNOPSIS
 
-  use Zing::Zang;
+  use Zing::Zang::Spawner;
 
-  my $zang = Zing::Zang->new(
-    on_perform => sub {
-      my ($self) = @_;
-
-      $self->{performed}++
-    }
+  my $zang = Zing::Zang::Spawner->new(
+    queues => ['launch'],
   );
 
   # $zang->execute;
@@ -31,10 +27,9 @@ Process Implementation
 
 =head1 DESCRIPTION
 
-This package provides a standard L<Zing::Process> which uses callbacks and
-doesn't need to be subclassed. It supports providing the standard process
-C<perform> method as C<on_perform> and C<receive> method as C<on_receive> which
-operate as expected.
+This package provides a L<Zing::Spawner> which uses callbacks and doesn't need
+to be subclassd. It supports providing a list of queues to listen to which will
+fork a process that loads, instantiates and executes schemes recevied.
 
 =cut
 
@@ -42,7 +37,7 @@ operate as expected.
 
 This package inherits behaviors from:
 
-L<Zing::Process>
+L<Zing::Spawner>
 
 =cut
 
@@ -73,6 +68,14 @@ This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional
   on_receive(Maybe[CodeRef])
 
 This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
+=head2 queues
+
+  queues(ArrayRef[Str])
+
+This attribute is read-only, accepts C<(ArrayRef[Str])> values, and is required.
 
 =cut
 
