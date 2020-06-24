@@ -25,7 +25,13 @@ has 'redis' => (
 
 fun new_redis($self) {
   require Redis;
-  state $redis = Redis->new;
+  state $redis = Redis->new(
+    # e.g. ZING_REDIS='server=127.0.0.1:9999,debug=0'
+    map +($$_[0], $#{$$_[1]} ? $$_[1] : $$_[1][0]),
+    map [$$_[0], $$_[1] && [split /\|/, $$_[1]]],
+    map [split /=/], split /,\s*/,
+    $ENV{ZING_REDIS} || ''
+  );
 }
 
 # METHODS

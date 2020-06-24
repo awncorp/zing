@@ -3,26 +3,27 @@
 
 =head1 NAME
 
-Zing::Zang - Process Implementation
+Zing::Zang::Watcher - Watcher Process
 
 =cut
 
 =head1 ABSTRACT
 
-Process Implementation
+Watcher Process Implementation
 
 =cut
 
 =head1 SYNOPSIS
 
-  use Zing::Zang;
+  use Zing::Zang::Watcher;
 
-  my $zang = Zing::Zang->new(
+  my $zang = Zing::Zang::Watcher->new(
     on_perform => sub {
       my ($self) = @_;
 
       $self->{performed}++
-    }
+    },
+    scheme => ['MyApp', [], 1],
   );
 
   # $zang->execute;
@@ -31,10 +32,10 @@ Process Implementation
 
 =head1 DESCRIPTION
 
-This package provides a standard L<Zing::Process> which uses callbacks and
-doesn't need to be subclassed. It supports providing the standard process
-C<perform> method as C<on_perform> and C<receive> method as C<on_receive> which
-operate as expected.
+This package provides a L<Zing::Watcher> which uses callbacks and doesn't need
+to be subclassd. It supports providing a process C<perform> method as
+C<on_perform> and a C<receive> method as C<on_receive> which operate as
+expected, and also requires a C<scheme> to be launched on execution.
 
 =cut
 
@@ -42,7 +43,7 @@ operate as expected.
 
 This package inherits behaviors from:
 
-L<Zing::Process>
+L<Zing::Watcher>
 
 =cut
 
@@ -73,6 +74,14 @@ This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional
   on_receive(Maybe[CodeRef])
 
 This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
+=head2 scheme
+
+  scheme(Scheme)
+
+This attribute is read-only, accepts C<(Scheme)> values, and is required.
 
 =cut
 

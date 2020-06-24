@@ -38,7 +38,7 @@ Multi-Process Management System
 =head1 DESCRIPTION
 
 This tool lets you start, stop, and tap thee logs of Perl 5 processes using the
-L<Zing> framework from the command-line.
+L<Zing> toolkit from the command-line.
 
 =head1 AUTHOR
 
