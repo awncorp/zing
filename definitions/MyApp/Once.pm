@@ -1,4 +1,5 @@
-package MyApp::Once;
+package
+  MyApp::Once;
 
 use parent 'Zing::Process';
 

@@ -1,4 +1,5 @@
-package MyApp::Sleep;
+package
+  MyApp::Sleep;
 
 use parent 'Zing::Process';
 
