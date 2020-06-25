@@ -79,6 +79,10 @@ L<Zing::Data>: Process Data
 
 =item *
 
+L<Zing::Dropbox>: Transient Store
+
+=item *
+
 L<Zing::KeyVal>: Key/Value Store
 
 =item *

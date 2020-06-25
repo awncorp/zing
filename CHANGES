@@ -1,6 +1,14 @@
 Changelog for Zing
 
-0.05 2020-06-24T02:50:17
+0.06 2020-06-25T08:21:08
+ - Add release updates
+ - Update main template
+ - Establish multi-Perl/Redis test CI instances (#116)
+ - Update documentation (#115)
+ - Add transient data store (#114)
+
+0.05 2020-06-24T02:50:22
+ - Built release version 0.05
  - Add release updates
  - Fix definitions in release
 

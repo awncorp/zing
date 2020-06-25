@@ -96,7 +96,7 @@ The dump method encodes and returns the data provided as JSON.
 
 =head2 keys
 
-  keys(Str $key) : ArrayRef[Str]
+  keys(Str @keys) : ArrayRef[Str]
 
 The keys method returns a list of keys under the namespace of the datastore or
 provided key.
@@ -107,7 +107,7 @@ provided key.
 
   # given: synopsis
 
-  my $keys = $store->keys;
+  my $keys = $store->keys('nodel');
 
 =back
 
@@ -263,7 +263,7 @@ The size method returns the size of a list in the datastore.
 
   # given: synopsis
 
-  my $size = $store->size;
+  my $size = $store->size('collection');
 
 =back
 
