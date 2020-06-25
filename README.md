@@ -119,6 +119,7 @@ These classes facilitate message-passing and communications:
 
 - [Zing::Channel](https://metacpan.org/pod/Zing%3A%3AChannel): Shared Communication
 - [Zing::Data](https://metacpan.org/pod/Zing%3A%3AData): Process Data
+- [Zing::Dropbox](https://metacpan.org/pod/Zing%3A%3ADropbox): Transient Store
 - [Zing::KeyVal](https://metacpan.org/pod/Zing%3A%3AKeyVal): Key/Value Store
 - [Zing::Mailbox](https://metacpan.org/pod/Zing%3A%3AMailbox): Process Mailbox
 - [Zing::PubSub](https://metacpan.org/pod/Zing%3A%3APubSub): Pub/Sub Store
@@ -298,6 +299,24 @@ This distribution provides support cross-cluster communication and thus
 operations. Using federated Redis as the data storage backend means you can
 scale your deployments without changing your implementations.
 
+## configuration
+
+    # configure where the command-line tool finds catridges
+    # ZING_HOME=/tmp
+
+    # configure the hostname used in process registration
+    # ZING_HOST=0.0.0.0
+    # ZING_HOST=68.80.90.100
+
+    # configure Redis driver without touching your source code
+    # ZING_REDIS='every=1_000_000,reconnect=60'
+    # ZING_REDIS='sentinels=127.0.0.1:12345|127.0.0.1:23456,sentinels_cnx_timeout=0.1'
+    # ZING_REDIS='server=192.168.0.1:6379,debug=0'
+
+This distribution provides environment variables that let you customize how
+Zing operates and behaves without the need to modify source code. These
+attributes are not required and fallback to sane defaults.
+
 ## distributed
 
     # in process (1..n) on cluster (1)
@@ -328,16 +347,36 @@ intricate process topologies.
 ## event-driven
 
     # in process (1)
-    use Zing::Process;
+    package MyApp::FileUpoad;
 
-    my $p1 = Zing::Process->new(name => 'file-upload');
+    use parent 'Zing::Process';
+
+    sub receive {
+      my ($self, $from, $data) = @_;
+
+      # react to file-upload events
+
+      return;
+    }
+
+    my $p1 = MyApp::FileUpoad->new;
 
     $p1->execute;
 
     # in process (2)
-    use Zing::Process;
+    package MyApp::TextTranslate;
 
-    my $p2 = Zing::Process->new(name => 'text-translate');
+    use parent 'Zing::Process';
+
+    sub receive {
+      my ($self, $from, $data) = @_;
+
+      # react to text-translate events
+
+      return;
+    }
+
+    my $p2 = MyApp::TextTranslate->new;
 
     $p2->execute;
 
@@ -351,7 +390,7 @@ reactive event-driven applications distributed across one or several servers.
 
     my $queue = Zing::Queue->new(name => 'tasks');
 
-    # pull from global queue
+    # pull from queue
     $queue->send({ command => { ... } });
     $queue->send({ command => { ... } });
     $queue->send({ command => { ... } });
@@ -399,7 +438,7 @@ child processes at runtime.
       return;
     });
 
-    # $zang->execute;
+    $zang->execute;
 
     # tap the logs using the command-line tool
 
@@ -465,17 +504,16 @@ non-blocking manner.
       on_perform => sub {
         my ($self) = @_;
 
-        $self->defer({ command => {...} });
+        $self->defer({ command => {...} }) and return;
 
         return;
       },
       on_receive => sub {
         my ($self, $from, $data) = @_;
 
-        # from myself
-        return unless $self->name eq $from;
+        return unless $self->name eq $from; # from myself
 
-        # $data->{command} ...
+        # do something
 
         return;
       }
