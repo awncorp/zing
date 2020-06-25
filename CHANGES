@@ -1,6 +1,11 @@
 Changelog for Zing
 
-0.06 2020-06-25T08:21:08
+0.07 2020-06-25T17:33:43
+ - Add release updates
+ - Implement internal naming strategy (#119)
+
+0.06 2020-06-25T08:21:14
+ - Built release version 0.06
  - Add release updates
  - Update main template
  - Establish multi-Perl/Redis test CI instances (#116)
