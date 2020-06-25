@@ -12,8 +12,6 @@ use Test::More;
 use Test::Trap;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Cli
@@ -101,36 +99,32 @@ main() : Any
 
 package main;
 
-SKIP: {
-  skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'main', 'method', fun($tryable) {
+  my $result;
 
-  $subs->example(-1, 'main', 'method', fun($tryable) {
-    my $result;
+  local @ARGV = ('start', 'once', '-I', 't/lib', '-a', 't/app');
+  trap { ok !($result = $tryable->result) }; # exit 0 is good
 
-    local @ARGV = ('start', 'once', '-I', 't/lib', '-a', 't/app');
-    trap { ok !($result = $tryable->result) }; # exit 0 is good
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'main', 'method', fun($tryable) {
+  my $result;
 
-  $subs->example(-2, 'main', 'method', fun($tryable) {
-    my $result;
+  local @ARGV = ('start', 'unce', '-I', 't/lib', '-a', 't/app');
+  trap { ok ($result = $tryable->result) }; # exit 1 is fail
 
-    local @ARGV = ('start', 'unce', '-I', 't/lib', '-a', 't/app');
-    trap { ok ($result = $tryable->result) }; # exit 1 is fail
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

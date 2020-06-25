@@ -11,8 +11,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Logic::Kernel
@@ -118,49 +116,45 @@ signals() : HashRef
 
 package main;
 
-SKIP: {
-  skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'flow', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'flow', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  my $step_0 = $result;
+  is $step_0->name, 'on_reset';
+  my $step_1 = $step_0->next;
+  is $step_1->name, 'on_register';
+  my $step_2 = $step_1->next;
+  is $step_2->name, 'on_perform';
+  my $step_3 = $step_2->next;
+  is $step_3->name, 'on_receive';
+  my $step_4 = $step_3->next;
+  is $step_4->name, 'on_suicide';
+  my $step_5 = $step_4->next;
+  is $step_5->name, 'on_launch';
+  my $step_6 = $step_5->next;
+  is $step_6->name, 'on_monitor';
+  my $step_7 = $step_6->next;
+  is $step_7->name, 'on_sanitize';
+  is $result->bottom->name, 'on_purge';
 
-    my $step_0 = $result;
-    is $step_0->name, 'on_reset';
-    my $step_1 = $step_0->next;
-    is $step_1->name, 'on_register';
-    my $step_2 = $step_1->next;
-    is $step_2->name, 'on_perform';
-    my $step_3 = $step_2->next;
-    is $step_3->name, 'on_receive';
-    my $step_4 = $step_3->next;
-    is $step_4->name, 'on_suicide';
-    my $step_5 = $step_4->next;
-    is $step_5->name, 'on_launch';
-    my $step_6 = $step_5->next;
-    is $step_6->name, 'on_monitor';
-    my $step_7 = $step_6->next;
-    is $step_7->name, 'on_sanitize';
-    is $result->bottom->name, 'on_purge';
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'signals', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is_deeply [sort keys %{$result}], [qw(INT QUIT TERM USR1 USR2)];
 
-  $subs->example(-1, 'signals', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is_deeply [sort keys %{$result}], [qw(INT QUIT TERM USR1 USR2)];
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

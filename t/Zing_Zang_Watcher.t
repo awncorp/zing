@@ -11,7 +11,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
 use Zing::Queue;
 
 =name

@@ -44,8 +44,8 @@ method dump(HashRef $data) {
   return JSON->new->allow_nonref->convert_blessed->encode($data);
 }
 
-method keys(Str $key) {
-  return [$self->redis->keys($self->term($key, '*'))];
+method keys(Str @keys) {
+  return [map $self->redis->keys($self->term(@$_)), [@keys], [@keys, '*']];
 }
 
 method pull(Str $key) {

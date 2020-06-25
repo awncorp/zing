@@ -11,7 +11,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
 use Zing::Queue;
 
 =name
@@ -85,8 +84,9 @@ my $test = testauto(__FILE__);
 my $subs = $test->standard;
 
 $subs->synopsis(fun($tryable) {
-  ok my $result = $tryable->result;
   my $queue = Zing::Queue->new(name => 'tasks');
+  $queue->drop;
+  ok my $result = $tryable->result;
   $queue->send({ perform => 'restart' });
   $result->execute;
   ok $result->{handled};

@@ -11,7 +11,6 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use Config;
 use FlightRecorder;
 use POSIX;
 

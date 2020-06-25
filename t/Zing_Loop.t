@@ -12,8 +12,6 @@ use Test::More;
 use Test::Trap;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Loop
@@ -149,44 +147,40 @@ exercise(Any @args) : Object
 
 package main;
 
-SKIP: {
-  skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'execute', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'execute', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'exercise', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'exercise', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'exercise', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $Loop::i, 0;
 
-  $subs->example(-2, 'exercise', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $Loop::i, 0;
+  $result
+});
 
-    $result
-  });
+$subs->example(-3, 'exercise', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $Loop::i, 1;
 
-  $subs->example(-3, 'exercise', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $Loop::i, 1;
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

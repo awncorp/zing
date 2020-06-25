@@ -11,8 +11,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Process
@@ -227,72 +225,68 @@ sub perform {
 
 package main;
 
-SKIP: {
-  skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'defer', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'defer', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'destroy', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'destroy', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'exercise', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'exercise', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'execute', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'execute', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'metadata', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  like $result->{data}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:data/;
+  like $result->{mailbox}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:mailbox/;
+  like $result->{name}, qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
+  like $result->{node}, qr/\d+:\d+/;
+  ok !$result->{parent};
+  like $result->{process}, qr/\d+/;
+  like $result->{server}, qr/\d+\.\d+\.\d+\.\d+/;
+  $result
+});
 
-  $subs->example(-1, 'metadata', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    like $result->{data}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:data/;
-    like $result->{mailbox}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:mailbox/;
-    like $result->{name}, qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
-    like $result->{node}, qr/\d+:\d+/;
-    ok !$result->{parent};
-    like $result->{process}, qr/\d+/;
-    like $result->{server}, qr/\d+\.\d+\.\d+\.\d+/;
-    $result
-  });
+$subs->example(-1, 'shutdown', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'shutdown', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'spawn', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'spawn', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'winddown', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'winddown', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

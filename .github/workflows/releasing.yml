@@ -162,9 +162,45 @@ jobs:
       env:
         HARNESS_OPTIONS: j9
 
+  Perl-Redis:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Git User
+      run: git config --global user.name "Al Newkirk"
+    - name: Setup Git Email
+      run: git config --global user.email "awncorp@cpan.org"
+    - name: Setup GitHub User
+      run: git config --global github.user ${{ secrets.GithubUser }}
+    - name: Setup GitHub Token
+      run: git config --global github.user ${{ secrets.GithubToken }}
+    - name: Install CPANM
+      run: sudo apt install -y cpanminus
+    - name: Install Perl::Critic
+      run: sudo cpanm -qn Perl::Critic
+    - name: Install Project Dependencies
+      run: sudo cpanm -qn --reinstall --installdeps .
+    - name: Critiquing Project
+      run: perlcritic lib t
+    - name: Testing Project
+      run: prove -Ilib -r t
+      env:
+        HARNESS_OPTIONS: j9
+        TEST_REDIS: 1
+        ZING_REDIS: "server=redis:6379,debug=0"
+
   Dist-Upload:
     runs-on: ubuntu-latest
-    needs: ["Perl-5300", "Perl-5280", "Perl-5260", "Perl-5240", "Perl-5220", "Perl-5182"]
+    needs: ["Perl-5300", "Perl-5280", "Perl-5260", "Perl-5240", "Perl-5220", "Perl-5182", "Perl-Redis"]
 
     steps:
     - uses: actions/checkout@v1

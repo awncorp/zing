@@ -2,66 +2,85 @@ use Zing::Store;
 
 package Redis;
 
-use Carp;
-
-*{"Redis::new"} = $INC{'Redis.pm'} = sub {
-  carp "Redis disabaled while testing"; undef
-};
+unless ($ENV{TEST_REDIS}) {
+  *{"Redis::new"} = $INC{'Redis.pm'} = sub {
+    require Carp;
+    Carp::croak "Redis disabaled while testing"; undef
+  };
+}
 
 package Zing::Store;
 
 our $DATA = {};
 
-sub drop {
-  my ($self, $key) = @_;
-  return int(!!delete $DATA->{$key});
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::drop"} = sub {
+    my ($self, $key) = @_;
+    return int(!!delete $DATA->{$key});
+  };
 }
 
-sub keys {
-  my ($self, @key) = @_;
-  my $re = join('|', $self->term(@key), $self->term(@key, '.*'));
-  return [grep /$re/, keys %$DATA];
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::keys"} = sub {
+    my ($self, @key) = @_;
+    my $re = join('|', $self->term(@key), $self->term(@key, '.*'));
+    return [grep /$re/, keys %$DATA];
+  };
 }
 
-sub pull {
-  my ($self, $key) = @_;
-  my $get = pop @{$DATA->{$key}} if $DATA->{$key};
-  return $get ? $self->load($get) : $get;
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::pull"} = sub {
+    my ($self, $key) = @_;
+    my $get = pop @{$DATA->{$key}} if $DATA->{$key};
+    return $get ? $self->load($get) : $get;
+  };
 }
 
-sub push {
-  my ($self, $key, $val) = @_;
-  my $set = $self->dump($val);
-  return push @{$DATA->{$key}}, $set;
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::push"} = sub {
+    my ($self, $key, $val) = @_;
+    my $set = $self->dump($val);
+    return push @{$DATA->{$key}}, $set;
+  };
 }
 
-sub recv {
-  my ($self, $key) = @_;
-  my $get = $DATA->{$key};
-  return $get ? $self->load($get) : $get;
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::recv"} = sub {
+    my ($self, $key) = @_;
+    my $get = $DATA->{$key};
+    return $get ? $self->load($get) : $get;
+  };
 }
 
-sub send {
-  my ($self, $key, $val) = @_;
-  my $set = $self->dump($val);
-  $DATA->{$key} = $set;
-  return 'OK';
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::send"} = sub {
+    my ($self, $key, $val) = @_;
+    my $set = $self->dump($val);
+    $DATA->{$key} = $set;
+    return 'OK';
+  };
 }
 
-sub size {
-  my ($self, $key) = @_;
-  return $DATA->{$key} ? scalar(@{$DATA->{$key}}) : 0;
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::size"} = sub {
+    my ($self, $key) = @_;
+    return $DATA->{$key} ? scalar(@{$DATA->{$key}}) : 0;
+  };
 }
 
-sub slot {
-  my ($self, $key, $pos) = @_;
-  my $get = $DATA->{$key}->[$pos];
-  return $get ? $self->load($get) : $get;
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::slot"} = sub {
+    my ($self, $key, $pos) = @_;
+    my $get = $DATA->{$key}->[$pos];
+    return $get ? $self->load($get) : $get;
+  };
 }
 
-sub test {
-  my ($self, $key) = @_;
-  return int exists $DATA->{$key};
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::test"} = sub {
+    my ($self, $key) = @_;
+    return int exists $DATA->{$key};
+  };
 }
 
 package Test::Zing;

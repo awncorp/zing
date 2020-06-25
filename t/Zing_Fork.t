@@ -9,10 +9,7 @@ use lib 't/lib';
 
 use Test::Auto;
 use Test::More;
-use Test::Trap;
 use Test::Zing;
-
-use Config;
 
 =name
 
@@ -219,90 +216,86 @@ sub perform {
 
 package main;
 
-SKIP: {
-    skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'execute', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'execute', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'monitor', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_WAIT} = 1;
+  ok my $result = $tryable->result;
+  ok grep {$_ != -1} values %$result;
 
-  $subs->example(-1, 'monitor', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_WAIT} = 1;
-    ok my $result = $tryable->result;
-    ok grep {$_ != -1} values %$result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'monitor', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_WAIT} = -1;
+  ok my $result = $tryable->result;
+  ok grep {$_ == -1} values %$result;
 
-  $subs->example(-2, 'monitor', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_WAIT} = -1;
-    ok my $result = $tryable->result;
-    ok grep {$_ == -1} values %$result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'sanitize', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_WAIT} = -1;
+  ok !(my $result = $tryable->result);
 
-  $subs->example(-1, 'sanitize', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_WAIT} = -1;
-    ok !(my $result = $tryable->result);
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'sanitize', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_WAIT_ONE} = 1;
+  ok my $result = $tryable->result;
+  is $result, 1;
 
-  $subs->example(-2, 'sanitize', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_WAIT_ONE} = 1;
-    ok my $result = $tryable->result;
-    is $result, 1;
+  $result
+});
 
-    $result
-  });
+$subs->example(-3, 'sanitize', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_WAIT} = 1;
+  ok my $result = $tryable->result;
+  is $result, 2;
 
-  $subs->example(-3, 'sanitize', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_WAIT} = 1;
-    ok my $result = $tryable->result;
-    is $result, 2;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'terminate', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_KILL} = -1;
+  ok my $result = $tryable->result;
+  my $assumed = { map +($_, -1), keys %$result };
+  is_deeply $result, $assumed;
 
-  $subs->example(-1, 'terminate', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_KILL} = -1;
-    ok my $result = $tryable->result;
-    my $assumed = { map +($_, -1), keys %$result };
-    is_deeply $result, $assumed;
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'terminate', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_KILL} = -1;
+  ok my $result = $tryable->result;
+  my $assumed = { map +($_, -1), keys %$result };
+  is_deeply $result, $assumed;
 
-  $subs->example(-2, 'terminate', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_KILL} = -1;
-    ok my $result = $tryable->result;
-    my $assumed = { map +($_, -1), keys %$result };
-    is_deeply $result, $assumed;
+  $result
+});
 
-    $result
-  });
+$subs->example(-3, 'terminate', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_KILL} = -1;
+  ok my $result = $tryable->result;
+  my $assumed = { map +($_, -1), keys %$result };
+  is_deeply $result, $assumed;
 
-  $subs->example(-3, 'terminate', 'method', fun($tryable) {
-    local $ENV{ZING_TEST_KILL} = -1;
-    ok my $result = $tryable->result;
-    my $assumed = { map +($_, -1), keys %$result };
-    is_deeply $result, $assumed;
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;
