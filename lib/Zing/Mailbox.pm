@@ -20,8 +20,8 @@ extends 'Zing::PubSub';
 has 'name' => (
   is => 'ro',
   isa => 'Str',
+  init_arg => undef,
   new => 1,
-  mod => 1,
 );
 
 fun new_name($self) {
