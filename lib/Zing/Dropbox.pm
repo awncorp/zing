@@ -18,13 +18,19 @@ extends 'Zing::KeyVal';
 # ATTRIBUTES
 
 has 'name' => (
-  def => '$dropbox',
+  is => 'ro',
+  isa => 'Str',
+  new => 1,
   mod => 1,
 );
 
+fun new_name($self) {
+  '$dropbox'
+}
+
 # BUILDERS
 
-method BUILD($args) {
+fun BUILD($self) {
   $self->{name} = '$dropbox';
 
   return $self;

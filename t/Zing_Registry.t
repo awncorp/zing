@@ -211,7 +211,7 @@ $subs->example(-1, 'send', 'method', fun($tryable) {
 
 $subs->example(-1, 'term', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result, qr/zing:\d+\.\d+\.\d+\.\d+:default:keyval:registry/;
+  like $result, qr/zing:\d+\.\d+\.\d+\.\d+:\$default:keyval:registry/;
 
   $result
 });

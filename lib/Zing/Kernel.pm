@@ -27,7 +27,7 @@ has 'journal' => (
 );
 
 fun new_journal($self) {
-  Zing::Channel->new(name => 'journal')
+  Zing::Channel->new(name => '$journal')
 }
 
 has 'scheme' => (
