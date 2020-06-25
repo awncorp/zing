@@ -82,10 +82,9 @@ sub _handle_logs {
     $data->{level} = $self->opts->level if $self->opts->level;
 
     my $logger = FlightRecorder->new($data);
+    my $lines = $logger->simple->lines;
 
-    if (my $lines = $logger->simple->generate) {
-      print STDOUT $from, ' ', $lines, "\n";
-    }
+    print STDOUT $from, ' ', $_, "\n" for @$lines;
   }
 
   $self->okay;
