@@ -28,7 +28,7 @@ fun new_redis($self) {
   state $redis = Redis->new(
     # e.g. ZING_REDIS='server=127.0.0.1:9999,debug=0'
     map +($$_[0], $#{$$_[1]} ? $$_[1] : $$_[1][0]),
-    map [$$_[0], $$_[1] && [split /\|/, $$_[1]]],
+    map [$$_[0], [split /\|/, $$_[1]]],
     map [split /=/], split /,\s*/,
     $ENV{ZING_REDIS} || ''
   );
@@ -44,8 +44,8 @@ method dump(HashRef $data) {
   return JSON->new->allow_nonref->convert_blessed->encode($data);
 }
 
-method keys(Str $key) {
-  return [$self->redis->keys($self->term($key, '*'))];
+method keys(Str @keys) {
+  return [map $self->redis->keys($self->term(@$_)), [@keys], [@keys, '*']];
 }
 
 method pull(Str $key) {

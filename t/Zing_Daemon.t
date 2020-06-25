@@ -9,10 +9,7 @@ use lib 't/lib';
 
 use Test::Auto;
 use Test::More;
-use Test::Trap;
 use Test::Zing;
-
-use Config;
 
 =name
 
@@ -138,36 +135,32 @@ sub perform {
 
 package main;
 
-SKIP: {
-    skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'execute', 'method', fun($tryable) {
+  ok !(my $result = $tryable->result); # good
 
-  $subs->example(-1, 'execute', 'method', fun($tryable) {
-    ok !(my $result = $tryable->result); # good
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'fork', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'fork', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'start', 'method', fun($tryable) {
+  ok !(my $result = $tryable->result); # good
 
-  $subs->example(-1, 'start', 'method', fun($tryable) {
-    ok !(my $result = $tryable->result); # good
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

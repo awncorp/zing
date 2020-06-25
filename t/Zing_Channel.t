@@ -10,8 +10,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Channel
@@ -202,72 +200,68 @@ term() : Str
 
 package main;
 
-SKIP: {
-    skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'recv', 'method', fun($tryable) {
+  ok !(my $result = $tryable->result);
 
-  $subs->example(-1, 'recv', 'method', fun($tryable) {
-    ok !(my $result = $tryable->result);
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'recv', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is_deeply $result, { status => 'works' };
 
-  $subs->example(-2, 'recv', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is_deeply $result, { status => 'works' };
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'renew', 'method', fun($tryable) {
+  ok !(my $result = $tryable->result);
 
-  $subs->example(-1, 'renew', 'method', fun($tryable) {
-    ok !(my $result = $tryable->result);
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'renew', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $result, 1;
 
-  $subs->example(-2, 'renew', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $result, 1;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'reset', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $result, 1;
 
-  $subs->example(-1, 'reset', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $result, 1;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'send', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $result, 1;
 
-  $subs->example(-1, 'send', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $result, 1;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'size', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $result, 5;
 
-  $subs->example(-1, 'size', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $result, 5;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'term', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  like $result, qr/term-01:pubsub:channel/;
 
-  $subs->example(-1, 'term', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    like $result, qr/term-01:pubsub:channel/;
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

@@ -11,8 +11,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Launcher
@@ -107,36 +105,32 @@ sub perform {
 
 package main;
 
-SKIP: {
-  skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'handle', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $MyApp::DATA, 1;
 
-  $subs->example(-1, 'handle', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $MyApp::DATA, 1;
+  $MyApp::DATA = 0;
 
-    $MyApp::DATA = 0;
+  $result
+});
 
-    $result
-  });
+$subs->example(-2, 'handle', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $MyApp::DATA, 4;
 
-  $subs->example(-2, 'handle', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is $MyApp::DATA, 4;
+  $MyApp::DATA = 0;
 
-    $MyApp::DATA = 0;
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

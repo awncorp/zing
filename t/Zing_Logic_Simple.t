@@ -11,8 +11,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Logic::Simple
@@ -119,39 +117,35 @@ signals() : HashRef
 
 package main;
 
-SKIP: {
-  skip 'Skipping systems using fork emulation' if $Config{d_pseudofork};
+my $test = testauto(__FILE__);
 
-  my $test = testauto(__FILE__);
+my $subs = $test->standard;
 
-  my $subs = $test->standard;
+$subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->synopsis(fun($tryable) {
-    ok my $result = $tryable->result;
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'flow', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
 
-  $subs->example(-1, 'flow', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
+  my $step_0 = $result;
+  is $step_0->name, 'on_reset';
+  my $step_1 = $step_0->next;
+  is $step_1->name, 'on_register';
+  my $step_2 = $step_1->next;
+  is $step_2->name, 'on_perform';
+  is $result->bottom->name, 'on_perform';
 
-    my $step_0 = $result;
-    is $step_0->name, 'on_reset';
-    my $step_1 = $step_0->next;
-    is $step_1->name, 'on_register';
-    my $step_2 = $step_1->next;
-    is $step_2->name, 'on_perform';
-    is $result->bottom->name, 'on_perform';
+  $result
+});
 
-    $result
-  });
+$subs->example(-1, 'signals', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is_deeply [sort keys %{$result}], [qw(INT QUIT TERM)];
 
-  $subs->example(-1, 'signals', 'method', fun($tryable) {
-    ok my $result = $tryable->result;
-    is_deeply [sort keys %{$result}], [qw(INT QUIT TERM)];
-
-    $result
-  });
-}
+  $result
+});
 
 ok 1 and done_testing;

@@ -11,8 +11,6 @@ use Test::Auto;
 use Test::More;
 use Test::Zing;
 
-use Config;
-
 =name
 
 Zing::Store
@@ -116,13 +114,13 @@ provided key.
 
 =signature keys
 
-keys(Str $key) : ArrayRef[Str]
+keys(Str @keys) : ArrayRef[Str]
 
 =example-1 keys
 
   # given: synopsis
 
-  my $keys = $store->keys;
+  my $keys = $store->keys('nodel');
 
 =example-2 keys
 
@@ -250,7 +248,7 @@ size(Str $key) : Int
 
   # given: synopsis
 
-  my $size = $store->size;
+  my $size = $store->size('collection');
 
 =example-2 size
 
@@ -423,7 +421,8 @@ $subs->example(-1, 'send', 'method', fun($tryable) {
 });
 
 $subs->example(-1, 'size', 'method', fun($tryable) {
-  ok !(my $result = $tryable->result);
+  ok my $result = $tryable->result;
+  is $result, 3;
 
   $result
 });
