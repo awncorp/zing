@@ -25,6 +25,8 @@ our $name = 'zing <{command}> [<{app}>] [options]';
 sub auto {
   {
     logs => '_handle_logs',
+    pid => '_handle_pid',
+    update => '_handle_update',
     start => '_handle_start',
     stop => '_handle_stop',
   }
@@ -33,6 +35,8 @@ sub auto {
 sub subs {
   {
     logs => 'Tap logs and output to STDOUT',
+    pid => 'Display an application process ID',
+    update => 'Hot-reload application processes',
     start => 'Start the specified application',
     stop => 'Stop the specified application',
   }
@@ -44,6 +48,11 @@ sub spec {
       desc => 'Directory of the app file',
       type => 'string',
       flag => 'a',
+    },
+    level => {
+      desc => 'Restrict log output by log-level',
+      type => 'string',
+      flag => 'l',
     },
     libdir => {
       desc => 'Directory for @INC',
@@ -62,7 +71,7 @@ sub spec {
 sub _handle_logs {
   my ($self) = @_;
 
-  my $c = Zing::Channel->new(name => 'journal');
+  my $c = Zing::Channel->new(name => '$journal');
 
   while (1) {
     next unless my $info = $c->recv;
@@ -70,12 +79,44 @@ sub _handle_logs {
     my $from = $info->{from};
     my $data = $info->{data};
 
+    $data->{level} = $self->opts->level if $self->opts->level;
+
     my $logger = FlightRecorder->new($data);
 
     if (my $lines = $logger->simple->generate) {
       print STDOUT $from, ' ', $lines, "\n";
     }
   }
+
+  $self->okay;
+}
+
+sub _handle_pid {
+  my ($self) = @_;
+
+  my $app = $self->args->app;
+
+  if (!$app) {
+    print $self->help, "\n";
+    return $self->okay;
+  }
+
+  my $piddir = $self->opts->piddir || $ENV{ZING_HOME} || File::Spec->curdir;
+  my $pidfile = File::Spec->catfile($piddir, "$app.pid");
+
+  if (! -e $pidfile) {
+    print "Can't find pid $pidfile\n";
+    return $self->fail;
+  }
+
+  my $pid = do { local $@; eval { do $pidfile } };
+
+  if (!$pid || ref $pid) {
+    print "File didn't return a process ID: $pidfile\n";
+    return $self->fail;
+  }
+
+  print "Process ID: $pid\n";
 
   $self->okay;
 }
@@ -96,7 +137,7 @@ sub _handle_start {
 
   unshift @INC, @$libdir if $libdir;
 
-  $appdir ||= File::Spec->curdir;
+  $appdir ||= $ENV{ZING_HOME} || File::Spec->curdir;
 
   my $appfile = File::Spec->catfile($appdir, $app);
 
@@ -131,13 +172,7 @@ sub _handle_stop {
     return $self->okay;
   }
 
-  my $piddir = $self->opts->piddir;
-  my $libdir = $self->opts->libdir;
-
-  unshift @INC, @$libdir if $libdir;
-
-  $piddir ||= File::Spec->curdir;
-
+  my $piddir = $self->opts->piddir || $ENV{ZING_HOME} || File::Spec->curdir;
   my $pidfile = File::Spec->catfile($piddir, "$app.pid");
 
   if (! -e $pidfile) {
@@ -155,6 +190,36 @@ sub _handle_stop {
   kill 'TERM', $pid;
 
   unlink $pidfile;
+
+  $self->okay;
+}
+
+sub _handle_update {
+  my ($self) = @_;
+
+  my $app = $self->args->app;
+
+  if (!$app) {
+    print $self->help, "\n";
+    return $self->okay;
+  }
+
+  my $piddir = $self->opts->piddir || $ENV{ZING_HOME} || File::Spec->curdir;
+  my $pidfile = File::Spec->catfile($piddir, "$app.pid");
+
+  if (! -e $pidfile) {
+    print "Can't find pid $pidfile\n";
+    return $self->fail;
+  }
+
+  my $pid = do { local $@; eval { do $pidfile } };
+
+  if (!$pid || ref $pid) {
+    print "File didn't return a process ID: $pidfile\n";
+    return $self->fail;
+  }
+
+  kill 'USR2', $pid;
 
   $self->okay;
 }

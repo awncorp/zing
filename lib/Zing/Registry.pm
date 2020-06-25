@@ -20,7 +20,7 @@ extends 'Zing::KeyVal';
 has 'name' => (
   is => 'ro',
   isa => 'Str',
-  def => 'default',
+  def => '$default',
   mod => 1,
 );
 

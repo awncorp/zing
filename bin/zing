@@ -26,8 +26,10 @@ Multi-Process Management System
   Commands:
 
     logs             Tap logs and output to STDOUT
+    pid              Display an application process ID
     start            Start the specified application
     stop             Stop the specified application
+    update           Hot-reload application processes
 
   Options:
 
