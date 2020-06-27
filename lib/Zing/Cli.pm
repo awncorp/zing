@@ -68,6 +68,11 @@ sub spec {
       type => 'string',
       flag => 'd',
     },
+    verbose => {
+      desc => 'Produce verbose log output',
+      type => 'flag',
+      flag => 'v',
+    },
   }
 }
 
@@ -98,8 +103,10 @@ sub _handle_logs {
 
     $data->{level} = $self->opts->level if $self->opts->level;
 
+    my $report = $self->opts->verbose ? 'verbose' : 'simple';
+
     my $logger = FlightRecorder->new($data);
-    my $lines = $logger->simple->lines;
+    my $lines = $logger->$report->lines;
 
     print STDOUT $from, ' ', $_, "\n" for @$lines;
   }
