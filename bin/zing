@@ -36,6 +36,9 @@ Multi-Process Management System
     -I,--libdir, +1  [string] Directory for @INC
     -a,--appdir      [string] Directory of the app file
     -d,--piddir      [string] Directory for the pid file
+    -l,--level       [string] Reduce log output by log-level
+    -p,--process     [string] Reduce log output by process name
+    -t,--tag         [string] Reduce log output by process tag
 
 =head1 DESCRIPTION
 
