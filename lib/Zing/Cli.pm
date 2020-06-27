@@ -68,7 +68,26 @@ sub spec {
       type => 'string',
       flag => 'd',
     },
+    verbose => {
+      desc => 'Produce verbose log output',
+      type => 'flag',
+      flag => 'v',
+    },
   }
+}
+
+sub _handle_clean {
+  my ($self) = @_;
+
+  my $r = Zing::Registry->new;
+
+  for my $id (@{$r->ids}) {
+    my $data = $r->store->recv($id) or next;
+    my $pid = $data->{process} or next;
+    $r->store->drop($id) unless kill 0, $pid;
+  }
+
+  $self->okay;
 }
 
 sub _handle_clean {
@@ -98,8 +117,10 @@ sub _handle_logs {
 
     $data->{level} = $self->opts->level if $self->opts->level;
 
+    my $report = $self->opts->verbose ? 'verbose' : 'simple';
+
     my $logger = FlightRecorder->new($data);
-    my $lines = $logger->simple->lines;
+    my $lines = $logger->$report->lines;
 
     print STDOUT $from, ' ', $_, "\n" for @$lines;
   }
