@@ -73,7 +73,7 @@ processes: ro, req, ArrayRef[Process]
 =description
 
 This package provides a mechanism for joining two (or more) processes and
-executing them as one in a turn-based fashion.
+executes them as one in a turn-based manner.
 
 =cut
 
@@ -84,7 +84,7 @@ each call.
 
 =signature perform
 
-perform() : Undef
+perform() : Any
 
 =example-1 perform
 
@@ -101,7 +101,7 @@ list.
 
 =signature destroy
 
-destroy() : Undef
+destroy() : Object
 
 =example-1 destroy
 
@@ -118,7 +118,7 @@ list.
 
 =signature shutdown
 
-shutdown() : Undef
+shutdown() : Object
 
 =example-1 shutdown
 
@@ -135,7 +135,7 @@ list.
 
 =signature winddown
 
-winddown() : Undef
+winddown() : Object
 
 =example-1 winddown
 
@@ -161,13 +161,21 @@ $subs->example(-1, 'perform', 'method', fun($tryable) {
   my ($ring, $result) = @{$tryable->result};
 
   ok $ring;
-  ok !$result;
+  ok $result;
 
-  ok $ring->processes->[0]->started;
+  ok !$ring->processes->[0]->started;
   ok !$ring->processes->[1]->started;
 
-  ok $ring->processes->[0]->stopped;
+  ok !$ring->processes->[0]->stopped;
   ok !$ring->processes->[1]->stopped;
+
+  $ring->execute;
+
+  ok $ring->processes->[0]->started;
+  ok $ring->processes->[0]->stopped;
+
+  ok $ring->processes->[1]->started;
+  ok $ring->processes->[1]->stopped;
 
   $result
 });
@@ -176,7 +184,7 @@ $subs->example(-1, 'destroy', 'method', fun($tryable) {
   my ($ring, $result) = @{$tryable->result};
 
   ok $ring;
-  ok !$result;
+  ok $result;
 
   $result
 });
@@ -185,7 +193,7 @@ $subs->example(-1, 'shutdown', 'method', fun($tryable) {
   my ($ring, $result) = @{$tryable->result};
 
   ok $ring;
-  ok !$result;
+  ok $result;
 
   ok !$ring->processes->[0]->loop->last;
   ok !$ring->processes->[1]->loop->last;
@@ -200,7 +208,7 @@ $subs->example(-1, 'winddown', 'method', fun($tryable) {
   my ($ring, $result) = @{$tryable->result};
 
   ok $ring;
-  ok !$result;
+  ok $result;
 
   ok $ring->processes->[0]->loop->last;
   ok $ring->processes->[1]->loop->last;

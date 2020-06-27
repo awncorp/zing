@@ -110,6 +110,10 @@ method handle_launch_event() {
     return 0;
   }
 
+  if ($process->loop->last) {
+    return 0;
+  }
+
   if ($process->loop->stop) {
     return 0;
   }
