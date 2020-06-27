@@ -1,1 +1,1 @@
-['MyApp::Sleep', [], 1]
+['MyApp::Sleep', [tag => 'sleep'], 1]

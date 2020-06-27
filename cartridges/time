@@ -1,1 +1,1 @@
-['MyApp::Time', [], 1]
+['MyApp::Time', [tag => 'time'], 1]

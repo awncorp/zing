@@ -131,11 +131,11 @@ $subs->example(-1, 'flow', 'method', fun($tryable) {
   ok my $result = $tryable->result;
 
   my $step_0 = $result;
-  is $step_0->name, 'on_reset';
+  is $step_0->name, 'on_register';
   my $step_1 = $step_0->next;
-  is $step_1->name, 'on_register';
+  is $step_1->name, 'on_perform';
   my $step_2 = $step_1->next;
-  is $step_2->name, 'on_perform';
+  is $step_2->name, 'on_reset';
   my $step_3 = $step_2->next;
   is $step_3->name, 'on_suicide';
   is $result->bottom->name, 'on_suicide';
