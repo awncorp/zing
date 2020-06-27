@@ -4,7 +4,13 @@ package
 use parent 'Zing::Process';
 
 sub perform {
-  warn $$, ' ', time; sleep 1;
+  my ($self) = @_;
+
+  $self->log->warn('sleeping for 1 sec');
+
+  sleep 1;
+
+  return $self;
 }
 
 1;

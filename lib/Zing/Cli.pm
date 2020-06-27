@@ -52,6 +52,11 @@ sub spec {
       type => 'string',
       flag => 'a',
     },
+    process => {
+      desc => 'Reduce log output by process name',
+      type => 'string',
+      flag => 'p',
+    },
     level => {
       desc => 'Reduce log output by log-level',
       type => 'string',
@@ -113,6 +118,10 @@ sub _handle_logs {
     my $report = $self->opts->verbose ? 'verbose' : 'simple';
     my $lines = $logger->$report->lines;
     my $tag = $data->{tag} || '--';
+
+    if (my $filter = $self->opts->from) {
+      next unless $from =~ /$filter/;
+    }
 
     if (my $filter = $self->opts->tag) {
       next unless $tag =~ /$filter/;

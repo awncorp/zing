@@ -1,1 +1,1 @@
-['MyApp::Logger', [], 2]
+['MyApp::Logger', [tag => 'logger'], 2]
