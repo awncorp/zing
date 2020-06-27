@@ -161,6 +161,12 @@ has 'stopped' => (
   def => 0,
 );
 
+has 'tag' => (
+  is => 'rw',
+  isa => 'Str',
+  opt => 1,
+);
+
 # METHODS
 
 method defer(HashRef $data) {
@@ -232,6 +238,7 @@ method metadata() {
     parent => ($self->parent ? $self->parent->node->pid : undef),
     process => $self->node->pid,
     server => $self->server->name,
+    tag => $self->tag,
   }
 }
 
