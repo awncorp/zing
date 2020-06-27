@@ -30,7 +30,7 @@ Multi-Process Assembly Ring
 =head1 DESCRIPTION
 
 This package provides a mechanism for joining two (or more) processes and
-executing them as one in a turn-based fashion.
+executes them as one in a turn-based manner.
 
 =cut
 
@@ -72,7 +72,7 @@ This package implements the following methods:
 
 =head2 destroy
 
-  destroy() : Undef
+  destroy() : Object
 
 The destroy method executes the C<destroy> method of all the processes in the
 list.
@@ -91,7 +91,7 @@ list.
 
 =head2 perform
 
-  perform() : Undef
+  perform() : Any
 
 The perform method executes the event-loop of the next process in the list with
 each call.
@@ -110,7 +110,7 @@ each call.
 
 =head2 shutdown
 
-  shutdown() : Undef
+  shutdown() : Object
 
 The shutdown method executes the C<shutdown> method of all the processes in the
 list.
@@ -129,7 +129,7 @@ list.
 
 =head2 winddown
 
-  winddown() : Undef
+  winddown() : Object
 
 The winddown method executes the C<winddown> method of all the processes in the
 list.

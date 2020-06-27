@@ -1,6 +1,19 @@
 Changelog for Zing
 
-0.07 2020-06-25T17:33:43
+0.08 2020-06-27T22:38:43
+ - Add release updates
+ - Implement Zing::Ringer (#133)
+ - Implement log filtering by name (#136)
+ - Implement log filtering by tag (#135)
+ - Implement verbose log output (#138)
+ - Cleanup dependencies (#131)
+ - Describe virtual-actors feature (#132)
+ - Implement registry cleanup (#134)
+ - Use init_arg to ignore "name" attr overrides (#124)
+ - Fix log tap output error (#123)
+
+0.07 2020-06-25T17:33:48
+ - Built release version 0.07
  - Add release updates
  - Implement internal naming strategy (#119)
 

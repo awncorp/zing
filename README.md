@@ -551,6 +551,20 @@ This distribution provides watcher processes which to supervise child processes
 but also are capable of multitasking and performing other operations while
 monitoring supervised processes.
 
+## virtual-actors
+
+    use Zing::Zang::Spawner;
+
+    my $zang = Zing::Zang::Spawner->new(
+      queues => ['schemes']
+    );
+
+    $zang->exercise;
+
+This distribution provides the ability to use virtual actors, which are
+processes (actors) created on-demand as a result of some system event. This
+feature is enabled by the [Zing::Launcher](https://metacpan.org/pod/Zing%3A%3ALauncher) and [Zing::Spawner](https://metacpan.org/pod/Zing%3A%3ASpawner) superclasses.
+
 # SEE ALSO
 
 [The Actor Model](https://en.wikipedia.org/wiki/Actor_model)
