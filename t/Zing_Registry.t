@@ -190,6 +190,7 @@ $subs->example(-2, 'recv', 'method', fun($tryable) {
     'parent',
     'process',
     'server',
+    'tag',
   ];
 
   $result

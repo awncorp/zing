@@ -145,10 +145,11 @@ method handle_reset_event() {
   my $process = $self->process;
 
   if ($process->journal && $process->log->count) {
-    $process->journal->send({
-      from => $process->name,
-      data => $process->log->serialize
-    });
+    my $data = {
+      logs => $process->log->serialize,
+      tag => $process->tag,
+    };
+    $process->journal->send({ data => $data, from => $process->name });
   }
 
   $process->log->reset;

@@ -53,7 +53,7 @@ sub spec {
       flag => 'a',
     },
     level => {
-      desc => 'Restrict log output by log-level',
+      desc => 'Reduce log output by log-level',
       type => 'string',
       flag => 'l',
     },
@@ -68,26 +68,17 @@ sub spec {
       type => 'string',
       flag => 'd',
     },
+    tag => {
+      desc => 'Reduce log output by process tag',
+      type => 'string',
+      flag => 't',
+    },
     verbose => {
       desc => 'Produce verbose log output',
       type => 'flag',
       flag => 'v',
     },
   }
-}
-
-sub _handle_clean {
-  my ($self) = @_;
-
-  my $r = Zing::Registry->new;
-
-  for my $id (@{$r->ids}) {
-    my $data = $r->store->recv($id) or next;
-    my $pid = $data->{process} or next;
-    $r->store->drop($id) unless kill 0, $pid;
-  }
-
-  $self->okay;
 }
 
 sub _handle_clean {
@@ -114,15 +105,20 @@ sub _handle_logs {
 
     my $from = $info->{from};
     my $data = $info->{data};
+    my $logs = $data->{logs};
 
-    $data->{level} = $self->opts->level if $self->opts->level;
+    $logs->{level} = $self->opts->level if $self->opts->level;
 
+    my $logger = FlightRecorder->new($logs);
     my $report = $self->opts->verbose ? 'verbose' : 'simple';
-
-    my $logger = FlightRecorder->new($data);
     my $lines = $logger->$report->lines;
+    my $tag = $data->{tag} || '--';
 
-    print STDOUT $from, ' ', $_, "\n" for @$lines;
+    if (my $filter = $self->opts->tag) {
+      next unless $tag =~ /$filter/;
+    }
+
+    print STDOUT $from, ' ', $tag, ' ', $_, "\n" for @$lines;
   }
 
   $self->okay;
