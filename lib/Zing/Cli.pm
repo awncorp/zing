@@ -12,6 +12,7 @@ use parent 'Data::Object::Cli';
 use Zing;
 use Zing::Channel;
 use Zing::Daemon;
+use Zing::Registry;
 
 use FlightRecorder;
 use File::Spec;
@@ -24,6 +25,7 @@ our $name = 'zing <{command}> [<{app}>] [options]';
 
 sub auto {
   {
+    clean => '_handle_clean',
     logs => '_handle_logs',
     pid => '_handle_pid',
     update => '_handle_update',
@@ -34,6 +36,7 @@ sub auto {
 
 sub subs {
   {
+    clean => 'Prune the processes registry',
     logs => 'Tap logs and output to STDOUT',
     pid => 'Display an application process ID',
     update => 'Hot-reload application processes',
@@ -66,6 +69,20 @@ sub spec {
       flag => 'd',
     },
   }
+}
+
+sub _handle_clean {
+  my ($self) = @_;
+
+  my $r = Zing::Registry->new;
+
+  for my $id (@{$r->ids}) {
+    my $data = $r->store->recv($id) or next;
+    my $pid = $data->{process} or next;
+    $r->store->drop($id) unless kill 0, $pid;
+  }
+
+  $self->okay;
 }
 
 sub _handle_logs {
