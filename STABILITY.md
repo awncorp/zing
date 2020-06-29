@@ -1,10 +1,10 @@
 ## Stability
 
-Our top priority is to provide a reliable development framework that important
+Our top priority is to provide a reliable development toolkit that important
 work is based upon. As such, we promise to put stability and backward
 compatibility first in the development of this project.
 
-Version 1.00 of this distribution is considered stable. Any changes to the API
+Version 0.20+ of this distribution is considered stable. Any changes to the API
 that result in changes to the test suite will be preceded by a three (3) month
 notice period, with the following exceptions:
 

@@ -1,8 +1,8 @@
 ## Contributing
 
 Thanks for your interest in this project. We welcome all community
-contributions! To install locally, follow the instructions in the
-[README.md](./README.mkdn) file.
+contributions! To install, follow the instructions in the
+[README.md](./README.md).
 
 ## Releasing
 
@@ -19,12 +19,12 @@ the most common steps in releasing this software.
 
 ```
   lib
-  ├── Class.pm
-  ├── Class
-  │   └── Widget.pm
+  ├── Zing.pm
+  ├── Zing
+  │   └── ...
   t
-  ├── Class.t
-  └── Class_Widget.t
+  ├── Zing.t
+  └── ...
 ```
 
 Important! Before you checkout the code and start making contributions you need
