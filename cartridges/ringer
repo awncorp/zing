@@ -1,1 +1,1 @@
-['Zing/Ringer', [schemes => [['MyApp::Sleep', [], 1], ['MyApp::Time', [], 1]]], 1]
+['Zing/Ringer', [schemes => [['MyApp::Sleep', [tag => 'sleep'], 1], ['MyApp::Time', [tag => 'time'], 1]], tag => 'ringer'], 1]

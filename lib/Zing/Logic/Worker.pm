@@ -61,7 +61,7 @@ method flow() {
     my $label = $name =~ s/\W+/_/gr;
     my $step_x = Zing::Flow->new(
       name => "on_handle_${label}",
-      code => fun($step, $loop) { $self->on_handle->($self, $name) },
+      code => fun($step, $loop) { $self->trace('on_handle')->($self, $name) },
     );
     $step_l->next($step_x) if $step_l;
     $step_l = $step_x;
