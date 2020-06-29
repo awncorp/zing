@@ -143,7 +143,11 @@ sub _handle_pid {
     return $self->okay;
   }
 
-  my $piddir = $self->opts->piddir || $ENV{ZING_HOME} || File::Spec->curdir;
+  my $piddir = $self->opts->piddir
+    || $ENV{ZING_PIDDIR}
+    || $ENV{ZING_HOME}
+    || File::Spec->curdir;
+
   my $pidfile = File::Spec->catfile($piddir, "$app.pid");
 
   if (! -e $pidfile) {
@@ -179,7 +183,7 @@ sub _handle_start {
 
   unshift @INC, @$libdir if $libdir;
 
-  $appdir ||= $ENV{ZING_HOME} || File::Spec->curdir;
+  $appdir ||= $ENV{ZING_APPDIR} || $ENV{ZING_HOME} || File::Spec->curdir;
 
   my $appfile = File::Spec->catfile($appdir, $app);
 
@@ -214,7 +218,11 @@ sub _handle_stop {
     return $self->okay;
   }
 
-  my $piddir = $self->opts->piddir || $ENV{ZING_HOME} || File::Spec->curdir;
+  my $piddir = $self->opts->piddir
+    || $ENV{ZING_PIDDIR}
+    || $ENV{ZING_HOME}
+    || File::Spec->curdir;
+
   my $pidfile = File::Spec->catfile($piddir, "$app.pid");
 
   if (! -e $pidfile) {
@@ -246,7 +254,11 @@ sub _handle_update {
     return $self->okay;
   }
 
-  my $piddir = $self->opts->piddir || $ENV{ZING_HOME} || File::Spec->curdir;
+  my $piddir = $self->opts->piddir
+    || $ENV{ZING_PIDDIR}
+    || $ENV{ZING_HOME}
+    || File::Spec->curdir;
+
   my $pidfile = File::Spec->catfile($piddir, "$app.pid");
 
   if (! -e $pidfile) {
