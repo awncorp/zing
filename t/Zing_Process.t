@@ -34,7 +34,9 @@ method: destroy
 method: exercise
 method: execute
 method: metadata
+method: ping
 method: shutdown
+method: signal
 method: spawn
 method: winddown
 
@@ -165,6 +167,22 @@ metadata() : HashRef
 
 =cut
 
+=method ping
+
+The ping method returns truthy if the process of the PID provided is active.
+
+=signature ping
+
+ping(Int $pid) : Bool
+
+=example-1 ping
+
+  # given: synopsis
+
+  $process->ping(12345);
+
+=cut
+
 =method shutdown
 
 The shutdown method haults the process event-loop immediately.
@@ -178,6 +196,28 @@ shutdown() : Object
   # given: synopsis
 
   $process->shutdown;
+
+=cut
+
+=method signal
+
+The signal method sends a C<kill> signal to the process of the PID provided.
+
+=signature signal
+
+signal(Int $pid, Str $type = 'kill') : Int
+
+=example-1 signal
+
+  # given: synopsis
+
+  $process->signal(12345);
+
+=example-2 signal
+
+  # given: synopsis
+
+  $process->signal(12345, 'term');
 
 =cut
 
@@ -271,7 +311,33 @@ $subs->example(-1, 'metadata', 'method', fun($tryable) {
   $result
 });
 
+$subs->example(-1, 'ping', 'method', fun($tryable) {
+  my $result;
+
+  local $ENV{ZING_TEST_KILL} = 0;
+  ok !($result = $tryable->result);
+
+  local $ENV{ZING_TEST_KILL} = 1;
+  ok $result = $tryable->result;
+
+  $result
+});
+
 $subs->example(-1, 'shutdown', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+
+  $result
+});
+
+$subs->example(-1, 'signal', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_KILL} = 1;
+  ok my $result = $tryable->result;
+
+  $result
+});
+
+$subs->example(-2, 'signal', 'method', fun($tryable) {
+  local $ENV{ZING_TEST_KILL} = 1;
   ok my $result = $tryable->result;
 
   $result

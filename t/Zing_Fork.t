@@ -173,7 +173,7 @@ processes and returns the results as a pid/result map.
 
 =signature terminate
 
-terminate(Str $signal = 'KILL') : HashRef[Int]
+terminate(Str $signal = 'kill') : HashRef[Int]
 
 =example-1 terminate
 

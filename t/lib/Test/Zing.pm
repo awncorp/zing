@@ -101,6 +101,7 @@ use Zing::Daemon;
 use Zing::Fork;
 use Zing::Logic;
 use Zing::Loop;
+use Zing::Process;
 
 use Data::Object::Space;
 
@@ -148,9 +149,6 @@ our $PIDS = $$ + 1;
   my $space = Data::Object::Space->new(
     'Zing/Fork'
   );
-  $space->inject(_kill => sub {
-    $ENV{ZING_TEST_KILL} || 0;
-  });
   $space->inject(_waitpid => sub {
     $ENV{ZING_TEST_WAIT_ONE}
     ? ($ENV{ZING_TEST_WAIT_ONE}++ == 1 ? 1 : -1)
@@ -170,16 +168,6 @@ our $PIDS = $$ + 1;
   });
 }
 
-# Zing/Logic
-{
-  my $space = Data::Object::Space->new(
-    'Zing/Logic'
-  );
-  $space->inject(_kill => sub {
-    $ENV{ZING_TEST_KILL} || 0;
-  });
-}
-
 # Zing/Loop
 {
   my $space = Data::Object::Space->new(
@@ -188,6 +176,16 @@ our $PIDS = $$ + 1;
   $space->inject(execute => sub {
     my ($self, @args) = @_;
     $self->exercise(@args); # always run once
+  });
+}
+
+# Zing/Process
+{
+  my $space = Data::Object::Space->new(
+    'Zing/Process'
+  );
+  $space->inject(_kill => sub {
+    $ENV{ZING_TEST_KILL} || 0;
   });
 }
 
