@@ -130,6 +130,9 @@ register {
   validation => is_instance_of('Zing::Repo'),
 };
 
+declare 'Schedule',
+  as Tuple([Str(), ArrayRef([Str()]), HashRef()]);
+
 declare 'Scheme',
   as Tuple([Str(), ArrayRef(), Int()]);
 

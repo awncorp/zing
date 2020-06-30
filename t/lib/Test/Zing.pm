@@ -102,6 +102,7 @@ use Zing::Fork;
 use Zing::Logic;
 use Zing::Loop;
 use Zing::Process;
+use Zing::Timer;
 
 use Data::Object::Space;
 
@@ -186,6 +187,20 @@ our $PIDS = $$ + 1;
   );
   $space->inject(_kill => sub {
     $ENV{ZING_TEST_KILL} || 0;
+  });
+}
+
+# Zing/Timer
+{
+  my $space = Data::Object::Space->new(
+    'Zing/Timer'
+  );
+  $space->inject(_time => sub {
+    $ENV{ZING_TEST_TIME} || time;
+  });
+  $space->inject(execute => sub {
+    my ($self, @args) = @_;
+    $self->exercise(@args); # always run once
   });
 }
 
