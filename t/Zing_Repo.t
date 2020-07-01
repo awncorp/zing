@@ -212,7 +212,7 @@ $subs->example(-1, 'drop', 'method', fun($tryable) {
 
 $subs->example(-1, 'global', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result, qr/^zing:text-1$/;
+  like $result, qr/^zing:main:text-1$/;
 
   $result
 });
@@ -231,14 +231,14 @@ $subs->example(-1, 'keys', 'method', fun($tryable) {
 
 $subs->example(-1, 'local', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result, qr/^zing:\d+\.\d+\.\d+\.\d+:text-1$/;
+  like $result, qr/^zing:main:\d+\.\d+\.\d+\.\d+:text-1$/;
 
   $result
 });
 
 $subs->example(-1, 'term', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result, qr/^zing:\d+\.\d+\.\d+\.\d+:repo:text-1$/;
+  like $result, qr/^zing:main:\d+\.\d+\.\d+\.\d+:repo:text-1$/;
 
   $result
 });

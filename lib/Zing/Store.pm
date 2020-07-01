@@ -87,7 +87,8 @@ method slot(Str $key, Int $pos) {
 }
 
 method term(Str @keys) {
-  return join(':', @keys);
+  join ':', map {s/[^a-zA-Z0-9\$\.]/-/g; lc} split /:/,
+  join ':', @keys;
 }
 
 method test(Str $key) {

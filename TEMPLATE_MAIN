@@ -360,6 +360,9 @@ scale your deployments without changing your implementations.
 
 =head2 configuration
 
+  # configure the namespace (defaults to "main")
+  ZING_NS=app
+
   # enable process debugging tracing
   ZING_DEBUG=1
 

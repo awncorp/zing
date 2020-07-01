@@ -261,8 +261,8 @@ $subs->example(-1, 'execute', 'method', fun($tryable) {
 
 $subs->example(-1, 'metadata', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result->{data}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:data/;
-  like $result->{mailbox}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:mailbox/;
+  like $result->{data}, qr/zing:main:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:data/;
+  like $result->{mailbox}, qr/zing:main:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:mailbox/;
   like $result->{name}, qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
   like $result->{node}, qr/\d+:\d+/;
   ok !$result->{parent};

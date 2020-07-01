@@ -56,12 +56,15 @@ fun new_target($self) {
 
 # METHODS
 
+state $ns = $ENV{ZING_NS} || 'main';
+
 method drop(Str @keys) {
   return $self->store->drop($self->term(@keys));
 }
 
 method global (Str @keys) {
-  return join(':', 'zing', @keys);
+  join ':', map {s/[^a-zA-Z0-9\$\.]/-/g; lc} split /:/,
+  join ':', 'zing', $ns, @keys
 }
 
 method ids() {
@@ -73,11 +76,12 @@ method keys() {
 }
 
 method local(Str @keys) {
-  return join(':', 'zing', $self->server->name, @keys);
+  join ':', map {s/[^a-zA-Z0-9\$\.]/-/g; lc} split /:/,
+  join ':', 'zing', $ns, $self->server->name, @keys
 }
 
 method term(Str @keys) {
-  return join(':', $self->${\"@{[$self->target]}"}, $self->name, @keys);
+  return $self->${\"@{[$self->target]}"}($self->name, @keys);
 }
 
 method test(Str @keys) {
