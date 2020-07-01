@@ -13,6 +13,8 @@ use Data::Object::ClassHas;
 
 extends 'Zing::KeyVal';
 
+use Zing::Term;
+
 # VERSION
 
 # ATTRIBUTES
@@ -54,7 +56,7 @@ method send(HashRef $val) {
 }
 
 method term() {
-  return $self->global($self->name, 'data');
+  return Zing::Term->new($self)->data;
 }
 
 1;

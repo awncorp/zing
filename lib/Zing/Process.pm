@@ -22,6 +22,7 @@ use Zing::Loop;
 use Zing::Mailbox;
 use Zing::Node;
 use Zing::Registry;
+use Zing::Term;
 
 # VERSION
 
@@ -170,7 +171,7 @@ has 'tag' => (
 # METHODS
 
 method defer(HashRef $data) {
-  $self->mailbox->send($self->name, $data);
+  $self->mailbox->send($self->mailbox->term, $data);
 
   return $self;
 }
@@ -257,6 +258,10 @@ method spawn(Scheme $scheme) {
   $fork->execute for 1..($size || 1);
 
   return $fork;
+}
+
+method term() {
+  return Zing::Term->new($self)->process;
 }
 
 method winddown() {

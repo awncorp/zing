@@ -32,10 +32,8 @@ Generic Store Abstraction
 =includes
 
 method: drop
-method: global
 method: ids
 method: keys
-method: local
 method: term
 method: test
 
@@ -88,22 +86,6 @@ drop(Str @keys) : Int
 
 =cut
 
-=method global
-
-The global method returns a global term (safe word) for the datastore.
-
-=signature global
-
-global(Str @keys) : Str
-
-=example-1 global
-
-  # given: synopsis
-
-  $repo->global('text-1');
-
-=cut
-
 =method ids
 
 The ids method returns a list of IDs (keys) stored under the datastore namespace.
@@ -122,7 +104,8 @@ ids() : ArrayRef[Str]
 
 =method keys
 
-The keys method returns a list of fully-qualified keys stored under the datastore namespace.
+The keys method returns a list of fully-qualified keys stored under the
+datastore namespace.
 
 =signature keys
 
@@ -133,22 +116,6 @@ keys() : ArrayRef[Str]
   # given: synopsis
 
   my $keys = $repo->keys;
-
-=cut
-
-=method local
-
-The local method returns a local term (safe word) for the datastore which includes the node name.
-
-=signature local
-
-local(Str @keys) : Str
-
-=example-1 local
-
-  # given: synopsis
-
-  $repo->local('text-1');
 
 =cut
 
@@ -210,13 +177,6 @@ $subs->example(-1, 'drop', 'method', fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'global', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-  like $result, qr/^zing:text-1$/;
-
-  $result
-});
-
 $subs->example(-1, 'ids', 'method', fun($tryable) {
   ok my $result = $tryable->result;
 
@@ -229,16 +189,10 @@ $subs->example(-1, 'keys', 'method', fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'local', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-  like $result, qr/^zing:\d+\.\d+\.\d+\.\d+:text-1$/;
-
-  $result
-});
-
 $subs->example(-1, 'term', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result, qr/^zing:\d+\.\d+\.\d+\.\d+:repo:text-1$/;
+  my $local = qr/zing:main:local\(\d+\.\d+\.\d+\.\d+\)/;
+  like $result, qr/^$local:repo:repo:text-1$/;
 
   $result
 });

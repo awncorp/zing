@@ -15,6 +15,7 @@ extends 'Zing::Watcher';
 
 use Zing::Channel;
 use Zing::Logic::Kernel;
+use Zing::Term;
 
 # VERSION
 
@@ -43,5 +44,9 @@ fun new_logic($self) {
 }
 
 # METHODS
+
+method term() {
+  return Zing::Term->new($self)->kernel;
+}
 
 1;

@@ -13,6 +13,7 @@ use Data::Object::ClassHas;
 
 use Zing::Server;
 use Zing::Store;
+use Zing::Term;
 
 # VERSION
 
@@ -60,10 +61,6 @@ method drop(Str @keys) {
   return $self->store->drop($self->term(@keys));
 }
 
-method global (Str @keys) {
-  return join(':', 'zing', @keys);
-}
-
 method ids() {
   return $self->store->keys($self->term);
 }
@@ -72,12 +69,8 @@ method keys() {
   return [map {my $re = quotemeta $self->term; s/^$re://r} @{$self->ids}];
 }
 
-method local(Str @keys) {
-  return join(':', 'zing', $self->server->name, @keys);
-}
-
 method term(Str @keys) {
-  return join(':', $self->${\"@{[$self->target]}"}, $self->name, @keys);
+  return Zing::Term->new($self, @keys)->repo;
 }
 
 method test(Str @keys) {

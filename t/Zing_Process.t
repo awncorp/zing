@@ -36,6 +36,7 @@ method: execute
 method: metadata
 method: shutdown
 method: spawn
+method: term
 method: winddown
 
 =cut
@@ -197,6 +198,22 @@ spawn(Scheme $scheme) : Fork
 
 =cut
 
+=method term
+
+The term method generates a term (safe string) for the datastore.
+
+=signature term
+
+term() : Str
+
+=example-1 term
+
+  # given: synopsis
+
+  $process->term;
+
+=cut
+
 =method winddown
 
 The winddown method haults the process event-loop after the current iteration.
@@ -261,9 +278,12 @@ $subs->example(-1, 'execute', 'method', fun($tryable) {
 
 $subs->example(-1, 'metadata', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result->{data}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:data/;
-  like $result->{mailbox}, qr/zing:\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+:mailbox/;
-  like $result->{name}, qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
+  my $global = qr/zing:main:global/;
+  my $local = qr/zing:main:local\(\d+\.\d+\.\d+\.\d+\)/;
+  my $process = qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
+  like $result->{data}, qr/$local:data:$process/;
+  like $result->{mailbox}, qr/$global:mailbox:$process/;
+  like $result->{name}, $process;
   like $result->{node}, qr/\d+:\d+/;
   ok !$result->{parent};
   like $result->{process}, qr/\d+/;
@@ -279,6 +299,15 @@ $subs->example(-1, 'shutdown', 'method', fun($tryable) {
 
 $subs->example(-1, 'spawn', 'method', fun($tryable) {
   ok my $result = $tryable->result;
+
+  $result
+});
+
+$subs->example(-1, 'term', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  my $local = qr/zing:main:local\(\d+\.\d+\.\d+\.\d+\)/;
+  my $process = qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
+  like $result, qr/$local:process:$process/;
 
   $result
 });

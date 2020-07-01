@@ -27,7 +27,7 @@ my $m2 = Zing::Mailbox->new(process => $p2);
 
 my $msg;
 
-$m1->send($p2->name, {text => 'hey'});
+$m1->send($p2->mailbox->term, {text => 'hey'});
 
 $msg = $m2->recv;
 

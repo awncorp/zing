@@ -13,6 +13,8 @@ use Data::Object::ClassHas;
 
 extends 'Zing::PubSub';
 
+use Zing::Term;
+
 # VERSION
 
 # ATTRIBUTES
@@ -47,7 +49,7 @@ method recv() {
 }
 
 method message(HashRef $val) {
-  +{ data => $val, from => $self->name };
+  return { data => $val, from => $self->term };
 }
 
 method reply(HashRef $bag, HashRef $val) {
@@ -63,7 +65,7 @@ method size() {
 }
 
 method term(Maybe[Str] $name) {
-  return $self->global($name || $self->name, 'mailbox');
+  return Zing::Term->new($name || $self)->mailbox;
 }
 
 1;

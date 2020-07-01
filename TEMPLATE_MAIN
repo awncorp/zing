@@ -215,7 +215,7 @@ of features currently enabled by this toolkit:
   my $p1 = Zing::Process->new(name => 'p1');
   my $p2 = Zing::Process->new(name => 'p2');
 
-  $p1->mailbox->send($p2->name, { action => 'greeting' });
+  $p1->mailbox->send($p2->mailbox->term, { action => 'greeting' });
 
 This distribution provides a toolkit for creating processes (actors) which can
 be run in isolation and which communicate with other processes through
@@ -241,7 +241,7 @@ message-passing.
 
   for my $friend (@$friends) {
     # send each registered process a message
-    $p2->send($friend, { discovery => $p2->name });
+    $p2->send($friend, { discovery => $p2->term });
   }
 
   $p2->execute;
@@ -533,7 +533,7 @@ especially by the command-line tool.
   my $p1 = Zing::Process->new(name => 'p1');
   my $p2 = Zing::Process->new(name => 'p2');
 
-  $p1->mailbox->send($p2->name, { say => 'ehlo' });
+  $p1->mailbox->send($p2->mailbox->term, { say => 'ehlo' });
 
   my $message = $p2->mailbox->recv;
 
@@ -595,7 +595,7 @@ non-blocking manner.
     on_receive => sub {
       my ($self, $from, $data) = @_;
 
-      return unless $self->name eq $from; # from myself
+      return unless $self->term eq $from; # from myself
 
       # do something
 

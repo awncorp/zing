@@ -92,7 +92,7 @@ recv() : Maybe[HashRef]
 
   # given: synopsis
 
-  $mailbox->send($mailbox->process->name, { status => 'hello' });
+  $mailbox->send($mailbox->term, { status => 'hello' });
 
   $mailbox->recv;
 
@@ -111,7 +111,7 @@ reply(HashRef $bag, HashRef $value) : Int
 
   # given: synopsis
 
-  $mailbox->send($mailbox->process->name, { status => 'hello' });
+  $mailbox->send($mailbox->term, { status => 'hello' });
 
   my $data = $mailbox->recv;
 
@@ -132,7 +132,7 @@ send(Str $key, HashRef $value) : Int
 
   # given: synopsis
 
-  $mailbox->send($mailbox->process->name, { status => 'hello' });
+  $mailbox->send($mailbox->term, { status => 'hello' });
 
 =cut
 
