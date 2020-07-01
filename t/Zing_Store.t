@@ -34,6 +34,7 @@ Redis Storage Abstraction
 method: drop
 method: dump
 method: keys
+method: pop
 method: pull
 method: push
 method: load
@@ -129,6 +130,31 @@ keys(Str @keys) : ArrayRef[Str]
   $store->send('model', { status => 'ok' });
 
   my $keys = $store->keys('model');
+
+=cut
+
+=method pop
+
+The pop method pops data off of the bottom of a list in the datastore.
+
+=signature pop
+
+pop(Str $key) : Maybe[HashRef]
+
+=example-1 pop
+
+  # given: synopsis
+
+  $store->pop('collection');
+
+=example-2 pop
+
+  # given: synopsis
+
+  $store->push('collection', { status => 1 });
+  $store->push('collection', { status => 2 });
+
+  $store->pop('collection');
 
 =cut
 
@@ -366,8 +392,22 @@ $subs->example(-2, 'keys', 'method', fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'pull', 'method', fun($tryable) {
+$subs->example(-1, 'pop', 'method', fun($tryable) {
   ok !(my $result = $tryable->result);
+
+  $result
+});
+
+$subs->example(-2, 'pop', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is_deeply $result, {status => 2};
+
+  $result
+});
+
+$subs->example(-1, 'pull', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is_deeply $result, {status => 1};
 
   $result
 });

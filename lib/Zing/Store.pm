@@ -48,6 +48,11 @@ method keys(Str @keys) {
   return [map $self->redis->keys($self->term(@$_)), [@keys], [@keys, '*']];
 }
 
+method pop(Str $key) {
+  my $get = $self->redis->rpop($key);
+  return $get ? $self->load($get) : $get;
+}
+
 method pull(Str $key) {
   my $get = $self->redis->lpop($key);
   return $get ? $self->load($get) : $get;
