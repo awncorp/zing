@@ -64,11 +64,11 @@ method execute() {
   $self->space->load;
 
   if ($Config{d_pseudofork}) {
-    die "Error on fork: fork emulation not supported";
+    Carp::confess "Error on fork: fork emulation not supported";
   }
 
   if(!defined($pid = fork)) {
-    die "Error on fork: $!";
+    Carp::confess "Error on fork: $!";
   }
 
   # parent

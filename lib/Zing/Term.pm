@@ -14,6 +14,7 @@ use Data::Object::ClassHas;
 use Zing::Node;
 use Zing::Server;
 
+use Carp ();
 use Scalar::Util ();
 
 use overload '""' => 'string';
@@ -153,7 +154,7 @@ fun BUILDARGS($self, $item, @data) {
       $args->{facets} = [@data];
     }
     else {
-      die qq(Error in term: Unrecognizable "object");
+      Carp::confess qq(Error in term: Unrecognizable "object");
     }
     $args->{handle} = $ENV{ZING_NS} || 'main';
     $args->{system} = 'zing';
@@ -171,13 +172,13 @@ fun BUILDARGS($self, $item, @data) {
     my $facets = [split /:/, $extras || ''];
 
     unless ($system eq 'zing') {
-      die qq(Error in term: Unrecognizable "system" in: $item);
+      Carp::confess qq(Error in term: Unrecognizable "system" in: $item);
     }
     unless ($target =~ m{^(global|local\(\d+\.\d+\.\d+\.\d+\))$}) {
-      die qq(Error in term: Unrecognizable "target" ($target) in: $item);
+      Carp::confess qq(Error in term: Unrecognizable "target" ($target) in: $item);
     }
     unless (grep {$_ eq $symbol} values %$symbols) {
-      die qq(Error in term: Unrecognizable "symbol" ($symbol) in: $item);
+      Carp::confess qq(Error in term: Unrecognizable "symbol" ($symbol) in: $item);
     }
 
     $args->{system} = $system;
@@ -188,7 +189,7 @@ fun BUILDARGS($self, $item, @data) {
     $args->{facets} = $facets;
   }
   else {
-    die 'Unrecognizable Zing term provided';
+    Carp::confess 'Unrecognizable Zing term provided';
   }
 
   return $args;
@@ -198,7 +199,7 @@ fun BUILDARGS($self, $item, @data) {
 
 method channel() {
   unless ($self->symbol eq 'channel') {
-    die 'Error in term: not a "channel"';
+    Carp::confess 'Error in term: not a "channel"';
   }
 
   return $self->string;
@@ -206,7 +207,7 @@ method channel() {
 
 method data() {
   unless ($self->symbol eq 'data') {
-    die 'Error in term: not a "data" term';
+    Carp::confess 'Error in term: not a "data" term';
   }
 
   return $self->string;
@@ -214,7 +215,7 @@ method data() {
 
 method domain() {
   unless ($self->symbol eq 'domain') {
-    die 'Error in term: not a "domain" term';
+    Carp::confess 'Error in term: not a "domain" term';
   }
 
   return $self->string;
@@ -222,7 +223,7 @@ method domain() {
 
 method kernel() {
   unless ($self->symbol eq 'kernel') {
-    die 'Error in term: not a "kernel" term';
+    Carp::confess 'Error in term: not a "kernel" term';
   }
 
   return $self->string;
@@ -230,7 +231,7 @@ method kernel() {
 
 method keyval() {
   unless ($self->symbol eq 'keyval') {
-    die 'Error in term: not a "keyval" term';
+    Carp::confess 'Error in term: not a "keyval" term';
   }
 
   return $self->string;
@@ -238,7 +239,7 @@ method keyval() {
 
 method mailbox() {
   unless ($self->symbol eq 'mailbox') {
-    die 'Error in term: not a "mailbox" term';
+    Carp::confess 'Error in term: not a "mailbox" term';
   }
 
   return $self->string;
@@ -246,7 +247,7 @@ method mailbox() {
 
 method process() {
   unless ($self->symbol eq 'process') {
-    die 'Error in term: not a "process" term';
+    Carp::confess 'Error in term: not a "process" term';
   }
 
   return $self->string;
@@ -254,7 +255,7 @@ method process() {
 
 method pubsub() {
   unless ($self->symbol eq 'pubsub') {
-    die 'Error in term: not a "pubsub" term';
+    Carp::confess 'Error in term: not a "pubsub" term';
   }
 
   return $self->string;
@@ -262,7 +263,7 @@ method pubsub() {
 
 method queue() {
   unless ($self->symbol eq 'queue') {
-    die 'Error in term: not a "queue" term';
+    Carp::confess 'Error in term: not a "queue" term';
   }
 
   return $self->string;
@@ -270,7 +271,7 @@ method queue() {
 
 method registry() {
   unless ($self->symbol eq 'registry') {
-    die 'Error in term: not a "registry" term';
+    Carp::confess 'Error in term: not a "registry" term';
   }
 
   return $self->string;
@@ -278,7 +279,7 @@ method registry() {
 
 method repo() {
   unless ($self->symbol eq 'repo') {
-    die 'Error in term: not a "repo" term';
+    Carp::confess 'Error in term: not a "repo" term';
   }
 
   return $self->string;

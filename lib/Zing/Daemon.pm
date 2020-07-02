@@ -11,6 +11,8 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
+use Carp ();
+
 use Config;
 use File::Spec;
 use POSIX;
@@ -115,13 +117,13 @@ method fork() {
   my $app = $self->app;
 
   if ($Config{d_pseudofork}) {
-    die "Error on fork: fork emulation not supported";
+    Carp::confess "Error on fork: fork emulation not supported";
   }
 
   my $pid = fork;
 
   if (!defined $pid) {
-    die "Error on fork: $!";
+    Carp::confess "Error on fork: $!";
   }
   elsif ($pid == 0) {
     $self->app->start; # child
