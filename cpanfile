@@ -4,7 +4,7 @@
 requires "Data::Object::Class" => "2.02";
 requires "Data::Object::ClassHas" => "2.01";
 requires "Data::Object::Cli" => "2.03";
-requires "Data::Object::Space" => "2.08";
+requires "Data::Object::Space" => "2.10";
 requires "Data::Object::Types" => "0.04";
 requires "FlightRecorder" => "0.09";
 requires "JSON" => "4.02";
@@ -20,7 +20,7 @@ on 'test' => sub {
   requires "Data::Object::Class" => "2.02";
   requires "Data::Object::ClassHas" => "2.01";
   requires "Data::Object::Cli" => "2.03";
-  requires "Data::Object::Space" => "2.08";
+  requires "Data::Object::Space" => "2.10";
   requires "Data::Object::Types" => "0.04";
   requires "FlightRecorder" => "0.09";
   requires "JSON" => "4.02";

@@ -28,6 +28,7 @@ sub auto {
     clean => '_handle_clean',
     logs => '_handle_logs',
     pid => '_handle_pid',
+    restart => '_handle_restart',
     update => '_handle_update',
     start => '_handle_start',
     stop => '_handle_stop',
@@ -36,9 +37,10 @@ sub auto {
 
 sub subs {
   {
-    clean => 'Prune the processes registry',
+    clean => 'Prune the process registry',
     logs => 'Tap logs and output to STDOUT',
     pid => 'Display an application process ID',
+    restart => 'Restart the specified application',
     update => 'Hot-reload application processes',
     start => 'Start the specified application',
     stop => 'Stop the specified application',
@@ -97,7 +99,7 @@ sub _handle_clean {
     $r->store->drop($id) unless kill 0, $pid;
   }
 
-  $self->okay;
+  return $self;
 }
 
 sub _handle_logs {
@@ -130,7 +132,7 @@ sub _handle_logs {
     print STDOUT $from, ' ', $tag, ' ', $_, "\n" for @$lines;
   }
 
-  $self->okay;
+  return $self;
 }
 
 sub _handle_pid {
@@ -164,7 +166,16 @@ sub _handle_pid {
 
   print "Process ID: $pid\n";
 
-  $self->okay;
+  return $self;
+}
+
+sub _handle_restart {
+  my ($self) = @_;
+
+  $self->_handle_stop;
+  $self->_handle_start;
+
+  return $self;
 }
 
 sub _handle_start {
@@ -206,6 +217,8 @@ sub _handle_start {
   );
 
   $daemon->start;
+
+  return $self;
 }
 
 sub _handle_stop {
@@ -241,7 +254,7 @@ sub _handle_stop {
 
   unlink $pidfile;
 
-  $self->okay;
+  return $self;
 }
 
 sub _handle_update {
@@ -275,7 +288,7 @@ sub _handle_update {
 
   kill 'USR2', $pid;
 
-  $self->okay;
+  return $self;
 }
 
 1;
