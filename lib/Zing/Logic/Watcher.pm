@@ -87,15 +87,15 @@ method flow() {
 
   my $step_1 = Zing::Flow->new(
     name => 'on_launch',
-    code => fun($step, $loop) { $self->on_launch->($self) }
+    code => fun($step, $loop) { $self->trace('on_launch')->($self) }
   );
   my $step_2 = $step_1->next(Zing::Flow->new(
     name => 'on_monitor',
-    code => fun($step, $loop) { $self->on_monitor->($self) }
+    code => fun($step, $loop) { $self->trace('on_monitor')->($self) }
   ));
   my $step_3 = $step_2->next(Zing::Flow->new(
     name => 'on_sanitize',
-    code => fun($step, $loop) { $self->on_sanitize->($self) }
+    code => fun($step, $loop) { $self->trace('on_sanitize')->($self) }
   ));
 
   $step_0->append($step_1);
@@ -151,27 +151,34 @@ method signals() {
   my $fork = $self->fork;
 
   $trapped->{INT} = sub {
-    $self->interupt('INT');
+    $self->trace('interupt', 'INT');
     $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reap children
     $self->process->winddown;
   };
 
   $trapped->{QUIT} = sub {
-    $self->interupt('QUIT');
+    $self->trace('interupt', 'QUIT');
     $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reap children
     $self->process->winddown;
   };
 
   $trapped->{TERM} = sub {
-    $self->interupt('TERM');
+    $self->trace('interupt', 'TERM');
     $fork->terminate($self->interupt);
     do {0} while ($fork->sanitize); # reap children
     $self->process->winddown;
   };
 
-  $trapped->{USR1} = $trapped->{USR2} = sub {
+  $trapped->{USR1} = sub {
+    $self->debug('handles "interupt", with, USR1');
+    $fork->terminate('INT');
+    do {0} while ($fork->sanitize); # reap children
+  };
+
+  $trapped->{USR2} = sub {
+    $self->debug('handles "interupt", with, USR2');
     $fork->terminate('INT');
     do {0} while ($fork->sanitize); # reap children
   };

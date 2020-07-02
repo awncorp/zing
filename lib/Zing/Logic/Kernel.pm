@@ -22,7 +22,7 @@ method flow() {
 
   my $step_1 = Zing::Flow->new(
     name => 'on_purge',
-    code => fun($step, $loop) { $self->handle_purge_event }
+    code => fun($step, $loop) { $self->trace('handle_purge_event') }
   );
 
   $step_0->append($step_1);
@@ -35,7 +35,6 @@ method handle_purge_event() {
   return $self if !$process->can('journal');
 
   # check every minute (60 secs) not every tick
-
   if ($self->{purge_at}) {
     return $self if $self->{purge_at} > time;
   }

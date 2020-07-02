@@ -85,28 +85,45 @@ sub _kill {
   CORE::kill(shift, shift)
 }
 
+sub _repr {
+  "$_[0]" =~ s/^((?:[\w:]+=*)\w+)\((\w+)\)/($1)/r
+}
+
+sub _words {
+  (map {ref ? _repr($_) : /\s+/ ? qq("$_") : $_} @_)
+}
+
 # METHODS
+
+method debug(Any @data) {
+  if ($ENV{ZING_DEBUG}) {
+    $self->process->log->debug(
+      join ' ', sprintf('in %s, %s', _words($self, $self->process)), @data
+    );
+  }
+  return $self;
+}
 
 method flow() {
   my $step_0 = Zing::Flow->new(
     name => 'on_register',
-    code => fun($step, $loop) { $self->on_register->($self) }
+    code => fun($step, $loop) { $self->trace('on_register')->($self) }
   );
   my $step_1 = $step_0->next(Zing::Flow->new(
     name => 'on_perform',
-    code => fun($step, $loop) { $self->on_perform->($self) }
+    code => fun($step, $loop) { $self->trace('on_perform')->($self) }
   ));
   my $step_2 = $step_1->next(Zing::Flow->new(
     name => 'on_receive',
-    code => fun($step, $loop) { $self->on_receive->($self) }
+    code => fun($step, $loop) { $self->trace('on_receive')->($self) }
   ));
   my $step_3 = $step_2->next(Zing::Flow->new(
     name => 'on_reset',
-    code => fun($step, $loop) { $self->on_reset->($self) }
+    code => fun($step, $loop) { $self->trace('on_reset')->($self) }
   ));
   my $step_4 = $step_3->next(Zing::Flow->new(
     name => 'on_suicide',
-    code => fun($step, $loop) { $self->on_suicide->($self) }
+    code => fun($step, $loop) { $self->trace('on_suicide')->($self) }
   ));
 
   $step_0
@@ -115,26 +132,30 @@ method flow() {
 method handle_perform_event() {
   my $process = $self->process;
 
-  return if !$process->can('perform');
+  return $self if !$process->can('perform');
 
-  return $process->perform();
+  $process->perform();
+
+  return $self;
 }
 
 method handle_receive_event() {
   my $process = $self->process;
 
-  return if !$process->can('mailbox');
-  return if !$process->can('receive');
+  return $self if !$process->can('mailbox');
+  return $self if !$process->can('receive');
 
   my $data = $process->mailbox->recv or return;
 
-  return $process->receive($data->{from}, $data->{data});
+  $process->receive($data->{from}, $data->{data});
+
+  return $self;
 }
 
 method handle_register_event() {
   my $process = $self->process;
 
-  return if $self->{registered};
+  return $self if $self->{registered};
 
   $self->{registered} = $process->registry->send($process);
 
@@ -145,11 +166,13 @@ method handle_reset_event() {
   my $process = $self->process;
 
   if ($process->journal && $process->log->count) {
-    my $data = {
-      logs => $process->log->serialize,
-      tag => $process->tag,
-    };
-    $process->journal->send({ data => $data, from => $process->name });
+    $process->journal->send({
+      from => $process->name,
+      data => {
+        logs => $process->log->serialize,
+        tag => $process->tag
+      }
+    });
   }
 
   $process->log->reset;
@@ -160,7 +183,7 @@ method handle_reset_event() {
 method handle_suicide_event() {
   my $process = $self->process;
 
-  return if !$process->parent;
+  return $self if !$process->parent;
 
   # children who don't known their parents kill themeselves :)
   $process->winddown unless _kill 0, $process->parent->node->pid;
@@ -172,21 +195,27 @@ method signals() {
   my $trapped = {};
 
   $trapped->{INT} = sub {
-    $self->interupt('INT');
+    $self->trace('interupt', 'INT');
     $self->process->winddown;
   };
 
   $trapped->{QUIT} = sub {
-    $self->interupt('QUIT');
+    $self->trace('interupt', 'QUIT');
     $self->process->winddown;
   };
 
   $trapped->{TERM} = sub {
-    $self->interupt('TERM');
+    $self->trace('interupt', 'TERM');
     $self->process->winddown;
   };
 
   return $trapped;
+}
+
+method trace(Str $method, Any @args) {
+  my @with = (@args ? (join ', ', 'with', _words(@args)) : ());
+
+  return $self->debug(qq(invokes "$method"), @with)->$method(@args);
 }
 
 1;
