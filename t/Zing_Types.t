@@ -367,6 +367,34 @@ Zing::Types
 
 =cut
 
+=type Poll
+
+  Poll
+
+=type-library Poll
+
+Zing::Types
+
+=type-composite Poll
+
+  InstanceOf["Zing::Poll"]
+
+=type-parent Poll
+
+  Object
+
+=type-example-1 Poll
+
+  # given: synopsis
+
+  use Zing::Poll;
+  use Zing::KeyVal;
+
+  my $keyval = Zing::KeyVal->new(name => 'notes');
+  my $poll = Zing::Poll->new(name => 'last-week', repo => $keyval);
+
+=cut
+
 =type Process
 
   Process

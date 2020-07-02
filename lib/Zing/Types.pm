@@ -89,6 +89,12 @@ register {
 };
 
 register {
+  name => 'Poll',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Poll'),
+};
+
+register {
   name => 'Process',
   parent => 'Object',
   validation => is_instance_of('Zing::Process'),

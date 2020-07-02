@@ -31,6 +31,7 @@ Generic Key/Value Store
 
 =includes
 
+method: poll
 method: recv
 method: send
 method: term
@@ -68,6 +69,23 @@ name: ro, opt, Str
 =description
 
 This package provides a general-purpose key/value store abstraction.
+
+=cut
+
+=method poll
+
+The poll method returns a L<Zing::Poll> object which can be used to perform a
+blocking-fetch from the store.
+
+=signature poll
+
+poll(Str $key) : Poll
+
+=example-1 poll
+
+  # given: synopsis
+
+  $keyval->poll('today');
 
 =cut
 
@@ -142,6 +160,12 @@ my $test = testauto(__FILE__);
 my $subs = $test->standard;
 
 $subs->synopsis(fun($tryable) {
+  ok my $result = $tryable->result;
+
+  $result
+});
+
+$subs->example(-1, 'poll', 'method', fun($tryable) {
   ok my $result = $tryable->result;
 
   $result

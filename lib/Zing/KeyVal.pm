@@ -12,9 +12,15 @@ use Data::Object::Class;
 
 extends 'Zing::Repo';
 
+use Zing::Poll;
+
 # VERSION
 
 # METHODS
+
+method poll(Str $key) {
+  return Zing::Poll->new(repo => $self, name => $key);
+}
 
 method recv(Str $key) {
   return $self->store->recv($self->term($key));
