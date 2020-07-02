@@ -3,27 +3,31 @@
 
 =head1 NAME
 
-Zing::Logic::Simple - Simple Logic
+Zing::Logic::Timer - Timer Logic
 
 =cut
 
 =head1 ABSTRACT
 
-Simple Process Logic Chain
+Timer Process Logic Chain
 
 =cut
 
 =head1 SYNOPSIS
 
-  package Simple;
+  package Process;
 
-  use parent 'Zing::Simple';
+  use parent 'Zing::Process';
+
+  sub schedules {
+    [['@minute', ['tasks'], { do => 1 }]]
+  }
 
   package main;
 
-  use Zing::Logic::Simple;
+  use Zing::Logic::Timer;
 
-  my $logic = Zing::Logic::Simple->new(process => Simple->new);
+  my $logic = Zing::Logic::Timer->new(process => Process->new);
 
   # $logic->execute;
 
@@ -31,7 +35,7 @@ Simple Process Logic Chain
 
 =head1 DESCRIPTION
 
-This package provides the logic (or logic chain) to be executed by the simple
+This package provides the logic (or logic chain) to be executed by the timer
 process event-loop.
 
 =cut
@@ -106,11 +110,35 @@ This attribute is read-only, accepts C<(CodeRef)> values, and is optional.
 
 =cut
 
+=head2 on_timer
+
+  on_timer(CodeRef)
+
+This attribute is read-only, accepts C<(CodeRef)> values, and is optional.
+
+=cut
+
 =head2 process
 
   process(Process)
 
 This attribute is read-only, accepts C<(Process)> values, and is required.
+
+=cut
+
+=head2 relays
+
+  relays(HashRef[Queue])
+
+This attribute is read-only, accepts C<(HashRef[Queue])> values, and is optional.
+
+=cut
+
+=head2 schedules
+
+  schedules(ArrayRef[Schedule])
+
+This attribute is read-only, accepts C<(ArrayRef[Schedule])> values, and is optional.
 
 =cut
 

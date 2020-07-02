@@ -119,6 +119,7 @@ These classes facilitate message-passing and communications:
 
 - [Zing::Channel](https://metacpan.org/pod/Zing%3A%3AChannel): Shared Communication
 - [Zing::Data](https://metacpan.org/pod/Zing%3A%3AData): Process Data
+- [Zing::Domain](https://metacpan.org/pod/Zing%3A%3ADomain): Aggregate Root
 - [Zing::Dropbox](https://metacpan.org/pod/Zing%3A%3ADropbox): Transient Store
 - [Zing::KeyVal](https://metacpan.org/pod/Zing%3A%3AKeyVal): Key/Value Store
 - [Zing::Mailbox](https://metacpan.org/pod/Zing%3A%3AMailbox): Process Mailbox
@@ -141,6 +142,7 @@ These base classes implement the underlying process (actor) logic:
 - [Zing::Simple](https://metacpan.org/pod/Zing%3A%3ASimple): Simple Process
 - [Zing::Single](https://metacpan.org/pod/Zing%3A%3ASingle): Single Process
 - [Zing::Spawner](https://metacpan.org/pod/Zing%3A%3ASpawner): Scheme Spawner
+- [Zing::Timer](https://metacpan.org/pod/Zing%3A%3ATimer): Timer Process
 - [Zing::Watcher](https://metacpan.org/pod/Zing%3A%3AWatcher): Watcher Process
 - [Zing::Worker](https://metacpan.org/pod/Zing%3A%3AWorker): Worker Process
 
@@ -168,7 +170,7 @@ of features currently enabled by this toolkit:
     my $p1 = Zing::Process->new(name => 'p1');
     my $p2 = Zing::Process->new(name => 'p2');
 
-    $p1->mailbox->send($p2->name, { action => 'greeting' });
+    $p1->mailbox->send($p2->mailbox->term, { action => 'greeting' });
 
 This distribution provides a toolkit for creating processes (actors) which can
 be run in isolation and which communicate with other processes through
@@ -192,7 +194,7 @@ message-passing.
 
     for my $friend (@$friends) {
       # send each registered process a message
-      $p2->send($friend, { discovery => $p2->name });
+      $p2->send($friend, { discovery => $p2->term });
     }
 
     $p2->execute;
@@ -301,6 +303,12 @@ scale your deployments without changing your implementations.
 
 ## configuration
 
+    # configure the namespace (defaults to "main")
+    ZING_NS=app
+
+    # enable process debugging tracing
+    ZING_DEBUG=1
+
     # configure where the command-line tool finds catridges
     ZING_HOME=/tmp
 
@@ -312,6 +320,10 @@ scale your deployments without changing your implementations.
     ZING_REDIS='every=1_000_000,reconnect=60'
     ZING_REDIS='sentinels=127.0.0.1:12345|127.0.0.1:23456,sentinels_cnx_timeout=0.1'
     ZING_REDIS='server=192.168.0.1:6379,debug=0'
+
+    # configure where the command-line tool finds catridges and PID files
+    ZING_APPDIR=./
+    ZING_PIDDIR=/tmp
 
 This distribution provides environment variables that let you customize how
 Zing operates and behaves without the need to modify source code. These
@@ -455,7 +467,7 @@ especially by the command-line tool.
     my $p1 = Zing::Process->new(name => 'p1');
     my $p2 = Zing::Process->new(name => 'p2');
 
-    $p1->mailbox->send($p2->name, { say => 'ehlo' });
+    $p1->mailbox->send($p2->mailbox->term, { say => 'ehlo' });
 
     my $message = $p2->mailbox->recv;
 
@@ -511,7 +523,7 @@ non-blocking manner.
       on_receive => sub {
         my ($self, $from, $data) = @_;
 
-        return unless $self->name eq $from; # from myself
+        return unless $self->term eq $from; # from myself
 
         # do something
 

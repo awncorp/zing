@@ -65,6 +65,25 @@ This package implements the following methods:
 
 =cut
 
+=head2 poll
+
+  poll(Str $key) : Poll
+
+The poll method returns a L<Zing::Poll> object which can be used to perform a
+blocking-fetch from the store.
+
+=over 4
+
+=item poll example #1
+
+  # given: synopsis
+
+  $keyval->poll('today');
+
+=back
+
+=cut
+
 =head2 recv
 
   recv(Str $key) : Maybe[HashRef]

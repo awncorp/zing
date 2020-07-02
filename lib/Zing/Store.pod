@@ -143,6 +143,37 @@ The load method decodes the JSON data provided and returns the data as a hashref
 
 =cut
 
+=head2 pop
+
+  pop(Str $key) : Maybe[HashRef]
+
+The pop method pops data off of the bottom of a list in the datastore.
+
+=over 4
+
+=item pop example #1
+
+  # given: synopsis
+
+  $store->pop('collection');
+
+=back
+
+=over 4
+
+=item pop example #2
+
+  # given: synopsis
+
+  $store->push('collection', { status => 1 });
+  $store->push('collection', { status => 2 });
+
+  $store->pop('collection');
+
+=back
+
+=cut
+
 =head2 pull
 
   pull(Str $key) : Maybe[HashRef]

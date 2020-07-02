@@ -99,24 +99,6 @@ The drop method returns truthy if the data was removed from the store.
 
 =cut
 
-=head2 global
-
-  global(Str @keys) : Str
-
-The global method returns a global term (safe word) for the datastore.
-
-=over 4
-
-=item global example #1
-
-  # given: synopsis
-
-  $repo->global('text-1');
-
-=back
-
-=cut
-
 =head2 ids
 
   ids() : ArrayRef[Str]
@@ -139,7 +121,8 @@ The ids method returns a list of IDs (keys) stored under the datastore namespace
 
   keys() : ArrayRef[Str]
 
-The keys method returns a list of fully-qualified keys stored under the datastore namespace.
+The keys method returns a list of fully-qualified keys stored under the
+datastore namespace.
 
 =over 4
 
@@ -148,24 +131,6 @@ The keys method returns a list of fully-qualified keys stored under the datastor
   # given: synopsis
 
   my $keys = $repo->keys;
-
-=back
-
-=cut
-
-=head2 local
-
-  local(Str @keys) : Str
-
-The local method returns a local term (safe word) for the datastore which includes the node name.
-
-=over 4
-
-=item local example #1
-
-  # given: synopsis
-
-  $repo->local('text-1');
 
 =back
 
