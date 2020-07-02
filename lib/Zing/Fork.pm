@@ -50,10 +50,6 @@ fun new_space($self) {
 
 # SHIMS
 
-sub _kill {
-  CORE::kill(shift, shift)
-}
-
 sub _waitpid {
   CORE::waitpid(shift, POSIX::WNOHANG)
 }
@@ -121,11 +117,11 @@ method sanitize() {
   return scalar(keys %{$self->processes});
 }
 
-method terminate(Str $signal = 'KILL') {
+method terminate(Str $signal = 'kill') {
   my $result = {};
 
   for my $pid (sort keys %{$self->processes}) {
-    $result->{$pid} = _kill uc($signal), $pid;
+    $result->{$pid} = $self->processes->{$pid}->signal($pid, $signal);
   }
 
   return $result;

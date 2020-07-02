@@ -168,6 +168,12 @@ has 'tag' => (
   opt => 1,
 );
 
+# SHIMS
+
+sub _kill {
+  CORE::kill(shift, shift)
+}
+
 # METHODS
 
 method defer(HashRef $data) {
@@ -243,10 +249,18 @@ method metadata() {
   }
 }
 
+method ping(Int $pid) {
+  return _kill 0, $pid;
+}
+
 method shutdown() {
   $self->loop->stop(1);
 
   return $self;
+}
+
+method signal(Int $pid, Str $type = 'kill') {
+  return _kill uc($type), $pid;
 }
 
 method spawn(Scheme $scheme) {
