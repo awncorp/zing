@@ -48,6 +48,7 @@ has 'pid_dir' => (
 );
 
 fun new_pid_dir($self) {
+  -w $ENV{ZING_PIDDIR} ? $ENV{ZING_PIDDIR} :
   -w $ENV{ZING_HOME} ? $ENV{ZING_HOME} :
   -w File::Spec->curdir ? File::Spec->curdir : File::Spec->tmpdir
 }
