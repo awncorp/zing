@@ -134,7 +134,7 @@ terminates the process.
 
 =head2 logs
 
-  $ zing logs
+  $ zing logs --level fatal
 
 The C<logs> command taps the centralized log source and outputs new events to
 STDOUT (standard output).

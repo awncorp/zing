@@ -101,7 +101,7 @@ terminates the process.
 
 ## logs
 
-    $ zing logs
+    $ zing logs --level fatal
 
 The `logs` command taps the centralized log source and outputs new events to
 STDOUT (standard output).
