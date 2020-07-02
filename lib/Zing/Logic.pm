@@ -90,7 +90,7 @@ sub _repr {
 }
 
 sub _words {
-  (map {ref ? _repr($_) : /\s+/ ? qq("$_") : $_} @_)
+  (map {ref() ? _repr($_) : m/\s+/ ? qq("$_") : $_} @_)
 }
 
 # METHODS
