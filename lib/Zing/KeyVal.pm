@@ -13,6 +13,7 @@ use Data::Object::Class;
 extends 'Zing::Repo';
 
 use Zing::Poll;
+use Zing::Term;
 
 # VERSION
 
@@ -31,7 +32,7 @@ method send(Str $key, HashRef $val) {
 }
 
 method term(Str @keys) {
-  return $self->next::method('keyval', @keys);
+  return Zing::Term->new($self, @keys)->keyval;
 }
 
 1;

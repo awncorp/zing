@@ -212,7 +212,9 @@ $subs->example(-1, 'send', 'method', fun($tryable) {
 
 $subs->example(-1, 'term', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result, qr/zing:\d+\.\d+\.\d+\.\d+:\$default:keyval:registry/;
+  my $local = qr/zing:main:local\(\d+\.\d+\.\d+\.\d+\)/;
+  my $process = qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
+  like $result, qr/$local:registry:\$default:$process/;
 
   $result
 });

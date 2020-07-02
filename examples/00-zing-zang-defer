@@ -32,7 +32,7 @@ my $z = Zing::Zang->new(
     my ($self, $from, $data) = @_;
 
     # from myself
-    return unless $self->name eq $from;
+    return unless $self->term eq $from;
 
     warn $from, ' ', $data->{time};
 
