@@ -26,6 +26,12 @@ register {
 };
 
 register {
+  name => 'Domain',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Domain'),
+};
+
+register {
   name => 'Error',
   parent => 'Object',
   validation => is_instance_of('Zing::Error'),
