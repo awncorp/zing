@@ -3,8 +3,6 @@
 use strict;
 use warnings;
 
-use feature 'say';
-
 use Zing::Zang;
 
 =pod explain
