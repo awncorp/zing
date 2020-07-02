@@ -105,6 +105,32 @@ Zing::Types
 
 =cut
 
+=type Domain
+
+  Domain
+
+=type-library Domain
+
+Zing::Types
+
+=type-composite Domain
+
+  InstanceOf["Zing::Domain"]
+
+=type-parent Domain
+
+  Object
+
+=type-example-1 Domain
+
+  # given: synopsis
+
+  use Zing::Domain;
+
+  my $domain = Zing::Domain->new(name => 'exchange');
+
+=cut
+
 =type Flow
 
   Flow
