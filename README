@@ -122,6 +122,8 @@ PRIMATIVES
 
       * Zing::Data: Process Data
 
+      * Zing::Domain: Aggregate Root
+
       * Zing::Dropbox: Transient Store
 
       * Zing::KeyVal: Key/Value Store
@@ -160,6 +162,8 @@ PRIMATIVES
 
       * Zing::Spawner: Scheme Spawner
 
+      * Zing::Timer: Timer Process
+
       * Zing::Watcher: Watcher Process
 
       * Zing::Worker: Worker Process
@@ -194,7 +198,7 @@ FEATURES
       my $p1 = Zing::Process->new(name => 'p1');
       my $p2 = Zing::Process->new(name => 'p2');
     
-      $p1->mailbox->send($p2->name, { action => 'greeting' });
+      $p1->mailbox->send($p2->mailbox->term, { action => 'greeting' });
 
     This distribution provides a toolkit for creating processes (actors)
     which can be run in isolation and which communicate with other
@@ -218,7 +222,7 @@ FEATURES
     
       for my $friend (@$friends) {
         # send each registered process a message
-        $p2->send($friend, { discovery => $p2->name });
+        $p2->send($friend, { discovery => $p2->term });
       }
     
       $p2->execute;
@@ -328,6 +332,12 @@ FEATURES
 
  configuration
 
+      # configure the namespace (defaults to "main")
+      ZING_NS=app
+    
+      # enable process debugging tracing
+      ZING_DEBUG=1
+    
       # configure where the command-line tool finds catridges
       ZING_HOME=/tmp
     
@@ -339,6 +349,10 @@ FEATURES
       ZING_REDIS='every=1_000_000,reconnect=60'
       ZING_REDIS='sentinels=127.0.0.1:12345|127.0.0.1:23456,sentinels_cnx_timeout=0.1'
       ZING_REDIS='server=192.168.0.1:6379,debug=0'
+    
+      # configure where the command-line tool finds catridges and PID files
+      ZING_APPDIR=./
+      ZING_PIDDIR=/tmp
 
     This distribution provides environment variables that let you customize
     how Zing operates and behaves without the need to modify source code.
@@ -483,7 +497,7 @@ FEATURES
       my $p1 = Zing::Process->new(name => 'p1');
       my $p2 = Zing::Process->new(name => 'p2');
     
-      $p1->mailbox->send($p2->name, { say => 'ehlo' });
+      $p1->mailbox->send($p2->mailbox->term, { say => 'ehlo' });
     
       my $message = $p2->mailbox->recv;
     
@@ -539,7 +553,7 @@ FEATURES
         on_receive => sub {
           my ($self, $from, $data) = @_;
     
-          return unless $self->name eq $from; # from myself
+          return unless $self->term eq $from; # from myself
     
           # do something
     

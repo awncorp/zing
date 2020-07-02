@@ -1,6 +1,26 @@
 Changelog for Zing
 
-0.08 2020-06-27T22:38:43
+0.09 2020-07-02T06:24:00
+ - Add release updates
+ - Update POD Template
+ - Add "trace" to Zing::Timer (#167)
+ - Add Domain to Types (#168)
+ - Replace "die" with "confess"
+ - Add "trace" to Zing::Timer
+ - Implement Zing::Timer (#156)
+ - Add "ping" method to Zing/Process (#155)
+ - Implement Zing::Term (#164)
+ - Implement Zing::Domain (#157)
+ - Include missing class examples (#160)
+ - Include support for lifo queues (#158)
+ - Document ZING_DEBUG, ZING_APPDIR, and ZING_PIDDIR (#152)
+ - Prevent fork-bombing in Spawner (#151)
+ - Include logic debug statements (#154)
+ - Implement Zing::Poll (#150)
+ - Update stability and contributing docs (#149)
+
+0.08 2020-06-27T22:38:48
+ - Built release version 0.08
  - Add release updates
  - Implement Zing::Ringer (#133)
  - Implement log filtering by name (#136)

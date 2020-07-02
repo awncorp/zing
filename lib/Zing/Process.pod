@@ -262,6 +262,24 @@ The metadata method returns metadata specific to the process.
 
 =cut
 
+=head2 ping
+
+  ping(Int $pid) : Bool
+
+The ping method returns truthy if the process of the PID provided is active.
+
+=over 4
+
+=item ping example #1
+
+  # given: synopsis
+
+  $process->ping(12345);
+
+=back
+
+=cut
+
 =head2 shutdown
 
   shutdown() : Object
@@ -280,6 +298,34 @@ The shutdown method haults the process event-loop immediately.
 
 =cut
 
+=head2 signal
+
+  signal(Int $pid, Str $type = 'kill') : Int
+
+The signal method sends a C<kill> signal to the process of the PID provided.
+
+=over 4
+
+=item signal example #1
+
+  # given: synopsis
+
+  $process->signal(12345);
+
+=back
+
+=over 4
+
+=item signal example #2
+
+  # given: synopsis
+
+  $process->signal(12345, 'term');
+
+=back
+
+=cut
+
 =head2 spawn
 
   spawn(Scheme $scheme) : Fork
@@ -293,6 +339,24 @@ The spawn method forks a scheme and returns a L<Zing::Fork> handler.
   # given: synopsis
 
   $process->spawn(['MyApp', [], 1]);
+
+=back
+
+=cut
+
+=head2 term
+
+  term() : Str
+
+The term method generates a term (safe string) for the datastore.
+
+=over 4
+
+=item term example #1
+
+  # given: synopsis
+
+  $process->term;
 
 =back
 

@@ -79,6 +79,10 @@ L<Zing::Data>: Process Data
 
 =item *
 
+L<Zing::Domain>: Aggregate Root
+
+=item *
+
 L<Zing::Dropbox>: Transient Store
 
 =item *
@@ -152,6 +156,10 @@ L<Zing::Single>: Single Process
 =item *
 
 L<Zing::Spawner>: Scheme Spawner
+
+=item *
+
+L<Zing::Timer>: Timer Process
 
 =item *
 
@@ -359,6 +367,9 @@ scale your deployments without changing your implementations.
 =cut
 
 =head2 configuration
+
+  # configure the namespace (defaults to "main")
+  ZING_NS=app
 
   # enable process debugging tracing
   ZING_DEBUG=1

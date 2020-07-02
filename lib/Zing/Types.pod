@@ -117,6 +117,42 @@ This type is defined in the L<Zing::Types> library.
 
 =cut
 
+=head2 domain
+
+  Domain
+
+This type is defined in the L<Zing::Types> library.
+
+=over 4
+
+=item domain parent
+
+  Object
+
+=back
+
+=over 4
+
+=item domain composition
+
+  InstanceOf["Zing::Domain"]
+
+=back
+
+=over 4
+
+=item domain example #1
+
+  # given: synopsis
+
+  use Zing::Domain;
+
+  my $domain = Zing::Domain->new(name => 'exchange');
+
+=back
+
+=cut
+
 =head2 flow
 
   Flow
@@ -475,6 +511,44 @@ This type is defined in the L<Zing::Types> library.
 
 =cut
 
+=head2 poll
+
+  Poll
+
+This type is defined in the L<Zing::Types> library.
+
+=over 4
+
+=item poll parent
+
+  Object
+
+=back
+
+=over 4
+
+=item poll composition
+
+  InstanceOf["Zing::Poll"]
+
+=back
+
+=over 4
+
+=item poll example #1
+
+  # given: synopsis
+
+  use Zing::Poll;
+  use Zing::KeyVal;
+
+  my $keyval = Zing::KeyVal->new(name => 'notes');
+  my $poll = Zing::Poll->new(name => 'last-week', repo => $keyval);
+
+=back
+
+=cut
+
 =head2 process
 
   Process
@@ -686,6 +760,58 @@ This type is defined in the L<Zing::Types> library.
   use Zing::Repo;
 
   my $repo = Zing::Repo->new(name => 'repo');
+
+=back
+
+=cut
+
+=head2 schedule
+
+  Schedule
+
+This type is defined in the L<Zing::Types> library.
+
+=over 4
+
+=item schedule composition
+
+  Tuple[Str, ArrayRef[Str], HashRef]
+
+=back
+
+=over 4
+
+=item schedule example #1
+
+  # given: synopsis
+
+  # at 00:00 on day-of-month 1 in january
+
+  ['0 0 1 1 *', ['task_queue'], { task => 'execute' }];
+
+=back
+
+=over 4
+
+=item schedule example #2
+
+  # given: synopsis
+
+  # at 00:00 on saturday
+
+  ['0 0 * * SAT', ['task_queue'], { task => 'execute' }];
+
+=back
+
+=over 4
+
+=item schedule example #3
+
+  # given: synopsis
+
+  # at minute 0 (hourly)
+
+  ['0 * * * *', ['task_queue'], { task => 'execute' }];
 
 =back
 

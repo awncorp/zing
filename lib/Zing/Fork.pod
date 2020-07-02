@@ -198,7 +198,7 @@ returns the number of processes remaining.
 
 =head2 terminate
 
-  terminate(Str $signal = 'KILL') : HashRef[Int]
+  terminate(Str $signal = 'kill') : HashRef[Int]
 
 The terminate method call L<perlfunc/kill> and sends a signal to all tracked
 processes and returns the results as a pid/result map.
