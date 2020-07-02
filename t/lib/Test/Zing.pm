@@ -29,9 +29,17 @@ unless ($ENV{TEST_REDIS}) {
 }
 
 unless ($ENV{TEST_REDIS}) {
-  *{"Zing::Store::pull"} = sub {
+  *{"Zing::Store::pop"} = sub {
     my ($self, $key) = @_;
     my $get = pop @{$DATA->{$key}} if $DATA->{$key};
+    return $get ? $self->load($get) : $get;
+  };
+}
+
+unless ($ENV{TEST_REDIS}) {
+  *{"Zing::Store::pull"} = sub {
+    my ($self, $key) = @_;
+    my $get = shift @{$DATA->{$key}} if $DATA->{$key};
     return $get ? $self->load($get) : $get;
   };
 }
