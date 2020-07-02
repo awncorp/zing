@@ -551,6 +551,44 @@ Zing::Types
 
 =cut
 
+=type Schedule
+
+  Schedule
+
+=type-library Schedule
+
+Zing::Types
+
+=type-composite Schedule
+
+  Tuple[Str, ArrayRef[Str], HashRef]
+
+=type-example-1 Schedule
+
+  # given: synopsis
+
+  # at 00:00 on day-of-month 1 in january
+
+  ['0 0 1 1 *', ['task_queue'], { task => 'execute' }];
+
+=type-example-2 Schedule
+
+  # given: synopsis
+
+  # at 00:00 on saturday
+
+  ['0 0 * * SAT', ['task_queue'], { task => 'execute' }];
+
+=type-example-3 Schedule
+
+  # given: synopsis
+
+  # at minute 0 (hourly)
+
+  ['0 * * * *', ['task_queue'], { task => 'execute' }];
+
+=cut
+
 =type Scheme
 
   Scheme

@@ -13,19 +13,19 @@ use Test::Zing;
 
 =name
 
-Zing::Logic::Simple
+Zing::Logic::Timer
 
 =cut
 
 =tagline
 
-Simple Logic
+Timer Logic
 
 =cut
 
 =abstract
 
-Simple Process Logic Chain
+Timer Process Logic Chain
 
 =cut
 
@@ -38,15 +38,19 @@ method: signals
 
 =synopsis
 
-  package Simple;
+  package Process;
 
-  use parent 'Zing::Simple';
+  use parent 'Zing::Process';
+
+  sub schedules {
+    [['@minute', ['tasks'], { do => 1 }]]
+  }
 
   package main;
 
-  use Zing::Logic::Simple;
+  use Zing::Logic::Timer;
 
-  my $logic = Zing::Logic::Simple->new(process => Simple->new);
+  my $logic = Zing::Logic::Timer->new(process => Process->new);
 
   # $logic->execute;
 
@@ -72,13 +76,16 @@ on_receive: ro, opt, CodeRef
 on_register: ro, opt, CodeRef
 on_reset: ro, opt, CodeRef
 on_suicide: ro, opt, CodeRef
+on_timer: ro, opt, CodeRef
 process: ro, req, Process
+relays: ro, opt, HashRef[Queue]
+schedules: ro, opt, ArrayRef[Schedule]
 
 =cut
 
 =description
 
-This package provides the logic (or logic chain) to be executed by the simple
+This package provides the logic (or logic chain) to be executed by the timer
 process event-loop.
 
 =cut
@@ -135,15 +142,20 @@ $subs->example(-1, 'flow', 'method', fun($tryable) {
   my $step_1 = $step_0->next;
   is $step_1->name, 'on_perform';
   my $step_2 = $step_1->next;
-  is $step_2->name, 'on_reset';
-  is $result->bottom->name, 'on_reset';
+  is $step_2->name, 'on_receive';
+  my $step_3 = $step_2->next;
+  is $step_3->name, 'on_reset';
+  my $step_4 = $step_3->next;
+  is $step_4->name, 'on_suicide';
+  my $step_5 = $step_4->next;
+  is $step_5->name, 'on_timer';
+  is $result->bottom->name, 'on_timer';
 
   $result
 });
 
 $subs->example(-1, 'signals', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  is_deeply [sort keys %{$result}], [qw(INT QUIT TERM)];
 
   $result
 });
