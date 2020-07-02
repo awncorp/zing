@@ -70,7 +70,7 @@ method flow() {
 
   my $step_1 = Zing::Flow->new(
     name => 'on_timer',
-    code => fun($step, $loop) { $self->on_timer->($self) }
+    code => fun($step, $loop) { $self->trace('on_timer')->($self) }
   );
 
   $step_0->append($step_1);
