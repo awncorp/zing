@@ -61,8 +61,6 @@ method execute() {
   my $process;
   my $sid = $$;
 
-  $self->space->load;
-
   if ($Config{d_pseudofork}) {
     Carp::confess "Error on fork: fork emulation not supported";
   }
@@ -73,17 +71,17 @@ method execute() {
 
   # parent
   if ($pid) {
-    $process = $self->processes->{$pid} = $self->space->build(
+    $process = $self->space->load->new(
       @{$self->scheme->[1]},
       node => Zing::Node->new(pid => $pid),
       parent => $self->parent,
     );
-    return $process;
+    return $self->processes->{$pid} = $process;
   }
   # child
   else {
     $pid = $$;
-    $process = $self->space->build(
+    $process = $self->space->reload->new(
       @{$self->scheme->[1]},
       node => Zing::Node->new(pid => $pid),
       parent => $self->parent,
