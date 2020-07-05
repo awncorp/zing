@@ -249,6 +249,29 @@ method metadata() {
   }
 }
 
+method recv() {
+  return $self->mailbox->recv;
+}
+
+method reply(HashRef $mail, HashRef $data) {
+  return $self->mailbox->send($mail->{from}, $data);
+}
+
+method send(Mailbox | Process | Str $to, HashRef $data) {
+  if (!ref $to) {
+    return $self->mailbox->send(Zing::Term->new($to)->mailbox, $data);
+  }
+  elsif ($to->isa('Zing::Mailbox')) {
+    return $self->mailbox->send($to->term, $data);
+  }
+  elsif ($to->isa('Zing::Process')) {
+    return $self->mailbox->send($to->mailbox->term, $data);
+  }
+  else {
+    return $self->mailbox->send(Zing::Term->new($to)->mailbox, $data);
+  }
+}
+
 method ping(Int $pid) {
   return _kill 0, $pid;
 }
