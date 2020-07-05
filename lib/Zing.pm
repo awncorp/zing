@@ -11,9 +11,7 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-extends 'Zing::Watcher';
-
-use Zing::Kernel;
+extends 'Zing::Kernel';
 
 # VERSION
 
@@ -28,7 +26,7 @@ has 'scheme' => (
 # METHODS
 
 method start() {
-  Zing::Kernel->new(scheme => $self->scheme)->execute;
+  return $self->execute;
 }
 
 1;
