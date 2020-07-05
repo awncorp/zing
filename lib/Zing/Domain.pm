@@ -33,12 +33,6 @@ fun new_channel($self) {
   Zing::Channel->new(name => $self->name)
 }
 
-has 'threshold' => (
-  is => 'ro',
-  isa => 'Str',
-  def => 1_000,
-);
-
 # BUILDERS
 
 fun BUILD($self) {
@@ -75,9 +69,7 @@ sub _copy {
 # METHODS
 
 method apply() {
-  if ($self->channel->renew) {
-    undef $self->{data} if $self->channel->size;
-  }
+  undef $self->{data} if $self->channel->renew;
 
   while (my $data = $self->recv) {
     my $op = $data->{op};
@@ -85,8 +77,7 @@ method apply() {
     my $val = $data->{val};
 
     if ($data->{snapshot} && !$self->{data}) {
-      $self->{data} = _copy $data->{snapshot};
-      next;
+      $self->{data} = _copy($data->{snapshot});
     }
 
     local $@;
@@ -123,12 +114,10 @@ method apply() {
 method change(Str $op, Str $key, Any @val) {
   my %fields = (
     key => $key,
-    snapshot => $self->data,
+    snapshot => _copy($self->data),
     time => time,
     val => [@val],
   );
-
-  $self->channel->drop if $self->channel->size >= $self->threshold;
 
   if ($op eq 'decr') {
     $self->send({ %fields, op => 'decr' });
