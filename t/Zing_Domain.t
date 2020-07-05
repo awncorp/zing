@@ -66,7 +66,6 @@ Zing::Types
 
 name: ro, req, Str
 channel: ro, opt, Channel
-threshold: ro, opt, Str
 
 =cut
 
