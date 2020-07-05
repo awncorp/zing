@@ -699,33 +699,33 @@ L<The Reactive Manifesto|http://www.reactivemanifesto.org>
 
 =head1 DISCLOSURES
 
-The following is all the known ways Zing is not like a traditional actor-model
-system.
+The following is a list of all the known ways Zing is not like a traditional
+actor-model system:
 
 =over 4
 
 =item *
 
-Actors act independently and aren't beholden to a system manager.
+In Zing, actors act independently and aren't beholden to a system manager.
 
 =item *
 
-Actors are always active (each runs its own infinite event-loop).
+In Zing, actors are always active (each runs its own infinite event-loop).
 
 =item *
 
-Actors can communicate unrestricted (no approved list of communicators).
+In Zing, actors can communicate unrestricted (no approved communicators).
 
 =item *
 
-Actors can C<receive> and C<poll> but don't have a default blocking C<receive>
-mechanism.
+In Zing, actors can block using C<poll> but do not block by default.
 
 =item *
 
-The default datastore/backend is L<Redis|redis.io> which means the system is
-(by default) subject to the guarantees and limitations of that system. Data is
-serialized as L<JSON|json.org> and stored in plain-text.
+In Zing, the default datastore/backend is L<Redis|https://redis.io> which means
+the system is (by default) subject to the guarantees and limitations of that
+system. Data is serialized as L<JSON|https://json.org> and stored in
+plain-text.
 
 =back
 

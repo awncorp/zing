@@ -280,6 +280,109 @@ The ping method returns truthy if the process of the PID provided is active.
 
 =cut
 
+=head2 recv
+
+  recv() : Maybe[HashRef]
+
+The recv method is a proxy for L<Zing::Mailbox/recv> and receives a single new
+message from the mailbox.
+
+=over 4
+
+=item recv example #1
+
+  # given: synopsis
+
+  $process->recv;
+
+=back
+
+=over 4
+
+=item recv example #2
+
+  # given: synopsis
+
+  my $peer = Zing::Process->new;
+
+  $peer->send($process, { note => 'ehlo' });
+
+  $process->recv;
+
+=back
+
+=cut
+
+=head2 reply
+
+  reply(HashRef $bag, HashRef $value) : Int
+
+The reply method is a proxy for L<Zing::Mailbox/reply> and sends a message to
+the mailbox represented by the C<$bag> received.
+
+=over 4
+
+=item reply example #1
+
+  # given: synopsis
+
+  my $peer = Zing::Process->new;
+
+  $peer->send($process, { note => 'ehlo' });
+
+  my $mail = $process->recv;
+
+  $process->reply($mail, { note => 'helo' });
+
+=back
+
+=cut
+
+=head2 send
+
+  send(Str $key, HashRef $value) : Int
+
+The send method is a proxy for L<Zing::Mailbox/send> and sends a new message to
+the mailbox specified.
+
+=over 4
+
+=item send example #1
+
+  # given: synopsis
+
+  my $peer = Zing::Process->new;
+
+  $process->send($peer, { note => 'invite' });
+
+=back
+
+=over 4
+
+=item send example #2
+
+  # given: synopsis
+
+  my $peer = Zing::Process->new;
+
+  $process->send($peer->mailbox, { note => 'invite' });
+
+=back
+
+=over 4
+
+=item send example #3
+
+  # given: synopsis
+
+  my $peer = Zing::Process->new;
+
+  $process->send($peer->mailbox->term, { note => 'invite' });
+
+=back
+
+=cut
+
 =head2 shutdown
 
   shutdown() : Object

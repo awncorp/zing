@@ -244,7 +244,7 @@ the mailbox specified.
 
 =signature send
 
-send(Str $key, HashRef $value) : Int
+send(Mailbox | Process | Str $to, HashRef $data) : Int
 
 =example-1 send
 
