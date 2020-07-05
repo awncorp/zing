@@ -607,17 +607,17 @@ feature is enabled by the [Zing::Launcher](https://metacpan.org/pod/Zing%3A%3ALa
 
 # DISCLOSURES
 
-The following is all the known ways Zing is not like a traditional actor-model
-system.
+The following is a list of all the known ways Zing is not like a traditional
+actor-model system:
 
-- Actors act independently and aren't beholden to a system manager.
-- Actors are always active (each runs its own infinite event-loop).
-- Actors can communicate unrestricted (no approved list of communicators).
-- Actors can `receive` and `poll` but don't have a default blocking `receive`
-mechanism.
-- The default datastore/backend is [Redis](https://metacpan.org/pod/redis.io) which means the system is
-(by default) subject to the guarantees and limitations of that system. Data is
-serialized as [JSON](https://metacpan.org/pod/json.org) and stored in plain-text.
+- In Zing, actors act independently and aren't beholden to a system manager.
+- In Zing, actors are always active (each runs its own infinite event-loop).
+- In Zing, actors can communicate unrestricted (no approved communicators).
+- In Zing, actors can block using `poll` but do not block by default.
+- In Zing, the default datastore/backend is [Redis](https://redis.io) which means
+the system is (by default) subject to the guarantees and limitations of that
+system. Data is serialized as [JSON](https://json.org) and stored in
+plain-text.
 
 # AUTHOR
 
