@@ -234,22 +234,27 @@ message-passing.
 =head2 asynchronous
 
   # in process (1)
+  use Zing::Domain;
   use Zing::Process;
 
+  my $d1 = Zing::Domain->new(name => 'peers');
   my $p1 = Zing::Process->new(name => 'p1');
 
+  $d1->push('mailboxes', $p1->mailbox->term);
   $p1->execute;
 
   # in process (2)
+  use Zing::Domain;
   use Zing::Process;
 
+  my $d2 = Zing::Domain->new(name => 'peers');
   my $p2 = Zing::Process->new(name => 'p2');
 
-  my $friends = $p2->registry->keys;
+  my $mailboxes = $d2->get('mailboxes');
 
-  for my $friend (@$friends) {
+  for my $address (@$mailboxes) {
     # send each registered process a message
-    $p2->send($friend, { discovery => $p2->term });
+    $p2->send($address, { discovery => $p2->mailbox->term });
   }
 
   $p2->execute;
@@ -687,6 +692,40 @@ L<The Orleans Project|http://dotnet.github.io/orleans>
 L<The Pyakka Project|https://github.com/jodal/pykka>
 
 L<The Reactive Manifesto|http://www.reactivemanifesto.org>
+
+=head1 DISCLOSURES
+
+The following is all the known ways Zing is not like a traditional actor-model
+system.
+
+=over 4
+
+=item *
+
+Actors act independently and aren't beholden to a system manager.
+
+=item *
+
+Actors are always active (each runs its own infinite event-loop).
+
+=item *
+
+Actors can communicate unrestricted (no approved list of communicators).
+
+=item *
+
+Actors can C<receive> and C<poll> but don't have a default blocking C<receive>
+mechanism.
+
+=item *
+
+The default datastore/backend is L<Redis|redis.io> which means the system is
+(by default) subject to the guarantees and limitations of that system. Data is
+serialized as L<JSON|json.org> and stored in plain-text.
+
+=back
+
+=cut
 
 =head1 AUTHOR
 
