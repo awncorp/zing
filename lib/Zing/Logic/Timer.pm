@@ -104,7 +104,7 @@ method handle_timer_event($name) {
 
   for (my $i = 0; $i < @{$self->schedules}; $i++) {
     # run each schedule initially, and then once per minute
-    last if $_tick == (
+    next if $_tick == (
       $self->{tick}[$i] || 0
     );
 
