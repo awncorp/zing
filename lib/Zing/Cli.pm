@@ -75,6 +75,12 @@ sub spec {
       type => 'string',
       flag => 'd',
     },
+    search => {
+      desc => 'Reduce log output by search string',
+      type => 'string',
+      flag => 's',
+      args => '@',
+    },
     tag => {
       desc => 'Reduce log output by process tag',
       type => 'string',
@@ -127,6 +133,12 @@ sub _handle_logs {
 
     if (my $filter = $self->opts->tag) {
       next unless $tag =~ /$filter/;
+    }
+
+    if (my $search = $self->opts->search) {
+      for my $search (@$search) {
+        @$lines = grep /$search/, @$lines;
+      }
     }
 
     print STDOUT $from, ' ', $tag, ' ', $_, "\n" for @$lines;
