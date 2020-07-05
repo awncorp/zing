@@ -340,7 +340,7 @@ the mailbox represented by the C<$bag> received.
 
 =head2 send
 
-  send(Str $key, HashRef $value) : Int
+  send(Mailbox | Process | Str $to, HashRef $data) : Int
 
 The send method is a proxy for L<Zing::Mailbox/send> and sends a new message to
 the mailbox specified.
