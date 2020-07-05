@@ -199,6 +199,10 @@ L<Zing::Zang::Spawner>: Process Spawner
 
 =item *
 
+L<Zing::Zang::Timer>: Timer Process
+
+=item *
+
 L<Zing::Zang::Watcher>: Process Watcher
 
 =item *
