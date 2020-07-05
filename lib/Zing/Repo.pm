@@ -10,6 +10,7 @@ use routines;
 
 use Data::Object::Class;
 use Data::Object::ClassHas;
+use Data::Object::Space;
 
 use Zing::Server;
 use Zing::Store;
@@ -42,7 +43,7 @@ has 'store' => (
 );
 
 fun new_store($self) {
-  Zing::Store->new;
+  Data::Object::Space->new($ENV{ZING_STORE} || 'Zing::Redis')->build
 }
 
 has 'target' => (

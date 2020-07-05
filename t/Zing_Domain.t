@@ -107,7 +107,7 @@ change(Str $op, Str $key, Any @val) : Object
 
   # given: synopsis
 
-  $domain->change('incr', 'karma');
+  $domain->change('incr', 'karma', 1);
 
 =cut
 
