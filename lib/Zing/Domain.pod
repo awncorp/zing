@@ -61,14 +61,6 @@ This attribute is read-only, accepts C<(Str)> values, and is required.
 
 =cut
 
-=head2 threshold
-
-  threshold(Str)
-
-This attribute is read-only, accepts C<(Str)> values, and is optional.
-
-=cut
-
 =head1 METHODS
 
 This package implements the following methods:
@@ -106,7 +98,7 @@ method is used internally and shouldn't need to be called directly.
 
   # given: synopsis
 
-  $domain->change('incr', 'karma');
+  $domain->change('incr', 'karma', 1);
 
 =back
 
