@@ -54,6 +54,11 @@ sub spec {
       type => 'string',
       flag => 'a',
     },
+    global => {
+      desc => 'Tap the "global" log channel (defaults to "local")',
+      type => 'flag',
+      flag => 'g',
+    },
     process => {
       desc => 'Reduce log output by process name',
       type => 'string',
@@ -105,7 +110,10 @@ sub _handle_clean {
 sub _handle_logs {
   my ($self) = @_;
 
-  my $c = Zing::Channel->new(name => '$journal');
+  my $c = Zing::Channel->new(
+    name => '$journal',
+    (target => $self->opts->global ? 'global' : 'local')
+  );
 
   while (1) {
     next unless my $info = $c->recv;
