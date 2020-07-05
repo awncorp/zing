@@ -78,19 +78,19 @@ environment variable) meant to be used in object construction.
 
 =signature args
 
-args(Str $env) : ArrayRef
+args(Str $env) : (Any)
 
 =example-1 args
 
   # given: synopsis
 
-  $store->args('port=0001,debug=0');
+  [$store->args('port=0001,debug=0')]
 
 =example-2 args
 
   # given: synopsis
 
-  $store->args('ports=0001|0002,debug=0');
+  [$store->args('ports=0001|0002,debug=0')]
 
 =cut
 
@@ -384,14 +384,14 @@ $subs->example(-1, 'args', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is_deeply $result, ['port', '0001', 'debug', 0];
 
-  $result
+  (@$result)
 });
 
 $subs->example(-2, 'args', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is_deeply $result, ['ports', ['0001', '0002'], 'debug', 0];
 
-  $result
+  (@$result)
 });
 
 $subs->example(-1, 'drop', 'method', fun($tryable) {

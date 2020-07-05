@@ -17,12 +17,10 @@ use Carp ();
 # METHODS
 
 sub args {
-  [
   map +($$_[0], $#{$$_[1]} ? $$_[1] : $$_[1][0]),
   map [$$_[0], [split /\|/, $$_[1]]],
   map [split /=/], split /,\s*/,
   $_[1] || ''
-  ]
 }
 
 sub drop {
