@@ -54,6 +54,11 @@ sub spec {
       type => 'string',
       flag => 'a',
     },
+    backlog => {
+      desc => 'Produce log output using the backlog',
+      type => 'flag',
+      flag => 'b',
+    },
     global => {
       desc => 'Tap the "global" log channel (defaults to "local")',
       type => 'flag',
@@ -120,6 +125,8 @@ sub _handle_logs {
     name => '$journal',
     (target => $self->opts->global ? 'global' : 'local')
   );
+
+  $c->reset if $self->opts->backlog;
 
   while (1) {
     next unless my $info = $c->recv;
