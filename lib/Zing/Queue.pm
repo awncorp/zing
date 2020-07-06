@@ -19,11 +19,11 @@ use Zing::Term;
 # METHODS
 
 method recv() {
-  return $self->store->pull($self->term);
+  return $self->store->lpull($self->term);
 }
 
 method send(HashRef $val) {
-  return $self->store->push($self->term, $val);
+  return $self->store->rpush($self->term, $val);
 }
 
 method size() {

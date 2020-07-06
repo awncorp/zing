@@ -43,7 +43,7 @@ method reset() {
 }
 
 method send(HashRef $val) {
-  return $self->store->push($self->term, $val);
+  return $self->store->rpush($self->term, $val);
 }
 
 method size() {

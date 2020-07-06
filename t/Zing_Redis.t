@@ -34,11 +34,12 @@ Redis Storage Abstraction
 method: drop
 method: dump
 method: keys
-method: pop
-method: pull
-method: push
 method: load
+method: lpull
+method: lpush
 method: recv
+method: rpull
+method: rpush
 method: send
 method: size
 method: slot
@@ -133,76 +134,76 @@ keys(Str @keys) : ArrayRef[Str]
 
 =cut
 
-=method pop
+=method rpull
 
-The pop method pops data off of the bottom of a list in the datastore.
+The rpull method pops data off of the bottom of a list in the datastore.
 
-=signature pop
+=signature rpull
 
-pop(Str $key) : Maybe[HashRef]
+rpull(Str $key) : Maybe[HashRef]
 
-=example-1 pop
-
-  # given: synopsis
-
-  $redis->pop('collection');
-
-=example-2 pop
+=example-1 rpull
 
   # given: synopsis
 
-  $redis->push('collection', { status => 1 });
-  $redis->push('collection', { status => 2 });
+  $redis->rpull('collection');
 
-  $redis->pop('collection');
+=example-2 rpull
+
+  # given: synopsis
+
+  $redis->rpush('collection', { status => 1 });
+  $redis->rpush('collection', { status => 2 });
+
+  $redis->rpull('collection');
 
 =cut
 
-=method pull
+=method lpull
 
-The pull method pops data off of the top of a list in the datastore.
+The lpull method pops data off of the top of a list in the datastore.
 
-=signature pull
+=signature lpull
 
-pull(Str $key) : Maybe[HashRef]
+lpull(Str $key) : Maybe[HashRef]
 
-=example-1 pull
-
-  # given: synopsis
-
-  $redis->pull('collection');
-
-=example-2 pull
+=example-1 lpull
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->lpull('collection');
 
-  $redis->pull('collection');
+=example-2 lpull
+
+  # given: synopsis
+
+  $redis->rpush('collection', { status => 'ok' });
+
+  $redis->lpull('collection');
 
 =cut
 
-=method push
+=method rpush
 
-The push method pushed data onto the bottom of a list in the datastore.
+The rpush method pushed data onto the bottom of a list in the datastore.
 
-=signature push
+=signature rpush
 
-push(Str $key, HashRef $val) : Int
+rpush(Str $key, HashRef $val) : Int
 
-=example-1 push
-
-  # given: synopsis
-
-  $redis->push('collection', { status => 'ok' });
-
-=example-2 push
+=example-1 rpush
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->rpush('collection', { status => 'ok' });
 
-  $redis->push('collection', { status => 'ok' });
+=example-2 rpush
+
+  # given: synopsis
+
+  $redis->rpush('collection', { status => 'ok' });
+
+  $redis->rpush('collection', { status => 'ok' });
 
 =cut
 
@@ -280,7 +281,7 @@ size(Str $key) : Int
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->rpush('collection', { status => 'ok' });
 
   my $size = $redis->size('collection');
 
@@ -304,7 +305,7 @@ slot(Str $key, Int $pos) : Maybe[HashRef]
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->rpush('collection', { status => 'ok' });
 
   my $model = $redis->slot('collection', 0);
 
@@ -338,7 +339,7 @@ test(Str $key) : Int
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->rpush('collection', { status => 'ok' });
 
   $redis->test('collection');
 
@@ -349,6 +350,28 @@ test(Str $key) : Int
   $redis->drop('collection');
 
   $redis->test('collection');
+
+=cut
+
+=method lpush
+
+The lpush method pushed data onto the top of a list in the datastore.
+
+=signature lpush
+
+lpush(Str $key, HashRef $val) : Int
+
+=example-1 lpush
+
+  # given: synopsis
+
+  $redis->lpush('collection', { status => '1' });
+
+=example-2 lpush
+
+  # given: synopsis
+
+  $redis->lpush('collection', { status => '0' });
 
 =cut
 
@@ -392,41 +415,41 @@ $subs->example(-2, 'keys', 'method', fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'pop', 'method', fun($tryable) {
+$subs->example(-1, 'rpull', 'method', fun($tryable) {
   ok !(my $result = $tryable->result);
 
   $result
 });
 
-$subs->example(-2, 'pop', 'method', fun($tryable) {
+$subs->example(-2, 'rpull', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is_deeply $result, {status => 2};
 
   $result
 });
 
-$subs->example(-1, 'pull', 'method', fun($tryable) {
+$subs->example(-1, 'lpull', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is_deeply $result, {status => 1};
 
   $result
 });
 
-$subs->example(-2, 'pull', 'method', fun($tryable) {
+$subs->example(-2, 'lpull', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is_deeply $result, {status => 'ok'};
 
   $result
 });
 
-$subs->example(-1, 'push', 'method', fun($tryable) {
+$subs->example(-1, 'rpush', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is $result, 1;
 
   $result
 });
 
-$subs->example(-2, 'push', 'method', fun($tryable) {
+$subs->example(-2, 'rpush', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is $result, 3;
 
@@ -502,6 +525,23 @@ $subs->example(-1, 'test', 'method', fun($tryable) {
 
 $subs->example(-2, 'test', 'method', fun($tryable) {
   ok !(my $result = $tryable->result);
+
+  $result
+});
+
+$subs->example(-1, 'lpush', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $result, 1;
+
+  $result
+});
+
+$subs->example(-2, 'lpush', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $result, 2;
+  my $redis = Zing::Redis->new;
+  my $top = $redis->lpull('collection');
+  is_deeply $top, { status => '0' };
 
   $result
 });

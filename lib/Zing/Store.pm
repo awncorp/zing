@@ -35,24 +35,28 @@ sub keys {
   Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "keys" not implemented);
 }
 
-sub pop {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "pop" not implemented);
-}
-
-sub pull {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "pull" not implemented);
-}
-
-sub push {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "push" not implemented);
-}
-
 sub load {
   Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "load" not implemented);
 }
 
+sub lpull {
+  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "lpull" not implemented);
+}
+
+sub lpush {
+  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "lpush" not implemented);
+}
+
 sub recv {
   Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "recv" not implemented);
+}
+
+sub rpull {
+  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "rpull" not implemented);
+}
+
+sub rpush {
+  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "rpush" not implemented);
 }
 
 sub send {
@@ -70,7 +74,6 @@ sub slot {
 sub term {
   shift; return join(':', @_);
 }
-
 
 sub test {
   Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "test" not implemented);

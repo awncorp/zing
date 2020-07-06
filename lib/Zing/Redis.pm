@@ -45,28 +45,33 @@ method keys(Str @keys) {
   return [map $self->client->keys($self->term(@$_)), [@keys], [@keys, '*']];
 }
 
-method pop(Str $key) {
-  my $get = $self->client->rpop($key);
-  return $get ? $self->load($get) : $get;
+method load(Str $data) {
+  return JSON->new->allow_nonref->convert_blessed->decode($data);
 }
 
-method pull(Str $key) {
+method lpull(Str $key) {
   my $get = $self->client->lpop($key);
   return $get ? $self->load($get) : $get;
 }
 
-method push(Str $key, HashRef $val) {
+method lpush(Str $key, HashRef $val) {
   my $set = $self->dump($val);
-  return $self->client->rpush($key, $set);
-}
-
-method load(Str $data) {
-  return JSON->new->allow_nonref->convert_blessed->decode($data);
+  return $self->client->lpush($key, $set);
 }
 
 method recv(Str $key) {
   my $get = $self->client->get($key);
   return $get ? $self->load($get) : $get;
+}
+
+method rpull(Str $key) {
+  my $get = $self->client->rpop($key);
+  return $get ? $self->load($get) : $get;
+}
+
+method rpush(Str $key, HashRef $val) {
+  my $set = $self->dump($val);
+  return $self->client->rpush($key, $set);
 }
 
 method send(Str $key, HashRef $val) {
