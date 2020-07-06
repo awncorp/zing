@@ -36,7 +36,9 @@ fun new_channel($self) {
 # BUILDERS
 
 fun BUILD($self) {
-  return $self->apply if $self->channel->reset;
+  $self->channel->{cursor}-- if $self->channel->{cursor};
+
+  return $self->apply;
 }
 
 # SHIMS
@@ -69,42 +71,42 @@ sub _copy {
 # METHODS
 
 method apply() {
-  undef $self->{data} if $self->channel->renew;
+  undef $self->{state} if $self->channel->renew;
 
   while (my $data = $self->recv) {
     my $op = $data->{op};
     my $key = $data->{key};
     my $val = $data->{val};
 
-    if ($data->{snapshot} && !$self->{data}) {
-      $self->{data} = _copy($data->{snapshot});
+    if ($data->{snapshot} && !$self->{state}) {
+      $self->{state} = _copy($data->{snapshot});
     }
 
     local $@;
 
     if ($op eq 'decr') {
-      eval{($self->data->{$key} //= 0) -= ($val->[0] // 0)};
+      eval{($self->state->{$key} //= 0) -= ($val->[0] // 0)};
     }
     elsif ($op eq 'del') {
-      eval{CORE::delete $self->data->{$key}};
+      eval{CORE::delete $self->state->{$key}};
     }
     elsif ($op eq 'incr') {
-      eval{($self->data->{$key} //= 0 ) += ($val->[0] // 0)};
+      eval{($self->state->{$key} //= 0 ) += ($val->[0] // 0)};
     }
     elsif ($op eq 'pop') {
-      eval{CORE::pop @{$self->data->{$key}}};
+      eval{CORE::pop @{$self->state->{$key}}};
     }
     elsif ($op eq 'push') {
-      eval{CORE::push @{$self->data->{$key}}, @$val};
+      eval{CORE::push @{$self->state->{$key}}, @$val};
     }
     elsif ($op eq 'set') {
-      eval{$self->data->{$key} = $val->[0]};
+      eval{$self->state->{$key} = $val->[0]};
     }
     elsif ($op eq 'shift') {
-      eval{CORE::shift @{$self->data->{$key}}};
+      eval{CORE::shift @{$self->state->{$key}}};
     }
     elsif ($op eq 'unshift') {
-      eval{CORE::unshift @{$self->data->{$key}}, @$val};
+      eval{CORE::unshift @{$self->state->{$key}}, @$val};
     }
   }
 
@@ -114,7 +116,7 @@ method apply() {
 method change(Str $op, Str $key, Any @val) {
   my %fields = (
     key => $key,
-    snapshot => _copy($self->data),
+    snapshot => _copy($self->state),
     time => time,
     val => [@val],
   );
@@ -150,12 +152,8 @@ method change(Str $op, Str $key, Any @val) {
   return $self->apply;
 }
 
-method data() {
-  return $self->{data} ||= {};
-}
-
 method get(Str $key) {
-  return $self->apply->data->{$key};
+  return $self->apply->state->{$key};
 }
 
 method decr(Str $key, Int $val = 1) {
@@ -192,6 +190,10 @@ method set(Str $key, Any $val) {
 
 method shift(Str $key) {
   return $self->apply->change('shift', $key);
+}
+
+method state() {
+  return $self->{state} ||= {};
 }
 
 method unshift(Str $key, Any @val) {
