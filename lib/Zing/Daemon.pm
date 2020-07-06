@@ -126,6 +126,7 @@ method fork() {
     Carp::confess "Error on fork: $!";
   }
   elsif ($pid == 0) {
+    Carp::confess "Error in fork: terminal detach failed" if POSIX::setsid() < 0;
     $self->app->start; # child
     unlink $self->pid_path;
     POSIX::_exit(0);
