@@ -29,6 +29,7 @@ sub auto {
     logs => '_handle_logs',
     pid => '_handle_pid',
     restart => '_handle_restart',
+    monitor => '_handle_monitor',
     update => '_handle_update',
     start => '_handle_start',
     stop => '_handle_stop',
@@ -41,6 +42,7 @@ sub subs {
     logs => 'Tap logs and output to STDOUT',
     pid => 'Display an application process ID',
     restart => 'Restart the specified application',
+    monitor => 'Monitor the specified application (start if not started)',
     update => 'Hot-reload application processes',
     start => 'Start the specified application',
     stop => 'Stop the specified application',
@@ -162,6 +164,30 @@ sub _handle_logs {
   return $self;
 }
 
+sub _handle_monitor {
+  my ($self) = @_;
+
+  my $app = $self->args->app;
+
+  if (!$app) {
+    print $self->help, "\n";
+    return $self->okay;
+  }
+
+  my $piddir = $self->opts->piddir
+    || $ENV{ZING_PIDDIR}
+    || $ENV{ZING_HOME}
+    || File::Spec->curdir;
+
+  my $pidfile = File::Spec->catfile($piddir, "$app.pid");
+
+  $self->opts->tag($app) if !$self->opts->tag;
+  $self->_handle_start if !-e $pidfile;
+  $self->_handle_logs;
+
+  return $self;
+}
+
 sub _handle_pid {
   my ($self) = @_;
 
@@ -237,13 +263,17 @@ sub _handle_start {
     return $self->fail;
   }
 
+  if (ref $scheme->[1] eq 'ARRAY') {
+    unshift @{$scheme->[1]}, tag => $app; # auto-tagging
+  }
+
   my $daemon = Zing::Daemon->new(
     name => $app,
     app => Zing->new(scheme => $scheme),
     ($piddir ? (pid_dir => $piddir) : ()),
   );
 
-  $daemon->start;
+  $daemon->execute;
 
   return $self;
 }
