@@ -9,34 +9,17 @@ use registry 'Zing::Types';
 use routines;
 
 use Data::Object::Class;
-use Data::Object::ClassHas;
 
-use Zing::Channel;
+extends 'Zing::Channel';
+
+use Zing::Term;
 
 # VERSION
-
-# ATTRIBUTES
-
-has 'name' => (
-  is => 'ro',
-  isa => 'Str',
-  req => 1,
-);
-
-has 'channel' => (
-  is => 'ro',
-  isa => 'Channel',
-  new => 1,
-);
-
-fun new_channel($self) {
-  Zing::Channel->new(name => $self->name)
-}
 
 # BUILDERS
 
 fun BUILD($self) {
-  $self->channel->{cursor}-- if $self->channel->{cursor};
+  $self->{cursor}-- if $self->{cursor};
 
   return $self->apply;
 }
@@ -71,7 +54,7 @@ sub _copy {
 # METHODS
 
 method apply() {
-  undef $self->{state} if $self->channel->renew;
+  undef $self->{state} if $self->renew;
 
   while (my $data = $self->recv) {
     my $op = $data->{op};
@@ -176,14 +159,6 @@ method push(Str $key, Any @val) {
   return $self->apply->change('push', $key, @val);
 }
 
-method recv() {
-  return $self->channel->recv;
-}
-
-method send(HashRef $data) {
-  return $self->channel->send($data);
-}
-
 method set(Str $key, Any $val) {
   return $self->apply->change('set', $key, $val);
 }
@@ -194,6 +169,10 @@ method shift(Str $key) {
 
 method state() {
   return $self->{state} ||= {};
+}
+
+method term() {
+  return Zing::Term->new($self)->domain;
 }
 
 method unshift(Str $key, Any @val) {
