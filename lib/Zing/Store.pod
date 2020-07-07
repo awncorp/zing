@@ -160,80 +160,52 @@ hashref.
 
 =cut
 
-=head2 pop
+=head2 lpull
 
-  pop(Str $key) : Maybe[HashRef]
+  lpull(Str $key) : Maybe[HashRef]
 
-The pop method should pop data off of the bottom of a list in the datastore.
+The lpull method should pop data off of the top of a list in the datastore.
 
 =over 4
 
-=item pop example #1
+=item lpull example #1
 
   # given: synopsis
 
-  $store->pop('collection');
+  $store->lpull('collection');
 
 =back
 
 =over 4
 
-=item pop example #2
+=item lpull example #2
 
   # given: synopsis
 
-  # $store->push('collection', { status => 1 });
-  # $store->push('collection', { status => 2 });
+  # $store->rpush('collection', { status => 'ok' });
 
-  $store->pop('collection');
-
-=back
-
-=cut
-
-=head2 pull
-
-  pull(Str $key) : Maybe[HashRef]
-
-The pull method should pop data off of the top of a list in the datastore.
-
-=over 4
-
-=item pull example #1
-
-  # given: synopsis
-
-  $store->pull('collection');
-
-=back
-
-=over 4
-
-=item pull example #2
-
-  # given: synopsis
-
-  # $store->push('collection', { status => 'ok' });
-
-  $store->pull('collection');
+  $store->lpull('collection');
 
 =back
 
 =cut
 
-=head2 push
+=head2 lpush
 
-  push(Str $key, HashRef $val) : Int
+  lpush(Str $key) : Int
 
-The push method should push data onto the bottom of a list in the datastore.
+The lpush method should push data onto the top of a list in the datastore.
 
 =over 4
 
-=item push example #1
+=item lpush example #1
 
   # given: synopsis
 
-  $store->push('collection', { status => 'ok' });
+  # $store->rpush('collection', { status => '1' });
+  # $store->rpush('collection', { status => '2' });
+
+  $store->lpush('collection', { status => '0' });
 
 =back
 
@@ -264,6 +236,55 @@ The recv method should fetch and return data from the datastore by its key.
   # $store->send('model', { status => 'ok' });
 
   $store->recv('model');
+
+=back
+
+=cut
+
+=head2 rpull
+
+  rpull(Str $key) : Maybe[HashRef]
+
+The rpull method should pop data off of the bottom of a list in the datastore.
+
+=over 4
+
+=item rpull example #1
+
+  # given: synopsis
+
+  $store->rpull('collection');
+
+=back
+
+=over 4
+
+=item rpull example #2
+
+  # given: synopsis
+
+  # $store->rpush('collection', { status => 1 });
+  # $store->rpush('collection', { status => 2 });
+
+  $store->rpull('collection');
+
+=back
+
+=cut
+
+=head2 rpush
+
+  rpush(Str $key, HashRef $val) : Int
+
+The rpush method should push data onto the bottom of a list in the datastore.
+
+=over 4
+
+=item rpush example #1
+
+  # given: synopsis
+
+  $store->rpush('collection', { status => 'ok' });
 
 =back
 
@@ -310,7 +331,7 @@ The size method should return the size of a list in the datastore.
 
   # given: synopsis
 
-  # $store->push('collection', { status => 'ok' });
+  # $store->rpush('collection', { status => 'ok' });
 
   my $size = $store->size('collection');
 
@@ -341,7 +362,7 @@ position in the list.
 
   # given: synopsis
 
-  # $store->push('collection', { status => 'ok' });
+  # $store->rpush('collection', { status => 'ok' });
 
   my $model = $store->slot('collection', 0);
 
@@ -381,7 +402,7 @@ datastore.
 
   # given: synopsis
 
-  # $store->push('collection', { status => 'ok' });
+  # $store->rpush('collection', { status => 'ok' });
 
   $store->test('collection');
 

@@ -143,92 +143,59 @@ The load method decodes the JSON data provided and returns the data as a hashref
 
 =cut
 
-=head2 pop
+=head2 lpull
 
-  pop(Str $key) : Maybe[HashRef]
+  lpull(Str $key) : Maybe[HashRef]
 
-The pop method pops data off of the bottom of a list in the datastore.
+The lpull method pops data off of the top of a list in the datastore.
 
 =over 4
 
-=item pop example #1
+=item lpull example #1
 
   # given: synopsis
 
-  $redis->pop('collection');
+  $redis->lpull('collection');
 
 =back
 
 =over 4
 
-=item pop example #2
+=item lpull example #2
 
   # given: synopsis
 
-  $redis->push('collection', { status => 1 });
-  $redis->push('collection', { status => 2 });
+  $redis->rpush('collection', { status => 'ok' });
 
-  $redis->pop('collection');
-
-=back
-
-=cut
-
-=head2 pull
-
-  pull(Str $key) : Maybe[HashRef]
-
-The pull method pops data off of the top of a list in the datastore.
-
-=over 4
-
-=item pull example #1
-
-  # given: synopsis
-
-  $redis->pull('collection');
-
-=back
-
-=over 4
-
-=item pull example #2
-
-  # given: synopsis
-
-  $redis->push('collection', { status => 'ok' });
-
-  $redis->pull('collection');
+  $redis->lpull('collection');
 
 =back
 
 =cut
 
-=head2 push
+=head2 lpush
 
-  push(Str $key, HashRef $val) : Int
+  lpush(Str $key, HashRef $val) : Int
 
-The push method pushed data onto the bottom of a list in the datastore.
+The lpush method pushed data onto the top of a list in the datastore.
 
 =over 4
 
-=item push example #1
+=item lpush example #1
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->lpush('collection', { status => '1' });
 
 =back
 
 =over 4
 
-=item push example #2
+=item lpush example #2
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
-
-  $redis->push('collection', { status => 'ok' });
+  $redis->lpush('collection', { status => '0' });
 
 =back
 
@@ -259,6 +226,67 @@ The recv method fetches and returns data from the datastore by its key.
   $redis->send('model', { status => 'ok' });
 
   $redis->recv('model');
+
+=back
+
+=cut
+
+=head2 rpull
+
+  rpull(Str $key) : Maybe[HashRef]
+
+The rpull method pops data off of the bottom of a list in the datastore.
+
+=over 4
+
+=item rpull example #1
+
+  # given: synopsis
+
+  $redis->rpull('collection');
+
+=back
+
+=over 4
+
+=item rpull example #2
+
+  # given: synopsis
+
+  $redis->rpush('collection', { status => 1 });
+  $redis->rpush('collection', { status => 2 });
+
+  $redis->rpull('collection');
+
+=back
+
+=cut
+
+=head2 rpush
+
+  rpush(Str $key, HashRef $val) : Int
+
+The rpush method pushed data onto the bottom of a list in the datastore.
+
+=over 4
+
+=item rpush example #1
+
+  # given: synopsis
+
+  $redis->rpush('collection', { status => 'ok' });
+
+=back
+
+=over 4
+
+=item rpush example #2
+
+  # given: synopsis
+
+  $redis->rpush('collection', { status => 'ok' });
+
+  $redis->rpush('collection', { status => 'ok' });
 
 =back
 
@@ -304,7 +332,7 @@ The size method returns the size of a list in the datastore.
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->rpush('collection', { status => 'ok' });
 
   my $size = $redis->size('collection');
 
@@ -334,7 +362,7 @@ The slot method returns the data from a list in the datastore by its index.
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->rpush('collection', { status => 'ok' });
 
   my $model = $redis->slot('collection', 0);
 
@@ -372,7 +400,7 @@ The test method returns truthy if the specific key (or datastore) exists.
 
   # given: synopsis
 
-  $redis->push('collection', { status => 'ok' });
+  $redis->rpush('collection', { status => 'ok' });
 
   $redis->test('collection');
 

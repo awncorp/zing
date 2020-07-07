@@ -164,7 +164,7 @@ L<Zing::Data>: Process Data
 
 =item *
 
-L<Zing::Domain>: Aggregate Root
+L<Zing::Domain>: Shared State Management
 
 =item *
 
