@@ -81,7 +81,7 @@ fun BUILDARGS($self, $item, @data) {
   if (Scalar::Util::blessed($item)) {
     my $local = sprintf 'local(%s)', Zing::Server->new->name;
 
-    @data = map {s/[^a-zA-Z0-9-\$\.]/-/g; lc} map {split /:/} @data;
+    @data = map {split /:/} @data;
 
     if ($item->isa('Zing::Channel')) {
       $args->{symbol} = $symbols->{'Zing::Channel'};

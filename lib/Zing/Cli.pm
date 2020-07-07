@@ -125,7 +125,7 @@ sub _handle_logs {
 
   my $c = Zing::Channel->new(
     name => '$journal',
-    (target => $self->opts->global ? 'global' : 'local')
+    (target => $self->opts->global ? 'global' : $ENV{ZING_TARGET} || 'local')
   );
 
   $c->reset if $self->opts->backlog;

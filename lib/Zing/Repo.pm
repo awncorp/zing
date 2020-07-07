@@ -53,7 +53,7 @@ has 'target' => (
 );
 
 fun new_target($self) {
-  'local'
+  $ENV{ZING_TARGET} || 'local'
 }
 
 # METHODS
