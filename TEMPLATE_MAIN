@@ -83,10 +83,6 @@ L<Zing::Domain>: Shared State Management
 
 =item *
 
-L<Zing::Dropbox>: Transient Store
-
-=item *
-
 L<Zing::KeyVal>: Key/Value Store
 
 =item *
@@ -389,6 +385,9 @@ scale your deployments without changing your implementations.
   # configure the hostname used in process registration
   ZING_HOST=0.0.0.0
   ZING_HOST=68.80.90.100
+
+  # configure the resource target (e.g. when distributing across multiple hosts)
+  ZING_TARGET='global' # or 'local'
 
   # configure the system datastore (defaults to 'Zing::Redis')
   ZING_STORE='Zing::Redis'

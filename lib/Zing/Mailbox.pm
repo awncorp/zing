@@ -39,7 +39,7 @@ has 'process' => (
 # BUILDERS
 
 fun new_target($self) {
-  'global'
+  $ENV{ZING_TARGET} || 'global'
 }
 
 # METHODS
