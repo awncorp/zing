@@ -62,10 +62,9 @@ Zing::Types
 
 =cut
 
-=attributes
+=inherits
 
-name: ro, req, Str
-channel: ro, opt, Channel
+Zing::Channel
 
 =cut
 
