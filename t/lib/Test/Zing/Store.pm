@@ -34,28 +34,34 @@ sub load {
   return $val;
 }
 
-sub pop {
-  my ($self, $key) = @_;
-  my $get = pop @{$DATA->{$key}} if $DATA->{$key};
-  return $get ? $self->load($get) : $get;
-}
-
-sub pull {
+sub lpull {
   my ($self, $key) = @_;
   my $get = shift @{$DATA->{$key}} if $DATA->{$key};
   return $get ? $self->load($get) : $get;
 }
 
-sub push {
+sub lpush {
   my ($self, $key, $val) = @_;
   my $set = $self->dump($val);
-  return push @{$DATA->{$key}}, $set;
+  return unshift @{$DATA->{$key}}, $set;
 }
 
 sub recv {
   my ($self, $key) = @_;
   my $get = $DATA->{$key};
   return $get ? $self->load($get) : $get;
+}
+
+sub rpull {
+  my ($self, $key) = @_;
+  my $get = pop @{$DATA->{$key}} if $DATA->{$key};
+  return $get ? $self->load($get) : $get;
+}
+
+sub rpush {
+  my ($self, $key, $val) = @_;
+  my $set = $self->dump($val);
+  return push @{$DATA->{$key}}, $set;
 }
 
 sub send {

@@ -45,7 +45,7 @@ fun new_target($self) {
 # METHODS
 
 method recv() {
-  return $self->store->pull($self->term);
+  return $self->store->lpull($self->term);
 }
 
 method message(HashRef $val) {
@@ -57,7 +57,7 @@ method reply(HashRef $bag, HashRef $val) {
 }
 
 method send(Str $key, HashRef $val) {
-  return $self->store->push($self->term($key), $self->message($val));
+  return $self->store->rpush($self->term($key), $self->message($val));
 }
 
 method size() {

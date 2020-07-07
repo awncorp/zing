@@ -35,11 +35,12 @@ method: args
 method: drop
 method: dump
 method: keys
-method: pop
-method: pull
-method: push
 method: load
+method: lpull
+method: lpush
 method: recv
+method: rpull
+method: rpush
 method: send
 method: size
 method: slot
@@ -152,68 +153,68 @@ keys(Str @keys) : ArrayRef[Str]
 
 =cut
 
-=method pop
+=method rpull
 
-The pop method should pop data off of the bottom of a list in the datastore.
+The rpull method should pop data off of the bottom of a list in the datastore.
 
-=signature pop
+=signature rpull
 
-pop(Str $key) : Maybe[HashRef]
+rpull(Str $key) : Maybe[HashRef]
 
-=example-1 pop
-
-  # given: synopsis
-
-  $store->pop('collection');
-
-=example-2 pop
+=example-1 rpull
 
   # given: synopsis
 
-  # $store->push('collection', { status => 1 });
-  # $store->push('collection', { status => 2 });
+  $store->rpull('collection');
 
-  $store->pop('collection');
+=example-2 rpull
+
+  # given: synopsis
+
+  # $store->rpush('collection', { status => 1 });
+  # $store->rpush('collection', { status => 2 });
+
+  $store->rpull('collection');
 
 =cut
 
-=method pull
+=method lpull
 
-The pull method should pop data off of the top of a list in the datastore.
+The lpull method should pop data off of the top of a list in the datastore.
 
-=signature pull
+=signature lpull
 
-pull(Str $key) : Maybe[HashRef]
+lpull(Str $key) : Maybe[HashRef]
 
-=example-1 pull
-
-  # given: synopsis
-
-  $store->pull('collection');
-
-=example-2 pull
+=example-1 lpull
 
   # given: synopsis
 
-  # $store->push('collection', { status => 'ok' });
+  $store->lpull('collection');
 
-  $store->pull('collection');
+=example-2 lpull
+
+  # given: synopsis
+
+  # $store->rpush('collection', { status => 'ok' });
+
+  $store->lpull('collection');
 
 =cut
 
-=method push
+=method rpush
 
-The push method should push data onto the bottom of a list in the datastore.
+The rpush method should push data onto the bottom of a list in the datastore.
 
-=signature push
+=signature rpush
 
-push(Str $key, HashRef $val) : Int
+rpush(Str $key, HashRef $val) : Int
 
-=example-1 push
+=example-1 rpush
 
   # given: synopsis
 
-  $store->push('collection', { status => 'ok' });
+  $store->rpush('collection', { status => 'ok' });
 
 =cut
 
@@ -293,7 +294,7 @@ size(Str $key) : Int
 
   # given: synopsis
 
-  # $store->push('collection', { status => 'ok' });
+  # $store->rpush('collection', { status => 'ok' });
 
   my $size = $store->size('collection');
 
@@ -318,7 +319,7 @@ slot(Str $key, Int $pos) : Maybe[HashRef]
 
   # given: synopsis
 
-  # $store->push('collection', { status => 'ok' });
+  # $store->rpush('collection', { status => 'ok' });
 
   my $model = $store->slot('collection', 0);
 
@@ -354,7 +355,7 @@ test(Str $key) : Int
 
   # given: synopsis
 
-  # $store->push('collection', { status => 'ok' });
+  # $store->rpush('collection', { status => 'ok' });
 
   $store->test('collection');
 
@@ -365,6 +366,25 @@ test(Str $key) : Int
   # $store->drop('collection');
 
   $store->test('collection');
+
+=cut
+
+=method lpush
+
+The lpush method should push data onto the top of a list in the datastore.
+
+=signature lpush
+
+lpush(Str $key) : Int
+
+=example-1 lpush
+
+  # given: synopsis
+
+  # $store->rpush('collection', { status => '1' });
+  # $store->rpush('collection', { status => '2' });
+
+  $store->lpush('collection', { status => '0' });
 
 =cut
 
@@ -430,45 +450,45 @@ $subs->example(-2, 'keys', 'method', fun($tryable) {
   []
 });
 
-$subs->example(-1, 'pop', 'method', fun($tryable) {
+$subs->example(-1, 'rpull', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
-    like $error, qr/"pop" not implemented/;
+    like $error, qr/"rpull" not implemented/;
   });
   ok my $result = $tryable->result;
 
   {}
 });
 
-$subs->example(-2, 'pop', 'method', fun($tryable) {
+$subs->example(-2, 'rpull', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
-    like $error, qr/"pop" not implemented/;
+    like $error, qr/"rpull" not implemented/;
   });
   ok my $result = $tryable->result;
 
   {}
 });
 
-$subs->example(-1, 'pull', 'method', fun($tryable) {
+$subs->example(-1, 'lpull', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
-    like $error, qr/"pull" not implemented/;
+    like $error, qr/"lpull" not implemented/;
   });
   ok my $result = $tryable->result;
 
   {}
 });
 
-$subs->example(-2, 'pull', 'method', fun($tryable) {
+$subs->example(-2, 'lpull', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
-    like $error, qr/"pull" not implemented/;
+    like $error, qr/"lpull" not implemented/;
   });
   ok my $result = $tryable->result;
 
   {}
 });
 
-$subs->example(-1, 'push', 'method', fun($tryable) {
+$subs->example(-1, 'rpush', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
-    like $error, qr/"push" not implemented/;
+    like $error, qr/"rpush" not implemented/;
   });
   ok my $result = $tryable->result;
 
@@ -566,6 +586,15 @@ $subs->example(-1, 'test', 'method', fun($tryable) {
 $subs->example(-2, 'test', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
     like $error, qr/"test" not implemented/;
+  });
+  ok my $result = $tryable->result;
+
+  1
+});
+
+$subs->example(-1, 'lpush', 'method', fun($tryable) {
+  $tryable->default(fun ($error) {
+    like $error, qr/"lpush" not implemented/;
   });
   ok my $result = $tryable->result;
 

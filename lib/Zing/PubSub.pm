@@ -24,11 +24,11 @@ method poll(Str $key) {
 }
 
 method recv(Str $key) {
-  return $self->store->pull($self->term($key));
+  return $self->store->lpull($self->term($key));
 }
 
 method send(Str $key, HashRef $val) {
-  return $self->store->push($self->term($key), $val);
+  return $self->store->rpush($self->term($key), $val);
 }
 
 method term(Str @keys) {
