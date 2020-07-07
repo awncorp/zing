@@ -1,6 +1,14 @@
 Changelog for Zing
 
-0.11 2020-07-05T21:34:19
+0.12 2020-07-07T02:36:23
+ - Add release updates
+ - Update documentation in "zing" application (#202)
+ - Implement "monitor" CLI command (#196)
+ - Rename internal store "list" methods (#198)
+ - Leverage snapshotting to build domains faster (#200)
+
+0.11 2020-07-05T21:34:34
+ - Built release version 0.11
  - Add release updates
  - Tweak documentation
  - Fix "once per minute" timer execution (#193)

@@ -119,7 +119,7 @@ These classes facilitate message-passing and communications:
 
 - [Zing::Channel](https://metacpan.org/pod/Zing%3A%3AChannel): Shared Communication
 - [Zing::Data](https://metacpan.org/pod/Zing%3A%3AData): Process Data
-- [Zing::Domain](https://metacpan.org/pod/Zing%3A%3ADomain): Aggregate Root
+- [Zing::Domain](https://metacpan.org/pod/Zing%3A%3ADomain): Shared State Management
 - [Zing::Dropbox](https://metacpan.org/pod/Zing%3A%3ADropbox): Transient Store
 - [Zing::KeyVal](https://metacpan.org/pod/Zing%3A%3AKeyVal): Key/Value Store
 - [Zing::Mailbox](https://metacpan.org/pod/Zing%3A%3AMailbox): Process Mailbox

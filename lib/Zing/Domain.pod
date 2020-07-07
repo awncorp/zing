@@ -3,13 +3,13 @@
 
 =head1 NAME
 
-Zing::Domain - Aggregate Root
+Zing::Domain - Shared State Management
 
 =cut
 
 =head1 ABSTRACT
 
-Aggregate Root Construct
+Shared State Management Construct
 
 =cut
 
@@ -99,24 +99,6 @@ method is used internally and shouldn't need to be called directly.
   # given: synopsis
 
   $domain->change('incr', 'karma', 1);
-
-=back
-
-=cut
-
-=head2 data
-
-  data() : HashRef
-
-The data method returns the raw aggregate data associated with the object.
-
-=over 4
-
-=item data example #1
-
-  # given: synopsis
-
-  $domain->data;
 
 =back
 
@@ -305,6 +287,24 @@ The shift method shifts data off of the stack associated with a specific key.
   # given: synopsis
 
   $domain->shift('history');
+
+=back
+
+=cut
+
+=head2 state
+
+  state() : HashRef
+
+The state method returns the raw aggregate data associated with the object.
+
+=over 4
+
+=item state example #1
+
+  # given: synopsis
+
+  $domain->state;
 
 =back
 
