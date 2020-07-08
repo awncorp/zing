@@ -220,10 +220,12 @@ of features currently enabled by this toolkit:
 
   use Zing::Process;
 
-  my $p1 = Zing::Process->new(name => 'p1');
-  my $p2 = Zing::Process->new(name => 'p2');
+  my $p1 = Zing::Process->new;
+  my $p2 = Zing::Process->new;
 
-  $p1->mailbox->send($p2->mailbox->term, { action => 'greeting' });
+  $p1->send($p2, { action => 'greetings' });
+  
+  say $p2->recv->{action}; # got it?
 
 This distribution provides a toolkit for creating processes (actors) which can
 be run in isolation and which communicate with other processes through
