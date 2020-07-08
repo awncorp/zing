@@ -2,60 +2,6 @@
 
 {content}
 
-=head1 COMMANDS
-
-Given the following process (actor):
-
-  # in lib/MyApp.pm
-
-  package MyApp;
-
-  use parent 'Zing::Single';
-
-  sub perform {
-    # do something (once)
-  }
-
-  1;
-
-With an application cartridge specifying 4 forks:
-
-  # in app/myapp
-
-  ['MyApp', [], 4]
-
-The L<zing> command-line application lets you manage Zing applications from the
-command-line using these commands:
-
-=cut
-
-=head2 start
-
-  $ zing start app/myapp
-
-The C<start> command loads an application I<cartridge> which returns a
-L<"scheme"|Zing::Types/scheme> and runs it as a daemon.
-
-=cut
-
-=head2 stop
-
-  $ zing stop app/myapp
-
-The C<stop> command finds a running application by its PID (process ID) and
-terminates the process.
-
-=cut
-
-=head2 logs
-
-  $ zing logs --level fatal
-
-The C<logs> command taps the centralized log source and outputs new events to
-STDOUT (standard output).
-
-=cut
-
 =head1 PRIMATIVES
 
 This distribution provides a collection of actor-model primitives which can be
@@ -677,6 +623,60 @@ monitoring supervised processes.
 This distribution provides the ability to use virtual actors, which are
 processes (actors) created on-demand as a result of some system event. This
 feature is enabled by the L<Zing::Launcher> and L<Zing::Spawner> superclasses.
+
+=cut
+
+=head1 COMMANDS
+
+Given the following process (actor):
+
+  # in lib/MyApp.pm
+
+  package MyApp;
+
+  use parent 'Zing::Single';
+
+  sub perform {
+    # do something (once)
+  }
+
+  1;
+
+With an application cartridge specifying 4 forks:
+
+  # in app/myapp
+
+  ['MyApp', [], 4]
+
+The L<zing> command-line application lets you manage Zing applications from the
+command-line using these commands:
+
+=cut
+
+=head2 start
+
+  $ zing start app/myapp
+
+The C<start> command loads an application I<cartridge> which returns a
+L<"scheme"|Zing::Types/scheme> and runs it as a daemon.
+
+=cut
+
+=head2 stop
+
+  $ zing stop app/myapp
+
+The C<stop> command finds a running application by its PID (process ID) and
+terminates the process.
+
+=cut
+
+=head2 logs
+
+  $ zing logs --level fatal
+
+The C<logs> command taps the centralized log source and outputs new events to
+STDOUT (standard output).
 
 =cut
 
