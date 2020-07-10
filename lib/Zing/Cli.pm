@@ -28,6 +28,7 @@ sub auto {
     clean => '_handle_clean',
     logs => '_handle_logs',
     pid => '_handle_pid',
+    resources => '_handle_resources',
     restart => '_handle_restart',
     monitor => '_handle_monitor',
     update => '_handle_update',
@@ -41,6 +42,7 @@ sub subs {
     clean => 'Prune the process registry',
     logs => 'Tap logs and output to STDOUT',
     pid => 'Display an application process ID',
+    resources => 'Display resource identifiers (under current namespace)',
     restart => 'Restart the specified application',
     monitor => 'Monitor the specified application (start if not started)',
     update => 'Hot-reload application processes',
@@ -111,7 +113,7 @@ sub _handle_clean {
 
   my $r = Zing::Registry->new;
 
-  for my $id (@{$r->ids}) {
+  for my $id (@{$r->keys}) {
     my $data = $r->store->recv($id) or next;
     my $pid = $data->{process} or next;
     $r->store->drop($id) unless kill 0, $pid;
@@ -218,6 +220,19 @@ sub _handle_pid {
   }
 
   print "Process ID: $pid\n";
+
+  return $self;
+}
+
+sub _handle_resources {
+  my ($self) = @_;
+
+  my $registry = Zing::Registry->new;
+  my $resources = $registry->store->keys((split /:/, $registry->term)[0,1]);
+
+  for my $resource (@$resources) {
+    print "$resource\n";
+  }
 
   return $self;
 }
