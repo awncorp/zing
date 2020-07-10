@@ -170,7 +170,7 @@ of features currently enabled by this toolkit:
   my $p2 = Zing::Process->new;
 
   $p1->send($p2, { action => 'greetings' });
-  
+
   say $p2->recv->{action}; # got it?
 
 This distribution provides a toolkit for creating processes (actors) which can
@@ -321,11 +321,14 @@ scale your deployments without changing your implementations.
 
 =head2 configuration
 
-  # configure the namespace (defaults to "main")
+  # configure the namespace
   ZING_NS=app
 
   # enable process debugging tracing
   ZING_DEBUG=1
+
+  # configure the namespace, same as ZING_NS (defaults to "main")
+  ZING_HANDLE=app
 
   # configure where the command-line tool finds catridges
   ZING_HOME=/tmp
