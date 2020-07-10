@@ -156,7 +156,7 @@ fun BUILDARGS($self, $item, @data) {
     else {
       Carp::confess qq(Error in term: Unrecognizable "object");
     }
-    $args->{handle} = ($ENV{ZING_NS} || 'main') =~ s/\W/-/gr;
+    $args->{handle} = ($ENV{ZING_HANDLE} || $ENV{ZING_NS} || 'main') =~ s/\W/-/gr;
     $args->{system} = 'zing';
   }
   elsif(defined $item && !ref $item) {
