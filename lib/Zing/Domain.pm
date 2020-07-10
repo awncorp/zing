@@ -9,12 +9,25 @@ use registry 'Zing::Types';
 use routines;
 
 use Data::Object::Class;
+use Data::Object::ClassHas;
 
 extends 'Zing::Channel';
 
 use Zing::Term;
 
 # VERSION
+
+# ATTRIBUTES
+
+has 'metadata' => (
+  is => 'ro',
+  isa => 'HashRef',
+  new => 1,
+);
+
+fun new_metadata($self) {
+  {}
+}
 
 # BUILDERS
 
@@ -99,6 +112,7 @@ method apply() {
 method change(Str $op, Str $key, Any @val) {
   my %fields = (
     key => $key,
+    metadata => $self->metadata,
     snapshot => _copy($self->state),
     time => time,
     val => [@val],

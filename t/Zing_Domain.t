@@ -68,6 +68,12 @@ Zing::Channel
 
 =cut
 
+=attributes
+
+metadata: ro, opt, HashRef
+
+=cut
+
 =description
 
 This package provides an aggregate abstraction and real-time cross-process
