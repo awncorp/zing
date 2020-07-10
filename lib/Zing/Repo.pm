@@ -62,12 +62,8 @@ method drop(Str @keys) {
   return $self->store->drop($self->term(@keys));
 }
 
-method ids() {
-  return $self->store->keys($self->term);
-}
-
 method keys() {
-  return [map {my $re = quotemeta $self->term; s/^$re://r} @{$self->ids}];
+  return $self->store->keys($self->term);
 }
 
 method term(Str @keys) {
