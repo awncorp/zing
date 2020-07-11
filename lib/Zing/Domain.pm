@@ -161,13 +161,13 @@ method del(Str $key) {
   return $self->apply->change('del', $key);
 }
 
-method emit(Str $key, HashRef $event) {
+method emit(Str $key, HashRef $data) {
   my $handlers = $self->handlers->{$key};
 
   return $self if !$handlers;
 
   for my $handler (@$handlers) {
-    $handler->[1]->($self, $event);
+    $handler->[1]->($self, $data);
   }
 
   return $self;

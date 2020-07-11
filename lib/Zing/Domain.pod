@@ -31,6 +31,14 @@ a full history of state changes.
 
 =cut
 
+=head1 INHERITS
+
+This package inherits behaviors from:
+
+L<Zing::Channel>
+
+=cut
+
 =head1 LIBRARIES
 
 This package uses type constraints from:
@@ -45,19 +53,11 @@ This package has the following attributes:
 
 =cut
 
-=head2 channel
+=head2 metadata
 
-  channel(Channel)
+  metadata(HashRef)
 
-This attribute is read-only, accepts C<(Channel)> values, and is optional.
-
-=cut
-
-=head2 name
-
-  name(Str)
-
-This attribute is read-only, accepts C<(Str)> values, and is required.
+This attribute is read-only, accepts C<(HashRef)> values, and is optional.
 
 =cut
 
@@ -162,6 +162,37 @@ The del method deletes the data associated with a specific key.
 
 =cut
 
+=head2 emit
+
+  emit(Str $key, HashRef $data) : Object
+
+The emit method executes any callbacks registered using the L</listen> method
+associated with a specific key.
+
+=over 4
+
+=item emit example #1
+
+  # given: synopsis
+
+  $domain->emit('email', { val => ['me@example.com'] });
+
+=back
+
+=over 4
+
+=item emit example #2
+
+  # given: synopsis
+
+  $domain->listen('email', sub { my ($self, $data) = @_; $self->{event} = $data; });
+
+  $domain->emit('email', { val => ['me@example.com'] });
+
+=back
+
+=cut
+
 =head2 get
 
   get(Str $key) : Any
@@ -192,6 +223,75 @@ The get method return the data associated with a specific key.
 
 =cut
 
+=head2 ignore
+
+  ignore(Str $key, Maybe[CodeRef] $sub) : Any
+
+The ignore method removes the callback specified by the L</listen>, or all
+callbacks associated with a specific key if no specific callback if provided.
+
+=over 4
+
+=item ignore example #1
+
+  # given: synopsis
+
+  $domain->ignore('email');
+
+=back
+
+=over 4
+
+=item ignore example #2
+
+  # given: synopsis
+
+  my $callback = sub { my ($self, $data) = @_; $self->{event} = $data; };
+
+  $domain->listen('email', $callback);
+
+  $domain->ignore('email', $callback);
+
+=back
+
+=over 4
+
+=item ignore example #3
+
+  # given: synopsis
+
+  my $callback_1 = sub { my ($self, $data) = @_; $self->{event} = [$data, 2]; };
+
+  $domain->listen('email', $callback_1);
+
+  my $callback_2 = sub { my ($self, $data) = @_; $self->{event} = [$data, 1]; };
+
+  $domain->listen('email', $callback_2);
+
+  $domain->ignore('email', $callback_1);
+
+=back
+
+=over 4
+
+=item ignore example #4
+
+  # given: synopsis
+
+  my $callback_1 = sub { my ($self, $data) = @_; $self->{event} = [$data, 1]; };
+
+  $domain->listen('email', $callback_1);
+
+  my $callback_2 = sub { my ($self, $data) = @_; $self->{event} = [$data, 2]; };
+
+  $domain->listen('email', $callback_2);
+
+  $domain->ignore('email');
+
+=back
+
+=cut
+
 =head2 incr
 
   incr(Str $key, Int $val = 1) : Object
@@ -215,6 +315,62 @@ The incr method increments the data associated with a specific key.
   # given: synopsis
 
   $domain->incr('karma', 5);
+
+=back
+
+=cut
+
+=head2 listen
+
+  listen(Str $key, CodeRef $sub) : Object
+
+The listen method registers callbacks associated with a specific key which
+will be invoked by the L</emit> method or whenever an event matching the key
+specified is received and applied.
+
+=over 4
+
+=item listen example #1
+
+  # given: synopsis
+
+  $domain->ignore('email');
+
+  $domain->listen('email', sub { my ($self, $data) = @_; $self->{event} = $data; });
+
+=back
+
+=over 4
+
+=item listen example #2
+
+  # given: synopsis
+
+  $domain->ignore('email');
+
+  my $callback = sub { my ($self, $data) = @_; $self->{event} = $data; };
+
+  $domain->listen('email', $callback);
+
+  $domain->listen('email', $callback);
+
+=back
+
+=over 4
+
+=item listen example #3
+
+  # given: synopsis
+
+  $domain->ignore('email');
+
+  my $callback_1 = sub { my ($self, $data) = @_; $self->{event} = [$data, 1]; };
+
+  $domain->listen('email', $callback_1);
+
+  my $callback_2 = sub { my ($self, $data) = @_; $self->{event} = [$data, 2]; };
+
+  $domain->listen('email', $callback_2);
 
 =back
 
