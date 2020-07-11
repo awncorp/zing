@@ -15,6 +15,8 @@ extends 'Zing::Channel';
 
 use Zing::Term;
 
+use Scalar::Util ();
+
 # VERSION
 
 # ATTRIBUTES
@@ -104,6 +106,8 @@ method apply() {
     elsif ($op eq 'unshift') {
       eval{CORE::unshift @{$self->state->{$key}}, @$val};
     }
+
+    $self->emit($key, $data);
   }
 
   return $self;
@@ -149,16 +153,46 @@ method change(Str $op, Str $key, Any @val) {
   return $self->apply;
 }
 
-method get(Str $key) {
-  return $self->apply->state->{$key};
-}
-
 method decr(Str $key, Int $val = 1) {
   return $self->apply->change('decr', $key, $val);
 }
 
 method del(Str $key) {
   return $self->apply->change('del', $key);
+}
+
+method emit(Str $key, HashRef $event) {
+  my $handlers = $self->handlers->{$key};
+
+  return $self if !$handlers;
+
+  for my $handler (@$handlers) {
+    $handler->[1]->($self, $event);
+  }
+
+  return $self;
+}
+
+method get(Str $key) {
+  return $self->apply->state->{$key};
+}
+
+method handlers() {
+  return $self->{handlers} ||= {};
+}
+
+method ignore(Str $key, Maybe[CodeRef] $sub) {
+  return $self if !$self->handlers->{$key};
+
+  return do { delete $self->handlers->{$key}; $self } if !$sub;
+
+  my $ref = Scalar::Util::refaddr($sub);
+
+  @{$self->handlers->{$key}} = grep {$ref ne $$_[0]} @{$self->handlers->{$key}};
+
+  delete $self->handlers->{$key} if !@{$self->handlers->{$key}};
+
+  return $self;
 }
 
 method incr(Str $key, Int $val = 1) {
@@ -183,6 +217,14 @@ method shift(Str $key) {
 
 method state() {
   return $self->{state} ||= {};
+}
+
+method listen(Str $key, CodeRef $sub) {
+  my $ref = Scalar::Util::refaddr($sub);
+
+  push @{$self->ignore($key, $sub)->handlers->{$key}}, [$ref, $sub];
+
+  return $self;
 }
 
 method term() {
