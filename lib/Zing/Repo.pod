@@ -99,24 +99,6 @@ The drop method returns truthy if the data was removed from the store.
 
 =cut
 
-=head2 ids
-
-  ids() : ArrayRef[Str]
-
-The ids method returns a list of IDs (keys) stored under the datastore namespace.
-
-=over 4
-
-=item ids example #1
-
-  # given: synopsis
-
-  my $ids = $repo->ids;
-
-=back
-
-=cut
-
 =head2 keys
 
   keys() : ArrayRef[Str]
