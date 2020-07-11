@@ -171,7 +171,7 @@ associated with a specific key.
 
 =signature emit
 
-emit(Str $key) : Object
+emit(Str $key, HashRef $data) : Object
 
 =example-1 emit
 
