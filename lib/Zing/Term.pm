@@ -67,6 +67,7 @@ state $symbols = {
   'Zing::Domain'   => 'domain',
   'Zing::Kernel'   => 'kernel',
   'Zing::KeyVal'   => 'keyval',
+  'Zing::Lookup'   => 'lookup',
   'Zing::Mailbox'  => 'mailbox',
   'Zing::Process'  => 'process',
   'Zing::PubSub'   => 'pubsub',
@@ -89,6 +90,12 @@ fun BUILDARGS($self, $item, @data) {
       $args->{target} = $local;
       $args->{bucket} = $bucket;
       $args->{facets} = [@facets, @data];
+    }
+    elsif ($item->isa('Zing::Lookup')) {
+      $args->{symbol} = $symbols->{'Zing::Lookup'};
+      $args->{target} = $item->target eq 'global' ? 'global' : $local;
+      $args->{bucket} = $item->name;
+      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::Domain')) {
       $args->{symbol} = $symbols->{'Zing::Domain'};
@@ -232,6 +239,14 @@ method kernel() {
 method keyval() {
   unless ($self->symbol eq 'keyval') {
     Carp::confess 'Error in term: not a "keyval" term';
+  }
+
+  return $self->string;
+}
+
+method lookup() {
+  unless ($self->symbol eq 'lookup') {
+    Carp::confess 'Error in term: not a "lookup" term';
   }
 
   return $self->string;

@@ -19,7 +19,7 @@ use Zing::Term;
 # BUILDERS
 
 fun BUILD($self) {
-  $self->{cursor} = $self->size;
+  $self->{position} = $self->size;
 
   return $self;
 }
@@ -27,19 +27,19 @@ fun BUILD($self) {
 # METHODS
 
 method recv() {
-  $self->{cursor}++ if (
-    my $data = $self->store->slot($self->term, int($self->{cursor}))
+  $self->{position}++ if (
+    my $data = $self->store->slot($self->term, int($self->{position}))
   );
   return $data;
 }
 
 method renew() {
-  return !($self->{cursor} = 0) if $self->{cursor} > $self->size;
+  return $self->reset if $self->{position} > $self->size;
   return 0;
 }
 
 method reset() {
-  return !($self->{cursor} = 0);
+  return !($self->{position} = 0);
 }
 
 method send(HashRef $val) {
