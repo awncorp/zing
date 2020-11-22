@@ -278,7 +278,7 @@ $subs->synopsis(fun($tryable) {
 });
 
 $subs->example(-1, 'drop', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
+  ok !(my $result = $tryable->result);
 
   $result
 });
