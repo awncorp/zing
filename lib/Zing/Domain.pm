@@ -34,7 +34,9 @@ fun new_metadata($self) {
 # BUILDERS
 
 fun BUILD($self) {
-  $self->{cursor}-- if $self->{cursor};
+  $self->{position} = $self->size;
+
+  $self->{position}-- if $self->{position};
 
   return $self->apply;
 }
@@ -76,8 +78,8 @@ method apply() {
     my $key = $data->{key};
     my $val = $data->{val};
 
-    if ($data->{snapshot} && !$self->{state}) {
-      $self->{state} = _copy($data->{snapshot});
+    if ((not defined $self->{state}) && %{$data->{snapshot}}) {
+      $self->restore($data);
     }
 
     local $@;
@@ -107,6 +109,10 @@ method apply() {
       eval{CORE::unshift @{$self->state->{$key}}, @$val};
     }
 
+    if (%{$data->{metadata}}) {
+      $self->{metadata} = _copy($data->{metadata});
+    }
+
     $self->emit($key, $data);
   }
 
@@ -117,7 +123,7 @@ method change(Str $op, Str $key, Any @val) {
   my %fields = (
     key => $key,
     metadata => $self->metadata,
-    snapshot => _copy($self->state),
+    snapshot => $self->snapshot,
     time => time,
     val => [@val],
   );
@@ -207,12 +213,20 @@ method push(Str $key, Any @val) {
   return $self->apply->change('push', $key, @val);
 }
 
+method restore(HashRef $data) {
+  return $self->{state} = _copy($data->{snapshot});
+}
+
 method set(Str $key, Any $val) {
   return $self->apply->change('set', $key, $val);
 }
 
 method shift(Str $key) {
   return $self->apply->change('shift', $key);
+}
+
+method snapshot() {
+  return _copy($self->state);
 }
 
 method state() {

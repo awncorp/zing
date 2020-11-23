@@ -20,6 +20,12 @@ register {
 };
 
 register {
+  name => 'Cursor',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Cursor'),
+};
+
+register {
   name => 'Data',
   parent => 'Object',
   validation => is_instance_of('Zing::Data'),
@@ -68,6 +74,12 @@ register {
   name => 'Logic',
   parent => 'Object',
   validation => is_instance_of('Zing::Logic'),
+};
+
+register {
+  name => 'Lookup',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Lookup'),
 };
 
 register {
@@ -141,6 +153,12 @@ declare 'Schedule',
 
 declare 'Scheme',
   as Tuple([Str(), ArrayRef(), Int()]);
+
+register {
+  name => 'Savepoint',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Savepoint'),
+};
 
 register {
   name => 'Server',
