@@ -68,6 +68,25 @@ sub _copy {
   }
 }
 
+sub _merge {
+  my ($a_data, $b_data) = @_;
+
+  return $a_data unless defined $b_data;
+
+  for my $key (keys %$b_data) {
+    my ($x, $y) = map { ref $_->{$key} eq 'HASH' } $b_data, $a_data;
+
+    if ($x and $y) {
+      $a_data->{$key} = _merge($a_data->{$key}, $b_data->{$key});
+    }
+    else {
+      $a_data->{$key} = $b_data->{$key};
+    }
+  }
+
+  return $a_data;
+}
+
 # METHODS
 
 method apply() {
@@ -92,6 +111,9 @@ method apply() {
     }
     elsif ($op eq 'incr') {
       eval{($self->state->{$key} //= 0 ) += ($val->[0] // 0)};
+    }
+    elsif ($op eq 'merge') {
+      eval{_merge(($self->state->{$key} //= {}), $val->[0])};
     }
     elsif ($op eq 'pop') {
       eval{CORE::pop @{$self->state->{$key}}};
@@ -136,6 +158,9 @@ method change(Str $op, Str $key, Any @val) {
   }
   elsif ($op eq 'incr') {
     $self->send({ %fields, op => 'incr' });
+  }
+  elsif ($op eq 'merge') {
+    $self->send({ %fields, op => 'merge' });
   }
   elsif ($op eq 'pop') {
     $self->send({ %fields, op => 'pop' });
@@ -203,6 +228,10 @@ method ignore(Str $key, Maybe[CodeRef] $sub) {
 
 method incr(Str $key, Int $val = 1) {
   return $self->apply->change('incr', $key, $val);
+}
+
+method merge(Str $key, HashRef $val) {
+  return $self->apply->change('merge', $key, $val);
 }
 
 method pop(Str $key) {
