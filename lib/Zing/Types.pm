@@ -14,9 +14,21 @@ extends 'Types::Standard';
 # VERSION
 
 register {
+  name => 'App',
+  parent => 'Object',
+  validation => is_instance_of('Zing::App'),
+};
+
+register {
   name => 'Channel',
   parent => 'Object',
   validation => is_instance_of('Zing::Channel'),
+};
+
+register {
+  name => 'Cli',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Cli'),
 };
 
 register {
@@ -35,6 +47,12 @@ register {
   name => 'Domain',
   parent => 'Object',
   validation => is_instance_of('Zing::Domain'),
+};
+
+register {
+  name => 'Env',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Env'),
 };
 
 register {
