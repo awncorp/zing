@@ -20,6 +20,12 @@ register {
 };
 
 register {
+  name => 'Cartridge',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Cartridge'),
+};
+
+register {
   name => 'Channel',
   parent => 'Object',
   validation => is_instance_of('Zing::Channel'),
@@ -35,6 +41,12 @@ register {
   name => 'Cursor',
   parent => 'Object',
   validation => is_instance_of('Zing::Cursor'),
+};
+
+register {
+  name => 'Daemon',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Daemon'),
 };
 
 register {
@@ -75,6 +87,12 @@ register {
 
 declare 'Interupt',
   as Enum([qw(CHLD HUP INT QUIT TERM USR1 USR2)]);
+
+register {
+  name => 'Journal',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Journal'),
+};
 
 register {
   name => 'Kernel',

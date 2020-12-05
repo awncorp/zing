@@ -35,19 +35,13 @@ our $PIDS = $$ + 1;
   $space->inject(fork => sub {
     $ENV{ZING_TEST_FORK} || $PIDS++;
   });
-  my $_execute = $space->cop(
-    'execute'
+  my $_start = $space->cop(
+    'start'
   );
-  $space->inject(execute => sub {
-    my ($self, @args) = @_;
-    my $result = $_execute->($self, @args);
-    unlink $self->pid_path;
-    $result
-  });
   $space->inject(start => sub {
     my ($self, @args) = @_;
-    my $result = $self->execute(@args);
-    unlink $self->pid_path;
+    my $result = $_start->($self, @args);
+    unlink $self->cartridge->pidfile;
     $result
   });
 }

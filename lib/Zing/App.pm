@@ -48,6 +48,18 @@ method id() {
   return $self->node->identifier;
 }
 
+method cartridge(Any @args) {
+  return $self->reify($self->cartridge_specification(@args));
+}
+
+method cartridge_namespace() {
+  return [$self->name, 'cartridge'];
+}
+
+method cartridge_specification(Any @args) {
+  return [$self->cartridge_namespace, [@args]];
+}
+
 method channel(Any @args) {
   return $self->reify($self->channel_specification(@args));
 }
@@ -120,6 +132,18 @@ method fork_specification(Any @args) {
   return [$self->fork_namespace, [@args]];
 }
 
+method journal(Any @args) {
+  return $self->reify($self->journal_specification(@args));
+}
+
+method journal_namespace() {
+  return [$self->name, 'journal'];
+}
+
+method journal_specification(Any @args) {
+  return [$self->journal_namespace, [@args]];
+}
+
 method kernel(Any @args) {
   return $self->reify($self->kernel_specification(@args));
 }
@@ -154,6 +178,10 @@ method launcher_namespace() {
 
 method launcher_specification(Any @args) {
   return [$self->launcher_namespace, [@args]];
+}
+
+method logger(Any @args) {
+  require FlightRecorder; FlightRecorder->new(level => 'info', @args);
 }
 
 method lookup(Any @args) {
