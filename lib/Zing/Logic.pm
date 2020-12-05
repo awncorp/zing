@@ -11,6 +11,8 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
+with 'Zing::Context';
+
 use Zing::Flow;
 
 # VERSION
@@ -96,7 +98,7 @@ sub _words {
 # METHODS
 
 method debug(Any @data) {
-  if ($ENV{ZING_DEBUG}) {
+  if ($self->env->debug) {
     $self->process->log->debug(
       join ' ', sprintf('in %s, %s', _words($self, $self->process)), @data
     );
