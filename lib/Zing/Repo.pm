@@ -16,6 +16,8 @@ use Zing::Server;
 use Zing::Store;
 use Zing::Term;
 
+with 'Zing::Context';
+
 # VERSION
 
 # ATTRIBUTES
@@ -43,7 +45,7 @@ has 'store' => (
 );
 
 fun new_store($self) {
-  Data::Object::Space->new($ENV{ZING_STORE} || 'Zing::Redis')->build
+  $self->env->app->store
 }
 
 has 'target' => (
@@ -53,7 +55,7 @@ has 'target' => (
 );
 
 fun new_target($self) {
-  $ENV{ZING_TARGET} || 'local'
+  $self->env->target || 'local'
 }
 
 # METHODS
@@ -67,7 +69,7 @@ method keys() {
 }
 
 method term(Str @keys) {
-  return Zing::Term->new($self, @keys)->repo;
+  return $self->env->app->term($self, @keys)->repo;
 }
 
 method test(Str @keys) {
