@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Channel';
 
-use FlightRecorder;
-
 # VERSION
 
 # ATTRIBUTES
@@ -52,8 +50,6 @@ has verbose => (
 # METHODS
 
 method stream(CodeRef $callback) {
-  require FlightRecorder;
-
   while ($self->tap) {
     next unless my $info = $self->recv;
 
@@ -63,7 +59,7 @@ method stream(CodeRef $callback) {
 
     $logs->{level} = $self->level;
 
-    my $logger = FlightRecorder->new($logs);
+    my $logger = $self->env->app->logger(%{$logs});
     my $report = $self->verbose ? 'verbose' : 'simple';
     my $lines = $logger->$report->lines;
 

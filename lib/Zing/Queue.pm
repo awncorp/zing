@@ -12,8 +12,6 @@ use Data::Object::Class;
 
 extends 'Zing::PubSub';
 
-use Zing::Term;
-
 # VERSION
 
 # METHODS
@@ -31,7 +29,7 @@ method size() {
 }
 
 method term() {
-  return Zing::Term->new($self)->queue;
+  return $self->env->app->term($self)->queue;
 }
 
 1;

@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Channel';
 
-use Zing::Term;
-
 use Scalar::Util ();
 
 # VERSION
@@ -271,7 +269,7 @@ method listen(Str $key, CodeRef $sub) {
 }
 
 method term() {
-  return Zing::Term->new($self)->domain;
+  return $self->env->app->term($self)->domain;
 }
 
 method unshift(Str $key, Any @val) {

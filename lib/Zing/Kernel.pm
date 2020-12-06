@@ -13,9 +13,7 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Watcher';
 
-use Zing::Channel;
 use Zing::Logic::Kernel;
-use Zing::Term;
 
 # VERSION
 
@@ -28,7 +26,7 @@ has 'journal' => (
 );
 
 fun new_journal($self) {
-  Zing::Channel->new(name => '$journal')
+  $self->env->app->journal
 }
 
 has 'scheme' => (
@@ -46,7 +44,7 @@ fun new_logic($self) {
 # METHODS
 
 method term() {
-  return Zing::Term->new($self)->kernel;
+  return $self->env->app->term($self)->kernel;
 }
 
 1;

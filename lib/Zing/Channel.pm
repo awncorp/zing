@@ -12,8 +12,6 @@ use Data::Object::Class;
 
 extends 'Zing::PubSub';
 
-use Zing::Term;
-
 # VERSION
 
 # BUILDERS
@@ -51,7 +49,7 @@ method size() {
 }
 
 method term() {
-  return Zing::Term->new($self)->channel;
+  return $self->env->app->term($self)->channel;
 }
 
 1;

@@ -32,7 +32,7 @@ method send(Str $key, HashRef $val) {
 }
 
 method term(Str @keys) {
-  return Zing::Term->new($self, @keys)->pubsub;
+  return $self->env->app->term($self, @keys)->pubsub;
 }
 
 1;

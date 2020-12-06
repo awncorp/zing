@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::KeyVal';
 
-use Zing::Term;
-
 # VERSION
 
 # ATTRIBUTES
@@ -52,7 +50,7 @@ method send(Process $proc) {
 }
 
 method term(Str @keys) {
-  return Zing::Term->new($self, @keys)->registry;
+  return $self->env->app->term($self, @keys)->registry;
 }
 
 method terms() {

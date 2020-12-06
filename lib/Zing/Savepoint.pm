@@ -11,7 +11,7 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use Zing::KeyVal;
+with 'Zing::Context';
 
 # VERSION
 
@@ -60,7 +60,7 @@ method name() {
 }
 
 method repo() {
-  return Zing::KeyVal->new(name => $self->name);
+  return $self->env->app->keyval(name => $self->name);
 }
 
 method recv() {

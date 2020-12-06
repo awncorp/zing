@@ -13,11 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Domain';
 
-use Zing::Cursor;
-use Zing::Domain;
-use Zing::Savepoint;
-use Zing::Term;
-
 use Digest::MD5;
 
 use Carp ();
@@ -43,7 +38,7 @@ fun BUILD($self) {
 # METHODS
 
 method cursor() {
-  return Zing::Cursor->new(lookup => $self);
+  return $self->env->app->cursor(lookup => $self);
 }
 
 method decr(Any @args) {
@@ -72,13 +67,13 @@ around del($key) {
     $self->change('set', $prev, { %{$self->state->{$prev}}, next => undef });
   }
   $self->$orig($name);
-  Zing::Domain->new(name => $item->{name})->drop;
+  $self->env->app->domain(name => $item->{name})->drop;
   return $self;
 }
 
 around drop() {
   for my $value (values %{$self->state}) {
-    Zing::Domain->new(name => $value->{name})->drop;
+    $self->env->app->domain(name => $value->{name})->drop;
   }
   return $self->$orig;
 }
@@ -86,7 +81,7 @@ around drop() {
 method get(Str $key) {
   my $data = $self->apply->state->{$self->hash($key)};
   return undef if !$data;
-  return Zing::Domain->new(name => $data->{name});
+  return $self->env->app->domain(name => $data->{name});
 }
 
 method head() {
@@ -120,7 +115,7 @@ method restore(HashRef $data) {
 method set(Str $key) {
   my $hash = $self->hash($key);
   my $name = join('-', $self->name, $hash);
-  my $domain = Zing::Domain->new(name => $name);
+  my $domain = $self->env->app->domain(name => $name);
   my $prev = $self->apply->head;
   if ($prev && $self->state->{$prev}) {
     $self->change('set', $prev, { %{$self->state->{$prev}}, next => $hash });
@@ -136,7 +131,7 @@ method shift(Any @args) {
 }
 
 method savepoint() {
-  return Zing::Savepoint->new(lookup => $self);
+  return $self->env->app->savepoint(lookup => $self);
 }
 
 method snapshot() {
@@ -148,7 +143,7 @@ method tail() {
 }
 
 method term() {
-  return Zing::Term->new($self)->lookup;
+  return $self->env->app->term($self)->lookup;
 }
 
 method unshift(Any @args) {

@@ -161,7 +161,7 @@ method keyval(Any @args) {
 }
 
 method keyval_namespace() {
-  return [$self->name, 'keyval'];
+  return [$self->name, 'key-val'];
 }
 
 method keyval_specification(Any @args) {
@@ -237,7 +237,7 @@ method pubsub(Any @args) {
 }
 
 method pubsub_namespace() {
-  return [$self->name, 'pubsub'];
+  return [$self->name, 'pub-sub'];
 }
 
 method pubsub_specification(Any @args) {
