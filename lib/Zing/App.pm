@@ -372,8 +372,8 @@ method store_specification(Any @args) {
   return [$self->store_namespace, [@args]];
 }
 
-method term(Object $type, Str @keys) {
-  require Zing::Term; Zing::Term->new($type, @keys);
+method term(Any @args) {
+  require Zing::Term; Zing::Term->new(@args);
 }
 
 method timer(Any @args) {

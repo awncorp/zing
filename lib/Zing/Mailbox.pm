@@ -13,6 +13,8 @@ use Data::Object::ClassHas;
 
 extends 'Zing::PubSub';
 
+with 'Zing::Context';
+
 use Zing::Term;
 
 # VERSION
@@ -39,7 +41,7 @@ has 'process' => (
 # BUILDERS
 
 fun new_target($self) {
-  $ENV{ZING_TARGET} || 'global'
+  $self->env->target || 'global'
 }
 
 # METHODS
@@ -65,7 +67,7 @@ method size() {
 }
 
 method term(Maybe[Str] $name) {
-  return Zing::Term->new($name || $self)->mailbox;
+  return $self->env->app->term($name || $self)->mailbox;
 }
 
 1;
