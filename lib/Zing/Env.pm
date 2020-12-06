@@ -54,7 +54,7 @@ has handle => (
 );
 
 fun new_handle($self) {
-  $ENV{ZING_HANDLE}
+  $ENV{ZING_HANDLE} || $ENV{ZING_NS}
 }
 
 has home => (
@@ -75,16 +75,6 @@ has host => (
 
 fun new_host($self) {
   $ENV{ZING_HOST}
-}
-
-has ns => (
-  is => 'ro',
-  isa => 'Maybe[Str]',
-  new => 1,
-);
-
-fun new_ns($self) {
-  $ENV{ZING_NS}
 }
 
 has piddir => (
@@ -115,19 +105,6 @@ has target => (
 
 fun new_target($self) {
   $ENV{ZING_TARGET}
-}
-
-# BUILDERS
-
-fun BUILD($self, $args) {
-  if (!exists $self->{ns} && exists $self->{handle}) {
-    $self->{ns} = $self->{handle};
-  }
-  if (!exists $self->{handle} && exists $self->{ns}) {
-    $self->{handle} = $self->{ns};
-  }
-
-  return $self;
 }
 
 1;
