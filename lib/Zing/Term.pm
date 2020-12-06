@@ -11,6 +11,8 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
+with 'Zing::Context';
+
 use Zing::Node;
 use Zing::Server;
 
@@ -163,7 +165,7 @@ fun BUILDARGS($self, $item, @data) {
     else {
       Carp::confess qq(Error in term: Unrecognizable "object");
     }
-    $args->{handle} = ($ENV{ZING_HANDLE} || $ENV{ZING_NS} || 'main') =~ s/\W/-/gr;
+    $args->{handle} = ($item->env->handle || 'main') =~ s/\W/-/gr;
     $args->{system} = 'zing';
   }
   elsif(defined $item && !ref $item) {

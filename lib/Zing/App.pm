@@ -184,6 +184,18 @@ method logger(Any @args) {
   require FlightRecorder; FlightRecorder->new(level => 'info', @args);
 }
 
+method logic(Any @args) {
+  return $self->reify($self->logic_specification(@args));
+}
+
+method logic_namespace() {
+  return [$self->name, 'logic'];
+}
+
+method logic_specification(Any @args) {
+  return [$self->logic_namespace, [@args]];
+}
+
 method lookup(Any @args) {
   return $self->reify($self->lookup_specification(@args));
 }

@@ -11,6 +11,8 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
+with 'Zing::Context';
+
 use FlightRecorder;
 use POSIX;
 
@@ -41,7 +43,7 @@ has 'data' => (
 );
 
 fun new_data($self) {
-  Zing::Data->new(process => $self)
+  $self->env->app->data(process => $self)
 }
 
 has 'journal' => (
@@ -51,7 +53,7 @@ has 'journal' => (
 );
 
 fun new_journal($self) {
-  Zing::Channel->new(name => '$journal')
+  $self->env->app->journal
 }
 
 has 'log' => (
@@ -61,7 +63,7 @@ has 'log' => (
 );
 
 fun new_log($self) {
-  FlightRecorder->new(auto => undef, level => 'info')
+  $self->env->app->logger(auto => undef)
 }
 
 has 'logic' => (
@@ -71,7 +73,7 @@ has 'logic' => (
 );
 
 fun new_logic($self) {
-  Zing::Logic->new(process => $self);
+  $self->env->app->logic(process => $self);
 }
 
 has 'loop' => (
@@ -91,7 +93,7 @@ has 'mailbox' => (
 );
 
 fun new_mailbox($self) {
-  Zing::Mailbox->new(process => $self)
+  $self->env->app->mailbox(process => $self)
 }
 
 has 'name' => (
@@ -127,7 +129,7 @@ has 'registry' => (
 );
 
 fun new_registry($self) {
-  Zing::Registry->new
+  $self->env->app->registry
 }
 
 has 'server' => (
@@ -259,7 +261,7 @@ method reply(HashRef $mail, HashRef $data) {
 
 method send(Mailbox | Process | Str $to, HashRef $data) {
   if (!ref $to) {
-    return $self->mailbox->send(Zing::Term->new($to)->mailbox, $data);
+    return $self->mailbox->send($self->env->app->term($to)->mailbox, $data);
   }
   elsif ($to->isa('Zing::Mailbox')) {
     return $self->mailbox->send($to->term, $data);
@@ -268,7 +270,7 @@ method send(Mailbox | Process | Str $to, HashRef $data) {
     return $self->mailbox->send($to->mailbox->term, $data);
   }
   else {
-    return $self->mailbox->send(Zing::Term->new($to)->mailbox, $data);
+    return $self->mailbox->send($self->env->app->term($to)->mailbox, $data);
   }
 }
 
@@ -288,7 +290,7 @@ method signal(Int $pid, Str $type = 'kill') {
 
 method spawn(Scheme $scheme) {
   my $size = $scheme->[2];
-  my $fork = Zing::Fork->new(parent => $self, scheme => $scheme);
+  my $fork = $self->env->app->fork(parent => $self, scheme => $scheme);
 
   $SIG{CHLD} = 'IGNORE';
 
@@ -298,7 +300,7 @@ method spawn(Scheme $scheme) {
 }
 
 method term() {
-  return Zing::Term->new($self)->process;
+  return $self->env->app->term($self)->process;
 }
 
 method winddown() {
