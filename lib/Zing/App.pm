@@ -12,6 +12,8 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 use Data::Object::Space;
 
+use Sys::Hostname ();
+
 # VERSION
 
 # ATTRIBUTES
@@ -24,6 +26,17 @@ has env => (
 
 fun new_env($self) {
   require Zing::Env; Zing::Env->new(app => $self);
+}
+
+has host => (
+  is => 'ro',
+  isa => 'Str',
+  init_arg => undef,
+  new => 1,
+);
+
+fun new_host($self) {
+  Sys::Hostname::hostname
 }
 
 has name => (
@@ -43,10 +56,6 @@ fun new_node($self) {
 }
 
 # METHODS
-
-method id() {
-  return $self->node->identifier;
-}
 
 method cartridge(Any @args) {
   return $self->reify($self->cartridge_specification(@args));
@@ -130,6 +139,18 @@ method fork_namespace() {
 
 method fork_specification(Any @args) {
   return [$self->fork_namespace, [@args]];
+}
+
+method id(Any @args) {
+  return $self->reify($self->id_specification(@args));
+}
+
+method id_namespace() {
+  return [$self->name, 'i-d'];
+}
+
+method id_specification(Any @args) {
+  return [$self->id_namespace, [@args]];
 }
 
 method journal(Any @args) {
