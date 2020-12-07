@@ -62,6 +62,12 @@ register {
 };
 
 register {
+  name => 'Entity',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Entity'),
+};
+
+register {
   name => 'Env',
   parent => 'Object',
   validation => is_instance_of('Zing::Env'),

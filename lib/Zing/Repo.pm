@@ -12,11 +12,11 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 use Data::Object::Space;
 
+extends 'Zing::Entity';
+
 use Zing::Server;
 use Zing::Store;
 use Zing::Term;
-
-with 'Zing::Context';
 
 # VERSION
 
@@ -45,7 +45,7 @@ has 'store' => (
 );
 
 fun new_store($self) {
-  $self->env->app->store
+  $self->app->store
 }
 
 has 'target' => (
@@ -69,7 +69,7 @@ method keys() {
 }
 
 method term(Str @keys) {
-  return $self->env->app->term($self, @keys)->repo;
+  return $self->app->term($self, @keys)->repo;
 }
 
 method test(Str @keys) {

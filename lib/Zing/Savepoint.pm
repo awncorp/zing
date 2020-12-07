@@ -11,7 +11,7 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-with 'Zing::Context';
+extends 'Zing::Entity';
 
 # VERSION
 
@@ -60,7 +60,7 @@ method name() {
 }
 
 method repo() {
-  return $self->env->app->keyval(name => $self->name);
+  return $self->app->keyval(name => $self->name);
 }
 
 method recv() {

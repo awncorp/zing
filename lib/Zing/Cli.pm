@@ -15,9 +15,8 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-extends 'Data::Object::Cli';
-
-with 'Zing::Context';
+use parent 'Data::Object::Cli';
+use parent 'Zing::Entity';
 
 # VERSION
 
@@ -40,7 +39,7 @@ has cartridge => (
 );
 
 fun new_cartridge($self) {
-  $self->env->app->cartridge(
+  $self->app->cartridge(
     name => $self->arg_app,
     $self->opt_appdir ? (appdir => $self->opt_appdir) : (),
     $self->opt_libdir ? (libdir => $self->opt_libdir) : (),
@@ -55,7 +54,7 @@ has daemon => (
 );
 
 fun new_daemon($self) {
-  $self->env->app->daemon(
+  $self->app->daemon(
     cartridge => $self->cartridge,
     $self->opt_backlog ? (log_reset => $self->opt_backlog) : (),
     $self->opt_level ? (log_level => $self->opt_level) : (),
@@ -193,7 +192,7 @@ has registry => (
 );
 
 fun new_registry($self) {
-  $self->env->app->registry
+  $self->app->registry
 }
 
 # USAGE

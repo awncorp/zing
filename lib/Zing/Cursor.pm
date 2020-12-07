@@ -11,7 +11,7 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-with 'Zing::Context';
+extends 'Zing::Entity';
 
 # VERSION
 
@@ -52,7 +52,7 @@ method first() {
 
   my $reference = $self->lookup->state->{$tail} or return undef;
 
-  return $self->env->app->domain(name => $reference->{name});
+  return $self->app->domain(name => $reference->{name});
 
 }
 
@@ -61,7 +61,7 @@ method last() {
 
   my $reference = $self->lookup->state->{$head} or return undef;
 
-  return $self->env->app->domain(name => $reference->{name});
+  return $self->app->domain(name => $reference->{name});
 }
 
 method next() {
@@ -82,7 +82,7 @@ method next() {
 
     $self->position($position);
 
-    return $self->env->app->domain(name => $current->{name});
+    return $self->app->domain(name => $current->{name});
   }
 
   my $current = $self->lookup->state->{$position} or return undef;
@@ -97,7 +97,7 @@ method next() {
 
   my $endpoint = $self->lookup->state->{$current->{next}} or return undef;
 
-  return $self->env->app->domain(name => $endpoint->{name});
+  return $self->app->domain(name => $endpoint->{name});
 }
 
 method prev() {
@@ -118,7 +118,7 @@ method prev() {
 
     $self->position($position);
 
-    return $self->env->app->domain(name => $current->{name});
+    return $self->app->domain(name => $current->{name});
   }
 
   my $current = $self->lookup->state->{$position} or return undef;
@@ -133,7 +133,7 @@ method prev() {
 
   my $endpoint = $self->lookup->state->{$current->{prev}} or return undef;
 
-  return $self->env->app->domain(name => $endpoint->{name});
+  return $self->app->domain(name => $endpoint->{name});
 }
 
 method reset() {

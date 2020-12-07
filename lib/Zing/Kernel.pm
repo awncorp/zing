@@ -26,7 +26,7 @@ has 'journal' => (
 );
 
 fun new_journal($self) {
-  $self->env->app->journal
+  $self->app->journal
 }
 
 has 'scheme' => (
@@ -38,13 +38,14 @@ has 'scheme' => (
 # BUILDERS
 
 fun new_logic($self) {
-  Zing::Logic::Kernel->new(process => $self);
+  my $debug = $self->env->debug;
+  Zing::Logic::Kernel->new(debug => $debug, process => $self)
 }
 
 # METHODS
 
 method term() {
-  return $self->env->app->term($self)->kernel;
+  return $self->app->term($self)->kernel;
 }
 
 1;

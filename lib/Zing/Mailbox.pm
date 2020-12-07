@@ -13,10 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::PubSub';
 
-with 'Zing::Context';
-
-use Zing::Term;
-
 # VERSION
 
 # ATTRIBUTES
@@ -67,7 +63,7 @@ method size() {
 }
 
 method term(Maybe[Str] $name) {
-  return $self->env->app->term($name || $self)->mailbox;
+  return $self->app->term($name || $self)->mailbox;
 }
 
 1;

@@ -11,20 +11,14 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-with 'Zing::Context';
+extends 'Zing::Entity';
 
 use FlightRecorder;
 use POSIX;
 
-use Zing::Channel;
-use Zing::Data;
-use Zing::Fork;
 use Zing::Logic;
 use Zing::Loop;
-use Zing::Mailbox;
 use Zing::Node;
-use Zing::Registry;
-use Zing::Term;
 
 # VERSION
 
@@ -43,7 +37,7 @@ has 'data' => (
 );
 
 fun new_data($self) {
-  $self->env->app->data(process => $self)
+  $self->app->data(process => $self)
 }
 
 has 'journal' => (
@@ -53,7 +47,7 @@ has 'journal' => (
 );
 
 fun new_journal($self) {
-  $self->env->app->journal
+  $self->app->journal
 }
 
 has 'log' => (
@@ -63,7 +57,7 @@ has 'log' => (
 );
 
 fun new_log($self) {
-  $self->env->app->logger(auto => undef)
+  $self->app->logger(auto => undef)
 }
 
 has 'logic' => (
@@ -73,7 +67,8 @@ has 'logic' => (
 );
 
 fun new_logic($self) {
-  $self->env->app->logic(process => $self);
+  my $debug = $self->env->debug;
+  Zing::Logic->new(debug => $debug, process => $self)
 }
 
 has 'loop' => (
@@ -93,7 +88,7 @@ has 'mailbox' => (
 );
 
 fun new_mailbox($self) {
-  $self->env->app->mailbox(process => $self)
+  $self->app->mailbox(process => $self)
 }
 
 has 'name' => (
@@ -129,7 +124,7 @@ has 'registry' => (
 );
 
 fun new_registry($self) {
-  $self->env->app->registry
+  $self->app->registry
 }
 
 has 'server' => (
@@ -261,7 +256,7 @@ method reply(HashRef $mail, HashRef $data) {
 
 method send(Mailbox | Process | Str $to, HashRef $data) {
   if (!ref $to) {
-    return $self->mailbox->send($self->env->app->term($to)->mailbox, $data);
+    return $self->mailbox->send($self->app->term($to)->mailbox, $data);
   }
   elsif ($to->isa('Zing::Mailbox')) {
     return $self->mailbox->send($to->term, $data);
@@ -270,7 +265,7 @@ method send(Mailbox | Process | Str $to, HashRef $data) {
     return $self->mailbox->send($to->mailbox->term, $data);
   }
   else {
-    return $self->mailbox->send($self->env->app->term($to)->mailbox, $data);
+    return $self->mailbox->send($self->app->term($to)->mailbox, $data);
   }
 }
 
@@ -290,7 +285,7 @@ method signal(Int $pid, Str $type = 'kill') {
 
 method spawn(Scheme $scheme) {
   my $size = $scheme->[2];
-  my $fork = $self->env->app->fork(parent => $self, scheme => $scheme);
+  my $fork = $self->app->fork(parent => $self, scheme => $scheme);
 
   $SIG{CHLD} = 'IGNORE';
 
@@ -300,7 +295,7 @@ method spawn(Scheme $scheme) {
 }
 
 method term() {
-  return $self->env->app->term($self)->process;
+  return $self->app->term($self)->process;
 }
 
 method winddown() {

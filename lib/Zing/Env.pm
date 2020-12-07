@@ -39,7 +39,7 @@ fun new_appdir($self) {
 
 has debug => (
   is => 'ro',
-  isa => 'Maybe[Int]',
+  isa => 'Maybe[Bool]',
   new => 1,
 );
 

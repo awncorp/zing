@@ -11,7 +11,7 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-with 'Zing::Context';
+extends 'Zing::Entity';
 
 use Carp ();
 
@@ -37,7 +37,7 @@ has logger => (
 );
 
 fun new_logger($self) {
-  $self->env->app->logger
+  $self->app->logger
 }
 
 has journal => (
@@ -47,7 +47,7 @@ has journal => (
 );
 
 fun new_journal($self) {
-  $self->env->app->journal(
+  $self->app->journal(
     level => $self->log_level,
     verbose => $self->log_verbose,
   )
@@ -60,7 +60,7 @@ has kernel => (
 );
 
 fun new_kernel($self) {
-  $self->env->app->zing(scheme => $self->cartridge->scheme)
+  $self->app->zing(scheme => $self->cartridge->scheme)
 }
 
 has log_filter_from => (

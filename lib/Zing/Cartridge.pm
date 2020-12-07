@@ -11,9 +11,9 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use File::Spec;
+extends 'Zing::Entity';
 
-with 'Zing::Context';
+use File::Spec;
 
 # VERSION
 

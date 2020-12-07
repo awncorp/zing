@@ -11,13 +11,17 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-with 'Zing::Context';
-
 use Zing::Flow;
 
 # VERSION
 
 # ATTRIBUTES
+
+has 'debug' => (
+  is => 'ro',
+  isa => 'Bool',
+  def => 0,
+);
 
 has 'interupt' => (
   is => 'rw',
@@ -97,15 +101,6 @@ sub _words {
 
 # METHODS
 
-method debug(Any @data) {
-  if ($self->env->debug) {
-    $self->process->log->debug(
-      join ' ', sprintf('in %s, %s', _words($self, $self->process)), @data
-    );
-  }
-  return $self;
-}
-
 method flow() {
   my $step_0 = Zing::Flow->new(
     name => 'on_register',
@@ -129,6 +124,15 @@ method flow() {
   ));
 
   $step_0
+}
+
+method note(Any @data) {
+  if ($self->debug) {
+    $self->process->log->debug(
+      join ' ', sprintf('in %s, %s', _words($self, $self->process)), @data
+    );
+  }
+  return $self;
 }
 
 method handle_perform_event() {
@@ -217,7 +221,7 @@ method signals() {
 method trace(Str $method, Any @args) {
   my @with = (@args ? (join ', ', 'with', _words(@args)) : ());
 
-  return $self->debug(qq(invokes "$method"), @with)->$method(@args);
+  return $self->note(qq(invokes "$method"), @with)->$method(@args);
 }
 
 1;

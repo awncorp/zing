@@ -11,9 +11,6 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-with 'Zing::Context';
-
-use Zing::Node;
 use Zing::Server;
 
 use Carp ();
