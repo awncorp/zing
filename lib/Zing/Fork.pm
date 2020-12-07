@@ -73,7 +73,7 @@ method execute() {
   if ($pid) {
     $process = $self->space->load->new(
       @{$self->scheme->[1]},
-      node => Zing::Node->new(pid => $pid),
+      pid => $pid,
       parent => $self->parent,
     );
     return $self->processes->{$pid} = $process;
@@ -83,7 +83,7 @@ method execute() {
     $pid = $$;
     $process = $self->space->reload->new(
       @{$self->scheme->[1]},
-      node => Zing::Node->new(pid => $pid),
+      pid => $pid,
       parent => $self->parent,
 
     );

@@ -48,14 +48,14 @@ fun new_iota($self) {
   $x
 }
 
-has process => (
+has pid => (
   is => 'ro',
   isa => 'Int',
   init_arg => undef,
   new => 1,
 );
 
-fun new_process($self) {
+fun new_pid($self) {
   $$
 }
 
@@ -84,7 +84,7 @@ fun new_time($self) {
 
 method string() {
   require Digest::SHA1; return Digest::SHA1::sha1_hex(
-    join('-', map $self->$_, qw(host process time iota salt))
+    join('-', map $self->$_, qw(host pid time iota salt))
   );
 }
 

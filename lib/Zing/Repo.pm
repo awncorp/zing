@@ -14,7 +14,6 @@ use Data::Object::Space;
 
 extends 'Zing::Entity';
 
-use Zing::Server;
 use Zing::Store;
 use Zing::Term;
 
@@ -27,16 +26,6 @@ has 'name' => (
   isa => 'Str',
   req => 1,
 );
-
-has 'server' => (
-  is => 'ro',
-  isa => 'Server',
-  new => 1,
-);
-
-fun new_server($self) {
-  Zing::Server->new
-}
 
 has 'store' => (
   is => 'ro',

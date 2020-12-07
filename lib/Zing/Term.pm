@@ -11,8 +11,6 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use Zing::Server;
-
 use Carp ();
 use Scalar::Util ();
 
@@ -79,7 +77,10 @@ fun BUILDARGS($self, $item, @data) {
   my $args = {};
 
   if (Scalar::Util::blessed($item)) {
-    my $local = sprintf 'local(%s)', Zing::Server->new->name;
+    my $local = sprintf 'local(%s)',
+      $item->isa('Zing::Entity')
+      ? ($item->env->target || '0.0.0.0')
+      : 'localhost';
 
     @data = map {split /:/} @data;
 

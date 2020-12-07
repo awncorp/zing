@@ -68,6 +68,12 @@ register {
 };
 
 register {
+  name => 'Entity',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Entity'),
+};
+
+register {
   name => 'Env',
   parent => 'Object',
   validation => is_instance_of('Zing::Env'),
@@ -143,12 +149,6 @@ register {
 };
 
 register {
-  name => 'Node',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Node'),
-};
-
-register {
   name => 'Poll',
   parent => 'Object',
   validation => is_instance_of('Zing::Poll'),
@@ -200,12 +200,6 @@ register {
   name => 'Savepoint',
   parent => 'Object',
   validation => is_instance_of('Zing::Savepoint'),
-};
-
-register {
-  name => 'Server',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Server'),
 };
 
 register {

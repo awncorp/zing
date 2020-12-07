@@ -192,7 +192,7 @@ method handle_suicide_event() {
   return $self if !$process->parent;
 
   # children who don't known their parents kill themeselves :)
-  $process->winddown unless $process->ping($process->parent->node->pid);
+  $process->winddown unless $process->ping($process->parent->pid);
 
   return $self;
 }

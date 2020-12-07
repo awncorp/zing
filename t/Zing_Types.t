@@ -52,6 +52,32 @@ system.
 
 =cut
 
+=type App
+
+  App
+
+=type-library App
+
+Zing::Types
+
+=type-composite App
+
+  InstanceOf["Zing::App"]
+
+=type-parent App
+
+  Object
+
+=type-example-1 App
+
+  # given: synopsis
+
+  use Zing::App;
+
+  my $app = Zing::App->new;
+
+=cut
+
 =type Channel
 
   Channel
@@ -128,6 +154,58 @@ Zing::Types
   use Zing::Domain;
 
   my $domain = Zing::Domain->new(name => 'exchange');
+
+=cut
+
+=type Entity
+
+  Entity
+
+=type-library Entity
+
+Zing::Types
+
+=type-composite Entity
+
+  InstanceOf["Zing::Entity"]
+
+=type-parent Entity
+
+  Object
+
+=type-example-1 Entity
+
+  # given: synopsis
+
+  use Zing::Entity;
+
+  my $app = Zing::Entity->new;
+
+=cut
+
+=type Env
+
+  Env
+
+=type-library Env
+
+Zing::Types
+
+=type-composite Env
+
+  InstanceOf["Zing::Env"]
+
+=type-parent Env
+
+  Object
+
+=type-example-1 Env
+
+  # given: synopsis
+
+  use Zing::Env;
+
+  my $env = Zing::Env->new;
 
 =cut
 
@@ -364,32 +442,6 @@ Zing::Types
   use Zing::Process;
 
   my $mailbox = Zing::Mailbox->new(process => Zing::Process->new);
-
-=cut
-
-=type Node
-
-  Node
-
-=type-library Node
-
-Zing::Types
-
-=type-composite Node
-
-  InstanceOf["Zing::Node"]
-
-=type-parent Node
-
-  Object
-
-=type-example-1 Node
-
-  # given: synopsis
-
-  use Zing::Node;
-
-  my $node = Zing::Node->new;
 
 =cut
 
@@ -632,32 +684,6 @@ Zing::Types
   # given: synopsis
 
   ['MyApp', [], 1_000];
-
-=cut
-
-=type Server
-
-  Server
-
-=type-library Server
-
-Zing::Types
-
-=type-composite Server
-
-  InstanceOf["Zing::Server"]
-
-=type-parent Server
-
-  Object
-
-=type-example-1 Server
-
-  # given: synopsis
-
-  use Zing::Server;
-
-  my $server = Zing::Server->new;
 
 =cut
 

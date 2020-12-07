@@ -42,17 +42,22 @@ fun new_host($self) {
 has name => (
   is => 'ro',
   isa => 'Str',
-  def => 'Zing',
-);
-
-has node => (
-  is => 'ro',
-  isa => 'Node',
   new => 1,
 );
 
-fun new_node($self) {
-  require Zing::Node; Zing::Node->new(app => $self);
+fun new_name($self) {
+  'Zing'
+}
+
+has pid => (
+  is => 'ro',
+  isa => 'Int',
+  init_arg => undef,
+  new => 1,
+);
+
+fun new_pid($self) {
+  $$
 }
 
 # METHODS

@@ -62,8 +62,8 @@ our $PIDS = $$ + 1;
     $self->space->load;
     my $process = $self->processes->{$pid} = $self->space->build(
       @{$self->scheme->[1]},
-      node => Zing::Node->new(pid => $pid),
       parent => $self->parent,
+      pid => $pid,
     );
     $process->execute;
     $process

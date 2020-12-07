@@ -18,7 +18,6 @@ use POSIX;
 
 use Zing::Logic;
 use Zing::Loop;
-use Zing::Node;
 
 # VERSION
 
@@ -98,17 +97,7 @@ has 'name' => (
 );
 
 fun new_name($self) {
-  $self->node->identifier
-}
-
-has 'node' => (
-  is => 'ro',
-  isa => 'Node',
-  new => 1,
-);
-
-fun new_node($self) {
-  Zing::Node->new
+  $self->app->id->string
 }
 
 has 'parent' => (
@@ -116,6 +105,16 @@ has 'parent' => (
   isa => 'Maybe[Process]',
   opt => 1,
 );
+
+has 'pid' => (
+  is => 'ro',
+  isa => 'Int',
+  new => 1,
+);
+
+fun new_pid($self) {
+  $self->app->pid
+}
 
 has 'registry' => (
   is => 'ro',
@@ -125,16 +124,6 @@ has 'registry' => (
 
 fun new_registry($self) {
   $self->app->registry
-}
-
-has 'server' => (
-  is => 'ro',
-  isa => 'Server',
-  new => 1,
-);
-
-fun new_server($self) {
-  Zing::Server->new
 }
 
 has 'signals' => (
@@ -237,11 +226,10 @@ method metadata() {
   {
     name => $self->name,
     data => $self->data->term,
+    host => $self->app->host,
     mailbox => $self->mailbox->term,
-    node => $self->node->name,
-    parent => ($self->parent ? $self->parent->node->pid : undef),
-    process => $self->node->pid,
-    server => $self->server->name,
+    parent => ($self->parent ? $self->parent->pid : undef),
+    process => $self->pid,
     tag => $self->tag,
   }
 }
