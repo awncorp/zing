@@ -15,12 +15,42 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use parent 'Data::Object::Cli';
-use parent 'Zing::Entity';
+extends 'Data::Object::Cli';
 
 # VERSION
 
 # ATTRIBUTES
+
+has app => (
+  is => 'ro',
+  isa => 'App',
+  new => 1,
+);
+
+fun new_app($self) {
+  require Zing::App;
+  require Zing::Env;
+
+  Zing::App->new(
+    env => Zing::Env->new(
+      $self->opt_appdir ? (
+        appdir => $self->opt_appdir
+      ) : (),
+      $self->opt_handle ? (
+        handle => $self->opt_handle
+      ) : (),
+      $self->opt_level ? (
+        level => $self->opt_level
+      ) : (),
+      $self->opt_piddir ? (
+        piddir => $self->opt_piddir
+      ) : (),
+      $self->opt_target ? (
+        target => $self->opt_target
+      ) : (),
+    )
+  )
+}
 
 has arg_app => (
   is => 'ro',
@@ -41,9 +71,15 @@ has cartridge => (
 fun new_cartridge($self) {
   $self->app->cartridge(
     name => $self->arg_app,
-    $self->opt_appdir ? (appdir => $self->opt_appdir) : (),
-    $self->opt_libdir ? (libdir => $self->opt_libdir) : (),
-    $self->opt_piddir ? (piddir => $self->opt_piddir) : (),
+    $self->opt_appdir ? (
+      appdir => $self->opt_appdir
+    ) : (),
+    $self->opt_libdir ? (
+      libdir => $self->opt_libdir
+    ) : (),
+    $self->opt_piddir ? (
+      piddir => $self->opt_piddir
+    ) : (),
   )
 }
 
@@ -56,12 +92,24 @@ has daemon => (
 fun new_daemon($self) {
   $self->app->daemon(
     cartridge => $self->cartridge,
-    $self->opt_backlog ? (log_reset => $self->opt_backlog) : (),
-    $self->opt_level ? (log_level => $self->opt_level) : (),
-    $self->opt_process ? (log_filter_from => $self->opt_process) : (),
-    $self->opt_search ? (log_filter_queries => $self->$self->opt_search) : (),
-    $self->opt_tag ? (log_filter_tag => $self->opt_tag) : (),
-    $self->opt_verbose ? (log_verbose => $self->opt_verbose) : (),
+    $self->opt_backlog ? (
+      log_reset => $self->opt_backlog
+    ) : (),
+    $self->opt_level ? (
+      log_level => $self->opt_level
+    ) : (),
+    $self->opt_process ? (
+      log_filter_from => $self->opt_process
+    ) : (),
+    $self->opt_search ? (
+      log_filter_queries => $self->$self->opt_search
+    ) : (),
+    $self->opt_tag ? (
+      log_filter_tag => $self->opt_tag
+    ) : (),
+    $self->opt_verbose ? (
+      log_verbose => $self->opt_verbose
+    ) : (),
   )
 }
 
@@ -85,14 +133,14 @@ fun new_opt_backlog($self) {
   $self->opts->backlog
 }
 
-has opt_global => (
+has opt_target => (
   is => 'ro',
-  isa => 'Maybe[Bool]',
+  isa => 'Maybe[Str]',
   new => 1,
 );
 
-fun new_opt_global($self) {
-  $self->opts->global
+fun new_opt_target($self) {
+  $self->opts->target
 }
 
 has opt_handle => (
@@ -193,7 +241,6 @@ our $name = 'zing <{command}> [<{app}>] [options]';
 
 fun auto() {
   {
-    clean => 'handle_clean',
     install => 'handle_install',
     logs => 'handle_logs',
     monitor => 'handle_monitor',
@@ -201,14 +248,12 @@ fun auto() {
     restart => 'handle_restart',
     start => 'handle_start',
     stop => 'handle_stop',
-    terms => 'handle_terms',
     update => 'handle_update',
   }
 }
 
 fun subs() {
   {
-    clean => 'Prune the process registry',
     install => 'Create an application cartridge',
     logs => 'Tap logs and output to STDOUT',
     monitor => 'Monitor the specified application (start if not started)',
@@ -216,7 +261,6 @@ fun subs() {
     restart => 'Restart the specified application',
     start => 'Start the specified application',
     stop => 'Stop the specified application',
-    terms => 'Display resource identifiers (under specified namespace)',
     update => 'Hot-reload application processes',
   }
 }
@@ -238,11 +282,6 @@ fun spec() {
       type => 'string',
       flag => 'h',
     },
-    global => {
-      desc => 'Tap the "global" log channel (defaults to "local")',
-      type => 'flag',
-      flag => 'g',
-    },
     process => {
       desc => 'Reduce log output by process name',
       type => 'string',
@@ -256,13 +295,13 @@ fun spec() {
     libdir => {
       desc => 'Directory for @INC',
       type => 'string',
-      flag => 'I',
+      flag => 'i',
       args => '@',
     },
     package => {
       desc => 'Provide a process package name',
       type => 'string',
-      flag => 'P',
+      flag => 'n',
     },
     piddir => {
       desc => 'Directory for the pid file',
@@ -274,6 +313,11 @@ fun spec() {
       type => 'string',
       flag => 's',
       args => '@',
+    },
+    target => {
+      desc => 'Provide a target (package)',
+      type => 'string',
+      flag => 'r',
     },
     tag => {
       desc => 'Reduce log output by process tag',
@@ -289,16 +333,6 @@ fun spec() {
 }
 
 # METHODS
-
-method handle_clean() {
-  for my $object (@{$self->app->search->for('meta')->objects}) {
-    my $data = $object->recv or next;
-    my $pid = $data->{process} or next;
-    $object->drop if !kill 0, $pid;
-  }
-  $self->output('registry cleaned');
-  exit(0);
-}
 
 method handle_install() {
   if (!$self->arg_app) {
@@ -415,11 +449,6 @@ method handle_stop() {
     $self->output('stopping ...');
   }
   exit(!$self->daemon->stop);
-}
-
-method handle_terms() {
-  $self->output(@{$self->app->search->for('*')->results});
-  exit(0);
 }
 
 method handle_update() {
