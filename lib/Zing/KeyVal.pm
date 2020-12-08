@@ -31,7 +31,7 @@ method send(Str $key, HashRef $val) {
 }
 
 method term(Str @keys) {
-  return $self->env->app->term($self, @keys)->keyval;
+  return $self->app->term($self, @keys)->keyval;
 }
 
 1;

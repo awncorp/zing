@@ -59,7 +59,7 @@ method stream(CodeRef $callback) {
 
     $logs->{level} = $self->level;
 
-    my $logger = $self->env->app->logger(%{$logs});
+    my $logger = $self->app->logger(%{$logs});
     my $report = $self->verbose ? 'verbose' : 'simple';
     my $lines = $logger->$report->lines;
 

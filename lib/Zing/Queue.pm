@@ -29,7 +29,7 @@ method size() {
 }
 
 method term() {
-  return $self->env->app->term($self)->queue;
+  return $self->app->term($self)->queue;
 }
 
 1;

@@ -269,7 +269,7 @@ method listen(Str $key, CodeRef $sub) {
 }
 
 method term() {
-  return $self->env->app->term($self)->domain;
+  return $self->app->term($self)->domain;
 }
 
 method unshift(Str $key, Any @val) {

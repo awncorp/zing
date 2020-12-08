@@ -92,7 +92,7 @@ fun new_mailbox($self) {
 
 has 'name' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   new => 1,
 );
 

@@ -19,7 +19,7 @@ extends 'Zing::KeyVal';
 
 has 'name' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   def => '$default',
   mod => 1,
 );
@@ -50,7 +50,7 @@ method send(Process $proc) {
 }
 
 method term(Str @keys) {
-  return $self->env->app->term($self, @keys)->registry;
+  return $self->app->term($self, @keys)->registry;
 }
 
 method terms() {

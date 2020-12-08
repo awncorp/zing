@@ -19,7 +19,7 @@ extends 'Zing::KeyVal';
 
 has 'name' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   init_arg => undef,
   new => 1,
   mod => 1,
@@ -54,7 +54,7 @@ method send(HashRef $val) {
 }
 
 method term() {
-  return $self->env->app->term($self)->data;
+  return $self->app->term($self)->data;
 }
 
 1;

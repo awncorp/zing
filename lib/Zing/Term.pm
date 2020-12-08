@@ -20,39 +20,33 @@ use overload '""' => 'string';
 
 # ATTRIBUTES
 
-has 'facets' => (
-  is => 'ro',
-  isa => 'ArrayRef[Str]',
-  opt => 1,
-);
-
 has 'handle' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   req => 1,
 );
 
 has 'symbol' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   req => 1,
 );
 
 has 'bucket' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   req => 1,
 );
 
 has 'system' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   req => 1,
 );
 
 has 'target' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   req => 1,
 );
 
@@ -77,112 +71,72 @@ fun BUILDARGS($self, $item, @data) {
   my $args = {};
 
   if (Scalar::Util::blessed($item)) {
-    my $local = sprintf 'local(%s)',
-      $item->isa('Zing::Entity')
-      ? ($item->env->target || '0.0.0.0')
-      : 'localhost';
-
-    @data = map {split /:/} @data;
-
     if ($item->isa('Zing::Data')) {
-      my ($bucket, @facets) = split /:/, $item->name;
       $args->{symbol} = $symbols->{'Zing::Data'};
-      $args->{target} = $local;
-      $args->{bucket} = $bucket;
-      $args->{facets} = [@facets, @data];
+      $args->{bucket} = $item->name;
     }
     elsif ($item->isa('Zing::Lookup')) {
       $args->{symbol} = $symbols->{'Zing::Lookup'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::Domain')) {
       $args->{symbol} = $symbols->{'Zing::Domain'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::Channel')) {
       $args->{symbol} = $symbols->{'Zing::Channel'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::Kernel')) {
-      my ($bucket, @facets) = split /:/, $item->name;
       $args->{symbol} = $symbols->{'Zing::Kernel'};
-      $args->{target} = $local;
-      $args->{bucket} = $bucket;
-      $args->{facets} = [@facets, @data];
+      $args->{bucket} = $item->name;
     }
     elsif ($item->isa('Zing::Mailbox')) {
-      my ($bucket, @facets) = split /:/, $item->name;
       $args->{symbol} = $symbols->{'Zing::Mailbox'};
-      $args->{target} = 'global';
-      $args->{bucket} = $bucket;
-      $args->{facets} = [@facets, @data];
+      $args->{bucket} = $item->name;
     }
     elsif ($item->isa('Zing::Process')) {
-      my ($bucket, @facets) = split /:/, $item->name;
       $args->{symbol} = $symbols->{'Zing::Process'};
-      $args->{target} = $local;
-      $args->{bucket} = $bucket;
-      $args->{facets} = [@facets, @data];
+      $args->{bucket} = $item->name;
     }
     elsif ($item->isa('Zing::Queue')) {
       $args->{symbol} = $symbols->{'Zing::Queue'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::Registry')) {
       $args->{symbol} = $symbols->{'Zing::Registry'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::KeyVal')) {
       $args->{symbol} = $symbols->{'Zing::KeyVal'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::PubSub')) {
       $args->{symbol} = $symbols->{'Zing::PubSub'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     elsif ($item->isa('Zing::Repo')) {
       $args->{symbol} = $symbols->{'Zing::Repo'};
-      $args->{target} = $item->target eq 'global' ? 'global' : $local;
       $args->{bucket} = $item->name;
-      $args->{facets} = [@data];
     }
     else {
       Carp::confess qq(Error in term: Unrecognizable "object");
     }
-    $args->{handle} = ($item->env->handle || 'main') =~ s/\W/-/gr;
+    $args->{target} = ($item->env->target || 'global');
+    $args->{handle} = ($item->env->handle || 'main');
     $args->{system} = 'zing';
   }
   elsif(defined $item && !ref $item) {
-    my $schema = [split /:/, "$item", 6];
+    my $schema = [split /:/, "$item", 5];
 
     my $system = $schema->[0];
     my $handle = $schema->[1];
     my $target = $schema->[2];
     my $symbol = $schema->[3];
     my $bucket = $schema->[4];
-    my $extras = $schema->[5];
-
-    my $facets = [split /:/, $extras || ''];
 
     unless ($system eq 'zing') {
       Carp::confess qq(Error in term: Unrecognizable "system" in: $item);
-    }
-    unless ($target =~ m{^(global|local\(\d+\.\d+\.\d+\.\d+\))$}) {
-      Carp::confess qq(Error in term: Unrecognizable "target" ($target) in: $item);
     }
     unless (grep {$_ eq $symbol} values %$symbols) {
       Carp::confess qq(Error in term: Unrecognizable "symbol" ($symbol) in: $item);
@@ -193,7 +147,6 @@ fun BUILDARGS($self, $item, @data) {
     $args->{target} = $target;
     $args->{symbol} = $symbol;
     $args->{bucket} = $bucket;
-    $args->{facets} = $facets;
   }
   else {
     Carp::confess 'Unrecognizable Zing term provided';
@@ -306,9 +259,8 @@ method string() {
   my $target = $self->target;
   my $symbol = $self->symbol;
   my $bucket = $self->bucket;
-  my $facets = $self->facets || [];
 
-  return lc join ':', $system, $handle, $target, $symbol, $bucket, @$facets;
+  return lc join ':', $system, $handle, $target, $symbol, $bucket;
 }
 
 1;

@@ -19,7 +19,7 @@ extends 'Zing::PubSub';
 
 has 'name' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   init_arg => undef,
   new => 1,
 );

@@ -99,7 +99,7 @@ fun new_store($self) {
 
 has target => (
   is => 'ro',
-  isa => 'Maybe[Enum[qw(global local)]]',
+  isa => 'Maybe[Name]',
   new => 1,
 );
 

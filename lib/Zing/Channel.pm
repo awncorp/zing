@@ -49,7 +49,7 @@ method size() {
 }
 
 method term() {
-  return $self->env->app->term($self)->channel;
+  return $self->app->term($self)->channel;
 }
 
 1;

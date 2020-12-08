@@ -23,7 +23,7 @@ use Zing::Term;
 
 has 'name' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   req => 1,
 );
 
