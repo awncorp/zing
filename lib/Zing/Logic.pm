@@ -163,7 +163,7 @@ method handle_register_event() {
 
   return $self if $self->{registered};
 
-  $self->{registered} = $process->registry->send($process);
+  $self->{registered} = $process->meta->send($process->metadata);
 
   return $self;
 }

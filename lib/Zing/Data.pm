@@ -49,8 +49,8 @@ method recv() {
   return $self->store->recv($self->term);
 }
 
-method send(HashRef $val) {
-  return $self->store->send($self->term, $val);
+method send(HashRef $value) {
+  return $self->store->send($self->term, $value);
 }
 
 method term() {

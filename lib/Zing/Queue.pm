@@ -20,8 +20,8 @@ method recv() {
   return $self->store->lpull($self->term);
 }
 
-method send(HashRef $val) {
-  return $self->store->rpush($self->term, $val);
+method send(HashRef $value) {
+  return $self->store->rpush($self->term, $value);
 }
 
 method size() {

@@ -19,20 +19,20 @@ use Zing::Term;
 
 # METHODS
 
-method poll(Str $key) {
-  return Zing::Poll->new(repo => $self, name => $key);
+method poll() {
+  return Zing::Poll->new(repo => $self, name => $self->name);
 }
 
-method recv(Str $key) {
-  return $self->store->lpull($self->term($key));
+method recv() {
+  return $self->store->lpull($self->term);
 }
 
-method send(Str $key, HashRef $val) {
-  return $self->store->rpush($self->term($key), $val);
+method send(HashRef $value) {
+  return $self->store->rpush($self->term, $value);
 }
 
-method term(Str @keys) {
-  return $self->app->term($self, @keys)->pubsub;
+method term() {
+  return $self->app->term($self)->pubsub;
 }
 
 1;

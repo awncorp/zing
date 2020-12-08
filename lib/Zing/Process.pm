@@ -87,7 +87,17 @@ has 'mailbox' => (
 );
 
 fun new_mailbox($self) {
-  $self->app->mailbox(process => $self)
+  $self->app->mailbox(name => $self->name)
+}
+
+has 'meta' => (
+  is => 'ro',
+  isa => 'Meta',
+  new => 1,
+);
+
+fun new_meta($self) {
+  $self->app->meta(name => $self->name)
 }
 
 has 'name' => (
@@ -114,16 +124,6 @@ has 'pid' => (
 
 fun new_pid($self) {
   $self->app->pid
-}
-
-has 'registry' => (
-  is => 'ro',
-  isa => 'Registry',
-  new => 1,
-);
-
-fun new_registry($self) {
-  $self->app->registry
 }
 
 has 'signals' => (
@@ -173,7 +173,7 @@ method destroy() {
 
   $self->data->drop;
   $self->mailbox->drop;
-  $self->registry->drop($self);
+  $self->meta->drop;
 
   return $self;
 }

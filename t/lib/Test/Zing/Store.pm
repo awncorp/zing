@@ -24,8 +24,8 @@ sub dump {
 }
 
 sub keys {
-  my ($self, @key) = @_;
-  my $re = join('|', $self->term(@key), $self->term(@key, '.*'));
+  my ($self, $key) = @_;
+  my $re = join('|', $self->term($key), $self->term($key, '.*'));
   return [grep /$re/, keys %$DATA];
 }
 

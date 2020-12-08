@@ -10,6 +10,7 @@ use routines;
 
 use Data::Object::Class;
 use Data::Object::ClassHas;
+use Data::Object::Space;
 
 use Carp ();
 use Scalar::Util ();
@@ -60,10 +61,10 @@ state $symbols = {
   'Zing::KeyVal'   => 'keyval',
   'Zing::Lookup'   => 'lookup',
   'Zing::Mailbox'  => 'mailbox',
+  'Zing::Meta'     => 'meta',
   'Zing::Process'  => 'process',
   'Zing::PubSub'   => 'pubsub',
   'Zing::Queue'    => 'queue',
-  'Zing::Registry' => 'registry',
   'Zing::Repo'     => 'repo',
 };
 
@@ -103,8 +104,8 @@ fun BUILDARGS($self, $item, @data) {
       $args->{symbol} = $symbols->{'Zing::Queue'};
       $args->{bucket} = $item->name;
     }
-    elsif ($item->isa('Zing::Registry')) {
-      $args->{symbol} = $symbols->{'Zing::Registry'};
+    elsif ($item->isa('Zing::Meta')) {
+      $args->{symbol} = $symbols->{'Zing::Meta'};
       $args->{bucket} = $item->name;
     }
     elsif ($item->isa('Zing::KeyVal')) {
@@ -213,6 +214,29 @@ method mailbox() {
   return $self->string;
 }
 
+method meta() {
+  unless ($self->symbol eq 'meta') {
+    Carp::confess 'Error in term: not a "meta" term';
+  }
+
+  return $self->string;
+}
+
+method object() {
+  require Zing::Env;
+
+  my $env = Zing::Env->new(
+    handle => $self->handle,
+    target => $self->target,
+  );
+
+  my $space = Data::Object::Space->new(
+    ({reverse %$symbols})->{$self->symbol}
+  );
+
+  return $space->build(env => $env, name => $self->bucket);
+}
+
 method process() {
   unless ($self->symbol eq 'process') {
     Carp::confess 'Error in term: not a "process" term';
@@ -232,14 +256,6 @@ method pubsub() {
 method queue() {
   unless ($self->symbol eq 'queue') {
     Carp::confess 'Error in term: not a "queue" term';
-  }
-
-  return $self->string;
-}
-
-method registry() {
-  unless ($self->symbol eq 'registry') {
-    Carp::confess 'Error in term: not a "registry" term';
   }
 
   return $self->string;

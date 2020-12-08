@@ -234,6 +234,18 @@ method mailbox_specification(Any @args) {
   return [$self->mailbox_namespace, [@args]];
 }
 
+method meta(Any @args) {
+  return $self->reify($self->meta_specification(@args));
+}
+
+method meta_namespace() {
+  return [$self->name, 'meta'];
+}
+
+method meta_specification(Any @args) {
+  return [$self->meta_namespace, [@args]];
+}
+
 method process(Any @args) {
   return $self->reify($self->process_specification(@args));
 }
@@ -268,18 +280,6 @@ method queue_namespace() {
 
 method queue_specification(Any @args) {
   return [$self->queue_namespace, [@args]];
-}
-
-method registry(Any @args) {
-  return $self->reify($self->registry_specification(@args));
-}
-
-method registry_namespace() {
-  return [$self->name, 'registry'];
-}
-
-method registry_specification(Any @args) {
-  return [$self->registry_namespace, [@args]];
 }
 
 method reify(Tuple[ArrayRef, ArrayRef] $spec) {
@@ -344,6 +344,18 @@ method scheduler_namespace() {
 
 method scheduler_specification(Any @args) {
   return [$self->scheduler_namespace, [@args]];
+}
+
+method search(Any @args) {
+  return $self->reify($self->search_specification(@args));
+}
+
+method search_namespace() {
+  return [$self->name, 'search'];
+}
+
+method search_specification(Any @args) {
+  return [$self->search_namespace, [@args]];
 }
 
 method simple(Any @args) {

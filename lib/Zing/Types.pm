@@ -114,8 +114,9 @@ register {
 
 declare 'Key',
   as Str(),
-  where { $_ =~ qr(^zing:[^:]+:[^:]+:[^:]+:[^:]+$) };
-  inline_as { my $q = $_[1]; "$q =~ /^zing:[^:]+:[^:]+:[^:]+:[^:]+$/" };
+  where {
+    $_ =~ qr(^zing:[^\:\*]+:[^\:\*]+:[^\:\*]+:[^\:\*]+$)
+  };
 
 register {
   name => 'KeyVal',
@@ -153,10 +154,17 @@ register {
   validation => is_instance_of('Zing::Mailbox'),
 };
 
+register {
+  name => 'Meta',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Meta'),
+};
+
 declare 'Name',
   as Str(),
-  where { $_ =~ qr(^[^:]+$) };
-  inline_as { my $q = $_[1]; "$q =~ /^[^:]+$/" };
+  where {
+    $_ =~ qr(^[^\:\*]+$)
+  };
 
 register {
   name => 'Poll',
@@ -180,12 +188,6 @@ register {
   name => 'Queue',
   parent => 'Object',
   validation => is_instance_of('Zing::Queue'),
-};
-
-register {
-  name => 'Registry',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Registry'),
 };
 
 register {

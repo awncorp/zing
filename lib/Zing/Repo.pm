@@ -37,32 +37,22 @@ fun new_store($self) {
   $self->app->store
 }
 
-has 'target' => (
-  is => 'ro',
-  isa => 'Enum[qw(global local)]',
-  new => 1,
-);
-
-fun new_target($self) {
-  $self->env->target || 'local'
-}
-
 # METHODS
 
-method drop(Str @keys) {
-  return $self->store->drop($self->term(@keys));
+method drop() {
+  return $self->store->drop($self->term);
 }
 
 method keys() {
   return $self->store->keys($self->term);
 }
 
-method term(Str @keys) {
-  return $self->app->term($self, @keys)->repo;
+method term() {
+  return $self->app->term($self)->repo;
 }
 
 method test(Str @keys) {
-  return $self->store->test($self->term(@keys));
+  return $self->store->test($self->term);
 }
 
 1;

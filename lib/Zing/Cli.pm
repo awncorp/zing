@@ -185,16 +185,6 @@ fun new_opt_verbose($self) {
   $self->opts->verbose
 }
 
-has registry => (
-  is => 'ro',
-  isa => 'Registry',
-  new => 1,
-);
-
-fun new_registry($self) {
-  $self->app->registry
-}
-
 # USAGE
 
 our $name = 'zing <{command}> [<{app}>] [options]';
@@ -301,7 +291,11 @@ fun spec() {
 # METHODS
 
 method handle_clean() {
-  $self->registry->clean;
+  for my $object (@{$self->app->search->for('meta')->objects}) {
+    my $data = $object->recv or next;
+    my $pid = $data->{process} or next;
+    $object->drop if !kill 0, $pid;
+  }
   $self->output('registry cleaned');
   exit(0);
 }
@@ -424,7 +418,7 @@ method handle_stop() {
 }
 
 method handle_terms() {
-  $self->output(@{$self->registry->terms});
+  $self->output(@{$self->app->search->for('*')->results});
   exit(0);
 }
 
