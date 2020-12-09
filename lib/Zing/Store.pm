@@ -5,14 +5,29 @@ use 5.014;
 use strict;
 use warnings;
 
-use registry;
+use registry 'Zing::Types';
 use routines;
 
 use Data::Object::Class;
+use Data::Object::ClassHas;
+
+use JSON -convert_blessed_universally;
 
 use Carp ();
 
 # VERSION
+
+# ATTRIBUTES
+
+has 'encoder' => (
+  is => 'ro',
+  isa => 'Encoder',
+  new => 1,
+);
+
+fun new_encoder($self) {
+  require Zing::Encoder; Zing::Encoder->new;
+}
 
 # METHODS
 

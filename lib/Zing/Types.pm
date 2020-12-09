@@ -62,6 +62,12 @@ register {
 };
 
 register {
+  name => 'Encoder',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Encoder'),
+};
+
+register {
   name => 'Entity',
   parent => 'Object',
   validation => is_instance_of('Zing::Entity'),

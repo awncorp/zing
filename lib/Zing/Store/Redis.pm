@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Store';
 
-use JSON -convert_blessed_universally;
-
 # VERSION
 
 # ATTRIBUTES
@@ -31,6 +29,12 @@ fun new_client($self) {
   state $client = Redis->new($self->args($ENV{ZING_REDIS}));
 }
 
+# BUILDERS
+
+fun new_encoder($self) {
+  require Zing::Encoder::Json; Zing::Encoder::Json->new;
+}
+
 # METHODS
 
 method drop(Str $key) {
@@ -38,7 +42,7 @@ method drop(Str $key) {
 }
 
 method dump(HashRef $data) {
-  return JSON->new->allow_nonref->convert_blessed->encode($data);
+  return $self->encoder->encode($data);
 }
 
 method keys(Str $key) {
@@ -46,7 +50,7 @@ method keys(Str $key) {
 }
 
 method load(Str $data) {
-  return JSON->new->allow_nonref->convert_blessed->decode($data);
+  return $self->encoder->decode($data);
 }
 
 method lpull(Str $key) {

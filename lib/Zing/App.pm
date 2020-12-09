@@ -134,6 +134,18 @@ method domain_specification(Any @args) {
   return [$self->domain_namespace, [@args]];
 }
 
+method encoder(Any @args) {
+  return $self->reify($self->encoder_specification(@args));
+}
+
+method encoder_namespace() {
+  return [$self->env->encode];
+}
+
+method encoder_specification(Any @args) {
+  return [$self->encoder_namespace, [@args]];
+}
+
 method fork(Any @args) {
   return $self->reify($self->fork_specification(@args));
 }
@@ -407,7 +419,7 @@ method store_namespace() {
 }
 
 method store_specification(Any @args) {
-  return [$self->store_namespace, [@args]];
+  return [$self->store_namespace, [encoder => $self->encoder, @args]];
 }
 
 method term(Any @args) {

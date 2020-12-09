@@ -47,6 +47,16 @@ fun new_debug($self) {
   $ENV{ZING_DEBUG}
 }
 
+has encode => (
+  is => 'ro',
+  isa => 'Maybe[Str]',
+  new => 1,
+);
+
+fun new_encode($self) {
+  $ENV{ZING_ENCODER} || 'Zing::Encoder::Json'
+}
+
 has handle => (
   is => 'ro',
   isa => 'Maybe[Str]',
