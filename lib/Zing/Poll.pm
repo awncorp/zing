@@ -17,12 +17,6 @@ use Time::HiRes ();
 
 # ATTRIBUTES
 
-has 'name' => (
-  is => 'ro',
-  isa => 'Str',
-  req => 1,
-);
-
 has 'repo' => (
   is => 'ro',
   isa => 'Repo',
@@ -33,12 +27,11 @@ has 'repo' => (
 
 method await(Int $secs) {
   my $data;
-  my $name = $self->name;
   my $repo = $self->repo;
   my @tres = (Time::HiRes::gettimeofday);
   my $time = join('', $tres[0] + $secs, $tres[1]);
 
-  until ($data = $repo->recv($name)) {
+  until ($data = $repo->recv) {
     last if join('', Time::HiRes::gettimeofday) >= $time;
   }
 

@@ -35,10 +35,10 @@ method: domain
 method: kernel
 method: keyval
 method: mailbox
+method: meta
 method: process
 method: pubsub
 method: queue
-method: registry
 method: repo
 method: string
 
@@ -63,7 +63,6 @@ Zing::Types
 
 =attributes
 
-facets: ro, opt, ArrayRef[Str]
 handle: ro, req, Str
 symbol: ro, req, Str
 bucket: ro, req, Str
@@ -110,7 +109,7 @@ data() : Str
   use Zing::Data;
   use Zing::Process;
 
-  Zing::Term->new(Zing::Data->new(process => Zing::Process->new));
+  Zing::Term->new(Zing::Data->new(name => '0.0.0.0'));
 
   # $term->data;
 
@@ -183,9 +182,27 @@ mailbox() : Str
   use Zing::Mailbox;
   use Zing::Process;
 
-  Zing::Term->new(Zing::Mailbox->new(process => Zing::Process->new));
+  Zing::Term->new(Zing::Mailbox->new(name => '0.0.0.0'));
 
   # $term->mailbox;
+
+=cut
+
+=method meta
+
+The meta method validates and returns a "meta" resource identifier.
+
+=signature meta
+
+meta() : Str
+
+=example-1 meta
+
+  use Zing::Meta;
+
+  Zing::Term->new(Zing::Meta->new(name => 'random'));
+
+  # $term->meta;
 
 =cut
 
@@ -243,24 +260,6 @@ queue() : Str
 
 =cut
 
-=method registry
-
-The registry method validates and returns a "registry" resource identifier.
-
-=signature registry
-
-registry() : Str
-
-=example-1 registry
-
-  use Zing::Registry;
-
-  Zing::Term->new(Zing::Registry->new(name => 'campaigns'));
-
-  # $term->registry;
-
-=cut
-
 =method repo
 
 The repo method validates and returns a "repo" resource identifier.
@@ -310,14 +309,12 @@ $subs->synopsis(fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'keyval';
   is $bucket, 'nodes';
-  is_deeply $facets, [];
 
   $result
 });
@@ -330,16 +327,14 @@ $subs->example(-1, 'channel', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'channel';
   is $bucket, 'chat';
-  is_deeply $facets, [];
 
-  is "$result", 'zing:main:local(0.0.0.0):channel:chat';
+  is "$result", 'zing:main:global:channel:chat';
 
   "$result"
 });
@@ -352,18 +347,14 @@ $subs->example(-1, 'data', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'data';
   is $bucket, '0.0.0.0';
-  is @$facets, 3;
 
-  my $process = join ':', $bucket, @$facets;
-
-  is "$result", "zing:main:local(0.0.0.0):data:$process";
+  is "$result", "zing:main:global:data:$bucket";
 
   "$result"
 });
@@ -376,16 +367,14 @@ $subs->example(-1, 'domain', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'domain';
   is $bucket, 'transaction';
-  is_deeply $facets, [];
 
-  is "$result", 'zing:main:local(0.0.0.0):domain:transaction';
+  is "$result", 'zing:main:global:domain:transaction';
 
   "$result"
 });
@@ -398,18 +387,14 @@ $subs->example(-1, 'kernel', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'kernel';
-  is $bucket, '0.0.0.0';
-  is @$facets, 3;
+  like $bucket, qr/^\w{40}$/;
 
-  my $process = join ':', $bucket, @$facets;
-
-  is "$result", "zing:main:local(0.0.0.0):kernel:$process";
+  is "$result", "zing:main:global:kernel:$bucket";
 
   "$result"
 });
@@ -422,16 +407,14 @@ $subs->example(-1, 'keyval', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'keyval';
   is $bucket, 'listeners';
-  is_deeply $facets, [];
 
-  is "$result", 'zing:main:local(0.0.0.0):keyval:listeners';
+  is "$result", 'zing:main:global:keyval:listeners';
 
   "$result"
 });
@@ -444,18 +427,34 @@ $subs->example(-1, 'mailbox', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
   is $target, 'global';
   is $symbol, 'mailbox';
   is $bucket, '0.0.0.0';
-  is @$facets, 3;
 
-  my $process = join ':', $bucket, @$facets;
+  is "$result", "zing:main:global:mailbox:$bucket";
 
-  is "$result", "zing:main:global:mailbox:$process";
+  "$result"
+});
+
+$subs->example(-1, 'meta', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+
+  my $system = $result->system;
+  my $handle = $result->handle;
+  my $target = $result->target;
+  my $symbol = $result->symbol;
+  my $bucket = $result->bucket;
+
+  is $system, 'zing';
+  is $handle, 'main';
+  is $target, 'global';
+  is $symbol, 'meta';
+  is $bucket, 'random';
+
+  is "$result", 'zing:main:global:meta:random';
 
   "$result"
 });
@@ -468,18 +467,14 @@ $subs->example(-1, 'process', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'process';
-  is $bucket, '0.0.0.0';
-  is @$facets, 3;
+  like $bucket, qr/^\w{40}$/;
 
-  my $process = join ':', $bucket, @$facets;
-
-  is "$result", "zing:main:local(0.0.0.0):process:$process";
+  is "$result", "zing:main:global:process:$bucket";
 
   "$result"
 });
@@ -498,38 +493,14 @@ $subs->example(-1, 'queue', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'queue';
   is $bucket, 'workflows';
-  is_deeply $facets, [];
 
-  is "$result", 'zing:main:local(0.0.0.0):queue:workflows';
-
-  "$result"
-});
-
-$subs->example(-1, 'registry', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-
-  my $system = $result->system;
-  my $handle = $result->handle;
-  my $target = $result->target;
-  my $symbol = $result->symbol;
-  my $bucket = $result->bucket;
-  my $facets = $result->facets;
-
-  is $system, 'zing';
-  is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
-  is $symbol, 'registry';
-  is $bucket, 'campaigns';
-  is_deeply $facets, [];
-
-  is "$result", 'zing:main:local(0.0.0.0):registry:campaigns';
+  is "$result", 'zing:main:global:queue:workflows';
 
   "$result"
 });
@@ -542,16 +513,14 @@ $subs->example(-1, 'repo', 'method', fun($tryable) {
   my $target = $result->target;
   my $symbol = $result->symbol;
   my $bucket = $result->bucket;
-  my $facets = $result->facets;
 
   is $system, 'zing';
   is $handle, 'main';
-  is $target, 'local(0.0.0.0)';
+  is $target, 'global';
   is $symbol, 'repo';
   is $bucket, 'miscellaneous';
-  is_deeply $facets, [];
 
-  is "$result", 'zing:main:local(0.0.0.0):repo:miscellaneous';
+  is "$result", 'zing:main:global:repo:miscellaneous';
 
   "$result"
 });
@@ -559,7 +528,7 @@ $subs->example(-1, 'repo', 'method', fun($tryable) {
 $subs->example(-1, 'string', 'method', fun($tryable) {
   ok my $result = $tryable->result;
 
-  is "$result", 'zing:main:local(0.0.0.0):keyval:nodes';
+  is "$result", 'zing:main:global:keyval:nodes';
 
   $result
 });

@@ -13,9 +13,8 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Domain';
 
-use Digest::MD5;
-
 use Carp ();
+use Digest::SHA ();
 
 # VERSION
 
@@ -92,12 +91,8 @@ method incr(Any @args) {
   Carp::confess(sprintf('Method incr() not supported for %s', ref($self)));
 }
 
-method hash(Str @args) {
-  return Digest::MD5::md5_hex($self->key(@args));
-}
-
-method key(Str @args) {
-  return join('.', @args);
+method hash(Str $key) {
+  return Digest::SHA::sha1_hex($key);
 }
 
 method pop(Any @args) {
@@ -114,7 +109,7 @@ method restore(HashRef $data) {
 
 method set(Str $key) {
   my $hash = $self->hash($key);
-  my $name = join('-', $self->name, $hash);
+  my $name = join('$', $self->name, $hash);
   my $domain = $self->app->domain(name => $name);
   my $prev = $self->apply->head;
   if ($prev && $self->state->{$prev}) {

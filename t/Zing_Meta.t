@@ -13,19 +13,19 @@ use Test::Zing;
 
 =name
 
-Zing::Registry
+Zing::Meta
 
 =cut
 
 =tagline
 
-Process Registry
+Process Metadata
 
 =cut
 
 =abstract
 
-Generic Process Registry
+Generic Process Metadata
 
 =cut
 
@@ -40,13 +40,11 @@ method: term
 
 =synopsis
 
-  use Zing::Process;
-  use Zing::Registry;
+  use Zing::Meta;
 
-  my $process = Zing::Process->new;
-  my $registry = Zing::Registry->new(process => $process);
+  my $meta = Zing::Meta->new(name => rand);
 
-  # $registry->recv($process);
+  # $meta->recv;
 
 =cut
 
@@ -70,78 +68,82 @@ name: ro, opt, Str
 
 =description
 
-This package provides a process registry for tracking active processes.
+This package provides process metadata for tracking active processes.
 
 =cut
 
 =method drop
 
-The drop method returns truthy if the process can be dropped from the registry.
+The drop method returns truthy if the process metadata can be dropped.
 
 =signature drop
 
-drop(Process $proc) : Int
+drop() : Int
 
 =example-1 drop
 
   # given: synopsis
 
-  $registry->drop($process);
+  $meta->drop;
 
 =cut
 
 =method recv
 
-The recv method fetches the process metadata (if any) from the registry.
+The recv method fetches the process metadata (if any).
 
 =signature recv
 
-recv(Process $proc) : Maybe[HashRef]
+recv() : Maybe[HashRef]
 
 =example-1 recv
 
   # given: synopsis
 
-  $registry->recv($process);
+  $meta->recv;
 
 =example-2 recv
 
   # given: synopsis
 
-  $registry->send($process);
+  use Zing::Process;
 
-  $registry->recv($process);
+  $meta->send(Zing::Process->new->metadata);
+
+  $meta->recv;
 
 =cut
 
 =method send
 
-The send method commits the process metadata to the registry overwriting any
+The send method commits the metadata provided to the store overwriting any
 existing data.
 
 =signature send
 
-send(Process $proc) : Str
+send(HashRef $proc) : Str
 
 =example-1 send
 
   # given: synopsis
 
-  $registry->send($process);
+  $meta->send({ created => time });
 
 =example-2 send
 
   # given: synopsis
 
-  $registry->drop;
+  use Zing::Process;
 
-  $registry->send($process);
+  $meta->drop;
+
+  $meta->send(Zing::Process->new->metadata);
 
 =cut
 
 =method term
 
-The term method generates a term (safe string) for the registry.
+The term method generates a term (safe string) for the metadata.
 
 =signature term
 
@@ -151,7 +153,7 @@ term(Str @keys) : Str
 
   # given: synopsis
 
-  $registry->term($process->name);
+  $meta->term;
 
 =cut
 
@@ -184,12 +186,11 @@ $subs->example(-2, 'recv', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is_deeply [sort keys %$result], [
     'data',
+    'host',
     'mailbox',
     'name',
-    'node',
     'parent',
     'process',
-    'server',
     'tag',
   ];
 
@@ -212,9 +213,7 @@ $subs->example(-1, 'send', 'method', fun($tryable) {
 
 $subs->example(-1, 'term', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  my $local = qr/zing:main:local\(\d+\.\d+\.\d+\.\d+\)/;
-  my $process = qr/\d+\.\d+\.\d+\.\d+:\d+:\d+:\d+/;
-  like $result, qr/$local:registry:\$default:$process/;
+  like $result, qr/zing:main:global:meta:[^:]+/;
 
   $result
 });

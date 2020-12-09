@@ -127,7 +127,7 @@ Zing::Types
   use Zing::Data;
   use Zing::Process;
 
-  my $data = Zing::Data->new(process => Zing::Process->new);
+  my $data = Zing::Data->new(name => 'random');
 
 =cut
 
@@ -358,8 +358,7 @@ Zing::Types
   use Zing::Logic;
   use Zing::Process;
 
-  my $process = Zing::Process->new;
-  my $logic = Zing::Logic->new(process => $process);
+  my $logic = Zing::Logic->new(process => Zing::Process->new);
 
 =cut
 
@@ -441,7 +440,33 @@ Zing::Types
   use Zing::Mailbox;
   use Zing::Process;
 
-  my $mailbox = Zing::Mailbox->new(process => Zing::Process->new);
+  my $mailbox = Zing::Mailbox->new(name => 'shared');
+
+=cut
+
+=type Meta
+
+  Meta
+
+=type-library Meta
+
+Zing::Types
+
+=type-composite Meta
+
+  InstanceOf["Zing::Meta"]
+
+=type-parent Meta
+
+  Object
+
+=type-example-1 Meta
+
+  # given: synopsis
+
+  use Zing::Meta;
+
+  my $meta = Zing::Meta->new(name => '$process');
 
 =cut
 
@@ -551,34 +576,6 @@ Zing::Types
 
 =cut
 
-=type Registry
-
-  Registry
-
-=type-library Registry
-
-Zing::Types
-
-=type-composite Registry
-
-  InstanceOf["Zing::Registry"]
-
-=type-parent Registry
-
-  Object
-
-=type-example-1 Registry
-
-  # given: synopsis
-
-  use Zing::Process;
-  use Zing::Registry;
-
-  my $process = Zing::Process->new;
-  my $registry = Zing::Registry->new(process => $process);
-
-=cut
-
 =type Redis
 
   Redis
@@ -684,6 +681,32 @@ Zing::Types
   # given: synopsis
 
   ['MyApp', [], 1_000];
+
+=cut
+
+=type Search
+
+  Search
+
+=type-library Search
+
+Zing::Types
+
+=type-composite Search
+
+  InstanceOf["Zing::Search"]
+
+=type-parent Search
+
+  Object
+
+=type-example-1 Search
+
+  # given: synopsis
+
+  use Zing::Search;
+
+  my $search = Zing::Search->new;
 
 =cut
 

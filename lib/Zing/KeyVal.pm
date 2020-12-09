@@ -19,7 +19,7 @@ use Zing::Poll;
 # METHODS
 
 method poll() {
-  return Zing::Poll->new(repo => $self, name => $self->name);
+  return Zing::Poll->new(repo => $self);
 }
 
 method recv() {

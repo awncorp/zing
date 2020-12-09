@@ -15,43 +15,7 @@ extends 'Zing::KeyVal';
 
 # VERSION
 
-# ATTRIBUTES
-
-has 'name' => (
-  is => 'ro',
-  isa => 'Name',
-  init_arg => undef,
-  new => 1,
-  mod => 1,
-);
-
-fun new_name($self) {
-  $self->process->name
-}
-
-has 'process' => (
-  is => 'ro',
-  isa => 'Process',
-  req => 1,
-);
-
-# BUILDERS
-
-fun BUILD($self) {
-  $self->{name} = $self->new_name;
-
-  return $self;
-}
-
 # METHODS
-
-method recv() {
-  return $self->store->recv($self->term);
-}
-
-method send(HashRef $value) {
-  return $self->store->send($self->term, $value);
-}
 
 method term() {
   return $self->app->term($self)->data;

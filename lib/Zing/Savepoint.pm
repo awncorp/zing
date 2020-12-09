@@ -42,7 +42,7 @@ method capture() {
 }
 
 method drop() {
-  return $self->repo->drop('state');
+  return $self->repo->drop;
 }
 
 method position() {
@@ -56,7 +56,7 @@ method metadata() {
 }
 
 method name() {
-  return join('-', $self->lookup->name, $self->lookup->hash('savepoint'));
+  return join('$', $self->lookup->name, 'savepoint');
 }
 
 method repo() {
@@ -64,12 +64,12 @@ method repo() {
 }
 
 method recv() {
-  return $self->repo->recv('state');
+  return $self->repo->recv;
 }
 
 method send() {
   my $capture = $self->capture;
-  $self->repo->send('state', $capture);
+  $self->repo->send($capture);
   return $self->{cached} = $capture;
 }
 
@@ -79,7 +79,7 @@ method snapshot() {
 }
 
 method test() {
-  return $self->repo->test('state');
+  return $self->repo->test;
 }
 
 1;

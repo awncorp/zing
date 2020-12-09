@@ -202,6 +202,12 @@ register {
   validation => is_instance_of('Zing::Repo'),
 };
 
+register {
+  name => 'Search',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Search'),
+};
+
 declare 'Schedule',
   as Tuple([Str(), ArrayRef([Str()]), HashRef()]);
 

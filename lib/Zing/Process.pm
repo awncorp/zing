@@ -36,7 +36,7 @@ has 'data' => (
 );
 
 fun new_data($self) {
-  $self->app->data(process => $self)
+  $self->app->data(name => $self->name)
 }
 
 has 'journal' => (

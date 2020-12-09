@@ -13,14 +13,13 @@ use Data::Object::Class;
 extends 'Zing::Repo';
 
 use Zing::Poll;
-use Zing::Term;
 
 # VERSION
 
 # METHODS
 
 method poll() {
-  return Zing::Poll->new(repo => $self, name => $self->name);
+  return Zing::Poll->new(repo => $self);
 }
 
 method recv() {
