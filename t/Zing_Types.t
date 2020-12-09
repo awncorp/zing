@@ -576,30 +576,6 @@ Zing::Types
 
 =cut
 
-=type Redis
-
-  Redis
-
-=type-library Redis
-
-Zing::Types
-
-=type-composite Redis
-
-  InstanceOf["Zing::Redis"]
-
-=type-parent Redis
-
-  Object
-
-=type-example-1 Redis
-
-  # given: synopsis
-
-  bless {}, 'Redis';
-
-=cut
-
 =type Repo
 
   Repo

@@ -94,7 +94,7 @@ has store => (
 );
 
 fun new_store($self) {
-  $ENV{ZING_STORE} || 'Zing::Redis'
+  $ENV{ZING_STORE} || 'Zing::Store::Redis'
 }
 
 has target => (

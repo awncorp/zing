@@ -340,8 +340,8 @@ scale your deployments without changing your implementations.
   # configure the resource target (e.g. when distributing across multiple hosts)
   ZING_TARGET='global' # or 'local'
 
-  # configure the system datastore (defaults to 'Zing::Redis')
-  ZING_STORE='Zing::Redis'
+  # configure the system datastore (defaults to 'Zing::Store::Redis')
+  ZING_STORE='Zing::Store::Redis'
 
   # configure Redis driver without touching your source code
   ZING_REDIS='server=127.0.0.1:6379'

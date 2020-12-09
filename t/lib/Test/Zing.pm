@@ -20,7 +20,7 @@ use Zing::Fork;
 use Zing::Logic;
 use Zing::Loop;
 use Zing::Process;
-use Zing::Redis;
+use Zing::Store::Redis;
 use Zing::Timer;
 
 use Data::Object::Space;
@@ -91,10 +91,10 @@ our $PIDS = $$ + 1;
   });
 }
 
-# Zing/Redis
+# Zing/Store/Redis
 {
   my $space = Data::Object::Space->new(
-    'Zing/Redis'
+    'Zing/Store/Redis'
   );
   my $other = Data::Object::Space->new(
     'Test/Zing/Store'

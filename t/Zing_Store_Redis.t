@@ -13,7 +13,7 @@ use Test::Zing;
 
 =name
 
-Zing::Redis
+Zing::Store::Redis
 
 =cut
 
@@ -50,9 +50,9 @@ method: test
 
 =synopsis
 
-  use Zing::Redis;
+  use Zing::Store::Redis;
 
-  my $redis = Zing::Redis->new;
+  my $redis = Zing::Store::Redis->new;
 
   # $redis->drop;
 
@@ -66,13 +66,13 @@ Zing::Types
 
 =attributes
 
-client: ro, opt, Redis
+client: ro, opt, Store
 
 =cut
 
 =description
 
-This package provides a L<Redis> adapter for use with data storage
+This package provides a L<Redis> storage adapter for use with data storage
 abstractions.
 
 =cut
@@ -539,7 +539,7 @@ $subs->example(-1, 'lpush', 'method', fun($tryable) {
 $subs->example(-2, 'lpush', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is $result, 2;
-  my $redis = Zing::Redis->new;
+  my $redis = Zing::Store::Redis->new;
   my $top = $redis->lpull('collection');
   is_deeply $top, { status => '0' };
 
