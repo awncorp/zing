@@ -39,9 +39,9 @@ method encode(HashRef $data) {
   return $self->encoder->encode($data);
 }
 
-method keys(Str $key) {
-  my $re = join('|', $self->term($key), $self->term($key, '.*'));
-  return [grep /$re/, keys %{$self->data}];
+method keys(Str $query) {
+  $query =~ s/\*/.*/g;
+  return [grep /$query/, keys %{$self->data}];
 }
 
 method decode(Str $data) {

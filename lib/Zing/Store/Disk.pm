@@ -49,11 +49,16 @@ method encode(HashRef $data) {
   return $self->encoder->encode($data);
 }
 
-method keys(Str $key) {
+method keys(Str $query) {
   my @paths = glob(File::Spec->catfile(
-    (File::Spec->splitdir($self->path($key)))[0..3], '*'
+    $self->root, (map +($_ || '*'), (split(':', $query))[0..3]), '*'
   ));
-  return [map {join(':', File::Spec->splitdir($_))} @paths];
+  return [
+    map {
+      join(':', (reverse((reverse(File::Spec->splitdir($_)))[0..4])))
+    }
+    grep -f, @paths
+  ];
 }
 
 method lpull(Str $key) {

@@ -44,8 +44,8 @@ method encode(HashRef $data) {
   return $self->encoder->encode($data);
 }
 
-method keys(Str $key) {
-  return [map $self->client->keys($self->term(@$_)), [$key], [$key, '*']];
+method keys(Str $query) {
+  return [map $self->client->keys($query)];
 }
 
 method decode(Str $data) {

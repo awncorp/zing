@@ -32,7 +32,6 @@ Generic Store Abstraction
 =includes
 
 method: drop
-method: keys
 method: term
 method: test
 
@@ -80,23 +79,6 @@ drop() : Int
   # given: synopsis
 
   $repo->drop('text-1');
-
-=cut
-
-=method keys
-
-The keys method returns a list of fully-qualified keys stored under the
-datastore namespace.
-
-=signature keys
-
-keys() : ArrayRef[Str]
-
-=example-1 keys
-
-  # given: synopsis
-
-  my $keys = $repo->keys;
 
 =cut
 
@@ -154,12 +136,6 @@ $subs->synopsis(fun($tryable) {
 
 $subs->example(-1, 'drop', 'method', fun($tryable) {
   ok !(my $result = $tryable->result);
-
-  $result
-});
-
-$subs->example(-1, 'keys', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
 
   $result
 });
