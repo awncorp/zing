@@ -25,7 +25,6 @@ has client => (
 
 fun new_client($self) {
   require Redis;
-  # e.g. ZING_REDIS='server=127.0.0.1:9999,debug=0'
   state $client = Redis->new($self->args($ENV{ZING_REDIS}));
 }
 

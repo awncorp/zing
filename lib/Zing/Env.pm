@@ -37,6 +37,25 @@ fun new_appdir($self) {
   $ENV{ZING_APPDIR};
 }
 
+has config => (
+  is => 'ro',
+  isa => 'HashRef[ArrayRef]',
+  new => 1,
+);
+
+fun new_config($self) {
+  my $config = {};
+  for my $KEY (grep /ZING_CONFIG_/, keys %ENV) {
+    $config->{lc($KEY =~ s/ZING_CONFIG_//r)} = [
+      map +($$_[0], $#{$$_[1]} ? $$_[1] : $$_[1][0]),
+      map [$$_[0], [split /\|/, $$_[1]]],
+      map [split /=/], split /,\s*/,
+      $ENV{$KEY} || ''
+    ];
+  }
+  $config;
+}
+
 has debug => (
   is => 'ro',
   isa => 'Maybe[Bool]',
