@@ -17,7 +17,7 @@ extends 'Zing::Store';
 
 # ATTRIBUTES
 
-has 'client' => (
+has client => (
   is => 'ro',
   isa => 'InstanceOf["Redis"]',
   new => 1,

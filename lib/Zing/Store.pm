@@ -11,8 +11,6 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use JSON -convert_blessed_universally;
-
 use Carp ();
 
 # VERSION
