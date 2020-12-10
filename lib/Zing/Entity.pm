@@ -11,6 +11,8 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
+extends 'Zing::Class';
+
 # VERSION
 
 # ATTRIBUTES

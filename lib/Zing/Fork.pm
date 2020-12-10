@@ -12,6 +12,8 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 use Data::Object::Space;
 
+extends 'Zing::Class';
+
 use POSIX ();
 
 use Config;
@@ -62,11 +64,11 @@ method execute() {
   my $sid = $$;
 
   if ($Config{d_pseudofork}) {
-    Carp::confess "Error on fork: fork emulation not supported";
+    $self->throw(error_fork('emulation not supported'));
   }
 
   if(!defined($pid = fork)) {
-    Carp::confess "Error on fork: $!";
+    $self->fork(error_fork("$!"));
   }
 
   # parent
@@ -123,6 +125,13 @@ method terminate(Str $signal = 'kill') {
   }
 
   return $result;
+}
+
+# ERRORS
+
+fun error_fork(Str $reason) {
+  code => 'error_fork',
+  message => "Error on fork: $reason",
 }
 
 1;

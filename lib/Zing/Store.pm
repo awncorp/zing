@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Entity';
 
-use Carp ();
-
 # VERSION
 
 # ATTRIBUTES
@@ -38,60 +36,67 @@ sub args {
   $_[1] || ''
 }
 
-sub drop {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "drop" not implemented);
+method drop(Any @args) {
+  $self->throw(error_not_implemented($self, 'drop'));
 }
 
-sub encode {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "encode" not implemented);
+method encode(Any @args) {
+  $self->throw(error_not_implemented($self, 'encode'));
 }
 
-sub keys {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "keys" not implemented);
+method keys(Any @args) {
+  $self->throw(error_not_implemented($self, 'keys'));
 }
 
-sub decode {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "decode" not implemented);
+method decode(Any @args) {
+  $self->throw(error_not_implemented($self, 'decode'));
 }
 
-sub lpull {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "lpull" not implemented);
+method lpull(Any @args) {
+  $self->throw(error_not_implemented($self, 'lpull'));
 }
 
-sub lpush {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "lpush" not implemented);
+method lpush(Any @args) {
+  $self->throw(error_not_implemented($self, 'lpush'));
 }
 
-sub recv {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "recv" not implemented);
+method recv(Any @args) {
+  $self->throw(error_not_implemented($self, 'recv'));
 }
 
-sub rpull {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "rpull" not implemented);
+method rpull(Any @args) {
+  $self->throw(error_not_implemented($self, 'rpull'));
 }
 
-sub rpush {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "rpush" not implemented);
+method rpush(Any @args) {
+  $self->throw(error_not_implemented($self, 'rpush'));
 }
 
-sub send {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "send" not implemented);
+method send(Any @args) {
+  $self->throw(error_not_implemented($self, 'send'));
 }
 
-sub size {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "size" not implemented);
+method size(Any @args) {
+  $self->throw(error_not_implemented($self, 'size'));
 }
 
-sub slot {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "slot" not implemented);
+method slot(Any @args) {
+  $self->throw(error_not_implemented($self, 'slot'));
 }
 
 sub term {
   shift; return join(':', @_);
 }
 
-sub test {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "test" not implemented);
+method test(Any @args) {
+  $self->throw(error_not_implemented($self, 'test'));
+}
+
+# ERRORS
+
+fun error_not_implemented(Object $object, Str $method) {
+  code => 'error_not_implemented',
+  message => "@{[ref($object)]} method \"$method\" not implemented",
 }
 
 1;

@@ -13,7 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Domain';
 
-use Carp ();
 use Digest::SHA ();
 
 # VERSION
@@ -41,7 +40,7 @@ method cursor() {
 }
 
 method decr(Any @args) {
-  Carp::confess(sprintf('Method decr() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'decr'));
 }
 
 around del($key) {
@@ -88,7 +87,7 @@ method head() {
 }
 
 method incr(Any @args) {
-  Carp::confess(sprintf('Method incr() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'incr'));
 }
 
 method hash(Str $key) {
@@ -96,11 +95,11 @@ method hash(Str $key) {
 }
 
 method pop(Any @args) {
-  Carp::confess(sprintf('Method pop() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'pop'));
 }
 
 method push(Any @args) {
-  Carp::confess(sprintf('Method push() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'push'));
 }
 
 method restore(HashRef $data) {
@@ -122,7 +121,7 @@ method set(Str $key) {
 }
 
 method shift(Any @args) {
-  Carp::confess(sprintf('Method shift() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'shift'));
 }
 
 method savepoint() {
@@ -142,7 +141,14 @@ method term() {
 }
 
 method unshift(Any @args) {
-  Carp::confess(sprintf('Method unshift() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'unshift'));
+}
+
+# ERRORS
+
+fun error_not_supported(Object $object, Str $method) {
+  code => 'error_not_implemented',
+  message => "@{[ref($object)]} method \"$method\" not supported",
 }
 
 1;

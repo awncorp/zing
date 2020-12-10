@@ -12,7 +12,8 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 use Data::Object::Space;
 
-use Carp ();
+extends 'Zing::Class';
+
 use Scalar::Util ();
 
 use overload '""' => 'string';
@@ -121,7 +122,7 @@ fun BUILDARGS($self, $item, @data) {
       $args->{bucket} = $item->name;
     }
     else {
-      Carp::confess qq(Error in term: Unrecognizable "object");
+      $self->throw(error_term_unknow_object($item));
     }
     $args->{target} = ($item->env->target || 'global');
     $args->{handle} = ($item->env->handle || 'main');
@@ -137,10 +138,10 @@ fun BUILDARGS($self, $item, @data) {
     my $bucket = $schema->[4];
 
     unless ($system eq 'zing') {
-      Carp::confess qq(Error in term: Unrecognizable "system" in: $item);
+      $self->throw(error_term_unknow_system("$item"));
     }
     unless (grep {$_ eq $symbol} values %$symbols) {
-      Carp::confess qq(Error in term: Unrecognizable "symbol" ($symbol) in: $item);
+      $self->throw(error_term_unknow_symbol("$item"));
     }
 
     $args->{system} = $system;
@@ -150,7 +151,7 @@ fun BUILDARGS($self, $item, @data) {
     $args->{bucket} = $bucket;
   }
   else {
-    Carp::confess 'Unrecognizable Zing term provided';
+    $self->throw(error_term_unknown());
   }
 
   return $args;
@@ -160,7 +161,7 @@ fun BUILDARGS($self, $item, @data) {
 
 method channel() {
   unless ($self->symbol eq 'channel') {
-    Carp::confess 'Error in term: not a "channel"';
+    $self->throw(error_term_invalid("channel"));
   }
 
   return $self->string;
@@ -168,7 +169,7 @@ method channel() {
 
 method data() {
   unless ($self->symbol eq 'data') {
-    Carp::confess 'Error in term: not a "data" term';
+    $self->throw(error_term_invalid("data"));
   }
 
   return $self->string;
@@ -176,7 +177,7 @@ method data() {
 
 method domain() {
   unless ($self->symbol eq 'domain') {
-    Carp::confess 'Error in term: not a "domain" term';
+    $self->throw(error_term_invalid("domain"));
   }
 
   return $self->string;
@@ -184,7 +185,7 @@ method domain() {
 
 method kernel() {
   unless ($self->symbol eq 'kernel') {
-    Carp::confess 'Error in term: not a "kernel" term';
+    $self->throw(error_term_invalid("kernel"));
   }
 
   return $self->string;
@@ -192,7 +193,7 @@ method kernel() {
 
 method keyval() {
   unless ($self->symbol eq 'keyval') {
-    Carp::confess 'Error in term: not a "keyval" term';
+    $self->throw(error_term_invalid("keyval"));
   }
 
   return $self->string;
@@ -200,7 +201,7 @@ method keyval() {
 
 method lookup() {
   unless ($self->symbol eq 'lookup') {
-    Carp::confess 'Error in term: not a "lookup" term';
+    $self->throw(error_term_invalid("lookup"));
   }
 
   return $self->string;
@@ -208,7 +209,7 @@ method lookup() {
 
 method mailbox() {
   unless ($self->symbol eq 'mailbox') {
-    Carp::confess 'Error in term: not a "mailbox" term';
+    $self->throw(error_term_invalid("mailbox"));
   }
 
   return $self->string;
@@ -216,7 +217,7 @@ method mailbox() {
 
 method meta() {
   unless ($self->symbol eq 'meta') {
-    Carp::confess 'Error in term: not a "meta" term';
+    $self->throw(error_term_invalid("meta"));
   }
 
   return $self->string;
@@ -239,7 +240,7 @@ method object() {
 
 method process() {
   unless ($self->symbol eq 'process') {
-    Carp::confess 'Error in term: not a "process" term';
+    $self->throw(error_term_invalid("process"));
   }
 
   return $self->string;
@@ -247,7 +248,7 @@ method process() {
 
 method pubsub() {
   unless ($self->symbol eq 'pubsub') {
-    Carp::confess 'Error in term: not a "pubsub" term';
+    $self->throw(error_term_invalid("pubsub"));
   }
 
   return $self->string;
@@ -255,7 +256,7 @@ method pubsub() {
 
 method queue() {
   unless ($self->symbol eq 'queue') {
-    Carp::confess 'Error in term: not a "queue" term';
+    $self->throw(error_term_invalid("queue"));
   }
 
   return $self->string;
@@ -263,7 +264,7 @@ method queue() {
 
 method repo() {
   unless ($self->symbol eq 'repo') {
-    Carp::confess 'Error in term: not a "repo" term';
+    $self->throw(error_term_invalid('repo'));
   }
 
   return $self->string;
@@ -277,6 +278,33 @@ method string() {
   my $bucket = $self->bucket;
 
   return lc join ':', $system, $handle, $target, $symbol, $bucket;
+}
+
+# ERRORS
+
+fun error_term_invalid(Str $name) {
+  code => 'error_term_invalid',
+  message => qq(Error in term: not a "$name" term),
+}
+
+fun error_term_unknown() {
+  code => 'error_term_unknown',
+  message => qq(Unrecognizable term (or object) provided),
+}
+
+fun error_term_unknow_object(Object $item) {
+  code => 'error_term_unknow_object',
+  message => qq(Error in term: Unrecognizable "object": $item),
+}
+
+fun error_term_unknow_symbol(Str $term) {
+  code => 'error_term_unknow_symbol',
+  message => qq(Error in term: Unrecognizable "symbol" in: $term),
+}
+
+fun error_term_unknow_system(Str $term) {
+  code => 'error_term_unknow_system',
+  message => qq(Error in term: Unrecognizable "system" in: $term),
 }
 
 1;

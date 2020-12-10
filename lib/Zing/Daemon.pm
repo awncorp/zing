@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Entity';
 
-use Carp ();
-
 use Config;
 use File::Spec;
 use FlightRecorder;
@@ -103,16 +101,16 @@ has log_verbose => (
 
 method fork() {
   if ($Config{d_pseudofork}) {
-    Carp::confess "Error on fork: fork emulation not supported";
+    $self->throw(error_fork("emulation not supported"));
   }
 
   my $pid = fork;
 
   if (!defined $pid) {
-    Carp::confess "Error on fork: $!";
+    $self->throw(error_fork("$!"));
   }
   elsif ($pid == 0) {
-    Carp::confess "Error in fork: terminal detach failed" if POSIX::setsid() < 0;
+    $self->throw(error_fork("terminal detach failed")) if POSIX::setsid() < 0;
     $self->kernel->start; # child
     unlink $self->cartridge->pidfile;
     POSIX::_exit(0);
@@ -231,6 +229,13 @@ method update() {
   }
 
   return 1;
+}
+
+# ERRORS
+
+fun error_fork(Str $reason) {
+  code => 'error_fork',
+  message => "Error on fork: $reason",
 }
 
 1;
