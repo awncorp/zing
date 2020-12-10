@@ -35,7 +35,7 @@ method drop(Str $key) {
   return int(!!delete $self->data->{$key});
 }
 
-method encode(HashRef $val) {
+method encode(HashRef $data) {
   return $self->encoder->encode($data);
 }
 

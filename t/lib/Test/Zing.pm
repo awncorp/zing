@@ -12,7 +12,7 @@ package Test::Zing;
 
 BEGIN {
   $ENV{ZING_HOST} = '0.0.0.0';
-  $ENV{ZING_STORE} = 'Test::Zing::Store';
+  $ENV{ZING_STORE} = 'Zing::Store::Hash';
 }
 
 use Zing::Daemon;
@@ -27,10 +27,10 @@ use Data::Object::Space;
 
 our $PIDS = $$ + 1;
 
-# Zing/Daemon
+# Zing::Daemon
 {
   my $space = Data::Object::Space->new(
-    'Zing/Daemon'
+    'Zing::Daemon'
   );
   $space->inject(fork => sub {
     $ENV{ZING_TEST_FORK} || $PIDS++;
@@ -46,10 +46,10 @@ our $PIDS = $$ + 1;
   });
 }
 
-# Zing/Fork
+# Zing::Fork
 {
   my $space = Data::Object::Space->new(
-    'Zing/Fork'
+    'Zing::Fork'
   );
   $space->inject(_waitpid => sub {
     $ENV{ZING_TEST_WAIT_ONE}
@@ -70,10 +70,10 @@ our $PIDS = $$ + 1;
   });
 }
 
-# Zing/Loop
+# Zing::Loop
 {
   my $space = Data::Object::Space->new(
-    'Zing/Loop'
+    'Zing::Loop'
   );
   $space->inject(execute => sub {
     my ($self, @args) = @_;
@@ -81,23 +81,23 @@ our $PIDS = $$ + 1;
   });
 }
 
-# Zing/Process
+# Zing::Process
 {
   my $space = Data::Object::Space->new(
-    'Zing/Process'
+    'Zing::Process'
   );
   $space->inject(_kill => sub {
     $ENV{ZING_TEST_KILL} || 0;
   });
 }
 
-# Zing/Store/Redis
+# Zing::Store::Redis
 {
   my $space = Data::Object::Space->new(
-    'Zing/Store/Redis'
+    'Zing::Store::Redis'
   );
   my $other = Data::Object::Space->new(
-    'Test/Zing/Store'
+    'Zing::Store::Hash'
   );
   unless ($ENV{TEST_REDIS}) {
     $space->load;
@@ -110,10 +110,10 @@ our $PIDS = $$ + 1;
   }
 }
 
-# Zing/Timer
+# Zing::Timer
 {
   my $space = Data::Object::Space->new(
-    'Zing/Timer'
+    'Zing::Timer'
   );
   $space->inject(_time => sub {
     $ENV{ZING_TEST_TIME} || time;

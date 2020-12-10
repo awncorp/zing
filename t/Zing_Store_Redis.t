@@ -32,9 +32,9 @@ Redis Storage Abstraction
 =includes
 
 method: drop
-method: dump
+method: encode
 method: keys
-method: load
+method: decode
 method: lpull
 method: lpush
 method: recv
@@ -93,19 +93,19 @@ drop(Str $key) : Int
 
 =cut
 
-=method dump
+=method encode
 
-The dump method encodes and returns the data provided as JSON.
+The encode method encodes and returns the data provided as JSON.
 
-=signature dump
+=signature encode
 
-dump(HashRef $data) : Str
+encode(HashRef $data) : Str
 
-=example-1 dump
+=example-1 encode
 
   # given: synopsis
 
-  $redis->dump({ status => 'ok' });
+  $redis->encode({ status => 'ok' });
 
 =cut
 
@@ -207,19 +207,19 @@ rpush(Str $key, HashRef $val) : Int
 
 =cut
 
-=method load
+=method decode
 
-The load method decodes the JSON data provided and returns the data as a hashref.
+The decode method decodes the JSON data provided and returns the data as a hashref.
 
-=signature load
+=signature decode
 
-load(Str $data) : HashRef
+decode(Str $data) : HashRef
 
-=example-1 load
+=example-1 decode
 
   # given: synopsis
 
-  $redis->load('{"status":"ok"}');
+  $redis->decode('{"status":"ok"}');
 
 =cut
 
@@ -394,7 +394,7 @@ $subs->example(-1, 'drop', 'method', fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'dump', 'method', fun($tryable) {
+$subs->example(-1, 'encode', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   like $result, qr/"status"\s*:\s*"ok"/;
 
@@ -456,7 +456,7 @@ $subs->example(-2, 'rpush', 'method', fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'load', 'method', fun($tryable) {
+$subs->example(-1, 'decode', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is_deeply $result, {status => 'ok'};
 

@@ -18,7 +18,7 @@ sub drop {
   return int(!!delete $DATA->{$key});
 }
 
-sub dump {
+sub encode {
   my ($self, $val) = @_;
   return $val;
 }
@@ -29,7 +29,7 @@ sub keys {
   return [grep /$re/, keys %$DATA];
 }
 
-sub load {
+sub decode {
   my ($self, $val) = @_;
   return $val;
 }
@@ -37,36 +37,36 @@ sub load {
 sub lpull {
   my ($self, $key) = @_;
   my $get = shift @{$DATA->{$key}} if $DATA->{$key};
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 sub lpush {
   my ($self, $key, $val) = @_;
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   return unshift @{$DATA->{$key}}, $set;
 }
 
 sub recv {
   my ($self, $key) = @_;
   my $get = $DATA->{$key};
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 sub rpull {
   my ($self, $key) = @_;
   my $get = pop @{$DATA->{$key}} if $DATA->{$key};
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 sub rpush {
   my ($self, $key, $val) = @_;
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   return push @{$DATA->{$key}}, $set;
 }
 
 sub send {
   my ($self, $key, $val) = @_;
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   $DATA->{$key} = $set;
   return 'OK';
 }
@@ -79,7 +79,7 @@ sub size {
 sub slot {
   my ($self, $key, $pos) = @_;
   my $get = $DATA->{$key}->[$pos];
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 sub test {

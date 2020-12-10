@@ -33,9 +33,9 @@ Data Storage Interface
 
 method: args
 method: drop
-method: dump
+method: encode
 method: keys
-method: load
+method: decode
 method: lpull
 method: lpush
 method: recv
@@ -111,20 +111,20 @@ drop(Str $key) : Int
 
 =cut
 
-=method dump
+=method encode
 
-The dump method should encode and return the data provided in a format suitable
-for the underlying storage mechanism.
+The encode method should encode and return the data provided in a format
+suitable for the underlying storage mechanism.
 
-=signature dump
+=signature encode
 
-dump(HashRef $data) : Str
+encode(HashRef $data) : Str
 
-=example-1 dump
+=example-1 encode
 
   # given: synopsis
 
-  $store->dump({ status => 'ok' });
+  $store->encode({ status => 'ok' });
 
 =cut
 
@@ -218,20 +218,20 @@ rpush(Str $key, HashRef $val) : Int
 
 =cut
 
-=method load
+=method decode
 
-The load method should decode the data provided and returns the data as a
+The decode method should decode the data provided and returns the data as a
 hashref.
 
-=signature load
+=signature decode
 
-load(Str $data) : HashRef
+decode(Str $data) : HashRef
 
-=example-1 load
+=example-1 decode
 
   # given: synopsis
 
-  $store->load('{"status":"ok"}');
+  $store->decode('{"status":"ok"}');
 
 =cut
 
@@ -423,9 +423,9 @@ $subs->example(-1, 'drop', 'method', fun($tryable) {
   1
 });
 
-$subs->example(-1, 'dump', 'method', fun($tryable) {
+$subs->example(-1, 'encode', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
-    like $error, qr/"dump" not implemented/;
+    like $error, qr/"encode" not implemented/;
   });
   ok my $result = $tryable->result;
 
@@ -495,9 +495,9 @@ $subs->example(-1, 'rpush', 'method', fun($tryable) {
   1
 });
 
-$subs->example(-1, 'load', 'method', fun($tryable) {
+$subs->example(-1, 'decode', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
-    like $error, qr/"load" not implemented/;
+    like $error, qr/"decode" not implemented/;
   });
   ok my $result = $tryable->result;
 
