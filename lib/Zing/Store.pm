@@ -40,16 +40,16 @@ sub drop {
   Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "drop" not implemented);
 }
 
-sub dump {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "dump" not implemented);
+sub encode {
+  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "encode" not implemented);
 }
 
 sub keys {
   Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "keys" not implemented);
 }
 
-sub load {
-  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "load" not implemented);
+sub decode {
+  Carp::croak qq(Error in Store: (@{[ref$_[0]]}) method "decode" not implemented);
 }
 
 sub lpull {

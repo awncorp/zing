@@ -41,7 +41,7 @@ method drop(Str $key) {
   return $self->client->del($key);
 }
 
-method dump(HashRef $data) {
+method encode(HashRef $data) {
   return $self->encoder->encode($data);
 }
 
@@ -49,37 +49,37 @@ method keys(Str $key) {
   return [map $self->client->keys($self->term(@$_)), [$key], [$key, '*']];
 }
 
-method load(Str $data) {
+method decode(Str $data) {
   return $self->encoder->decode($data);
 }
 
 method lpull(Str $key) {
   my $get = $self->client->lpop($key);
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method lpush(Str $key, HashRef $val) {
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   return $self->client->lpush($key, $set);
 }
 
 method recv(Str $key) {
   my $get = $self->client->get($key);
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method rpull(Str $key) {
   my $get = $self->client->rpop($key);
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method rpush(Str $key, HashRef $val) {
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   return $self->client->rpush($key, $set);
 }
 
 method send(Str $key, HashRef $val) {
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   return $self->client->set($key, $set);
 }
 
@@ -89,7 +89,7 @@ method size(Str $key) {
 
 method slot(Str $key, Int $pos) {
   my $get = $self->client->lindex($key, $pos);
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method test(Str $key) {

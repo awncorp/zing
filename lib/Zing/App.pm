@@ -62,6 +62,11 @@ fun new_pid($self) {
 
 # METHODS
 
+method for(Any %args) {
+  my %data = %{$self->env}; delete $data{app};
+  require Zing::Env; Zing::Env->new(%data, %args)->app;
+}
+
 method cartridge(Any @args) {
   return $self->reify($self->cartridge_specification(@args));
 }
@@ -139,7 +144,7 @@ method encoder(Any @args) {
 }
 
 method encoder_namespace() {
-  return [$self->env->encode];
+  return [$self->env->encoder];
 }
 
 method encoder_specification(Any @args) {

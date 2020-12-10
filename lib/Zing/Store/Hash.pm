@@ -35,7 +35,7 @@ method drop(Str $key) {
   return int(!!delete $self->data->{$key});
 }
 
-method dump(HashRef $val) {
+method encode(HashRef $val) {
   return $self->encoder->encode($data);
 }
 
@@ -44,37 +44,37 @@ method keys(Str $key) {
   return [grep /$re/, keys %{$self->data}];
 }
 
-method load(Str $data) {
+method decode(Str $data) {
   return $self->encoder->decode($data);
 }
 
 method lpull(Str $key) {
   my $get = shift @{$self->data->{$key}} if $self->data->{$key};
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method lpush(Str $key, HashRef $val) {
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   return unshift @{$self->data->{$key}}, $set;
 }
 
 method recv(Str $key) {
   my $get = $self->data->{$key};
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method rpull(Str $key) {
   my $get = pop @{$self->data->{$key}} if $self->data->{$key};
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method rpush(Str $key, HashRef $val) {
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   return push @{$self->data->{$key}}, $set;
 }
 
 method send(Str $key, HashRef $val) {
-  my $set = $self->dump($val);
+  my $set = $self->encode($val);
   $self->data->{$key} = $set;
   return 'OK';
 }
@@ -85,7 +85,7 @@ method size(Str $key) {
 
 method slot(Str $key, Int $pos) {
   my $get = $self->data->{$key}->[$pos];
-  return $get ? $self->load($get) : $get;
+  return $get ? $self->decode($get) : $get;
 }
 
 method test(Str $key) {
