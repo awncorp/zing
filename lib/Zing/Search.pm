@@ -59,6 +59,15 @@ fun new_store($self) {
 
 # METHODS
 
+method any() {
+  return $self->where(
+    bucket => '*',
+    symbol => '*',
+    handle => '*',
+    target => '*',
+  );
+}
+
 method for(Str $type) {
   return $self->where(
     bucket => '*',
