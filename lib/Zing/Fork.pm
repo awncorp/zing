@@ -83,7 +83,7 @@ method execute() {
   # child
   else {
     $pid = $$;
-    $process = $self->space->reload->new(
+    $process = $self->space->load->new(
       @{$self->scheme->[1]},
       pid => $pid,
       parent => $self->parent,
