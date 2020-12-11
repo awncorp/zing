@@ -158,7 +158,7 @@ method send(Str $key, HashRef $val) {
 method size(Str $key) {
   if ($self->test($key)) {
     if (my $data = $self->recv($key)) {
-      return scalar(@{$data});
+      return scalar(@{$data->{list}});
     }
   }
   return 0;
@@ -167,7 +167,7 @@ method size(Str $key) {
 method slot(Str $key, Int $pos) {
   if ($self->test($key)) {
     if (my $data = $self->recv($key)) {
-      return $data->[$pos];
+      return $data->{list}[$pos];
     }
   }
   return undef;
