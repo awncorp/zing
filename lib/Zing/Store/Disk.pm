@@ -37,16 +37,8 @@ fun new_encoder($self) {
 
 # METHODS
 
-method decode(Str $data) {
-  return $self->encoder->decode($data);
-}
-
 method drop(Str $key) {
   return int(!!unlink $self->path($key));
-}
-
-method encode(HashRef $data) {
-  return $self->encoder->encode($data);
 }
 
 method keys(Str $query) {

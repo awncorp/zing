@@ -36,20 +36,20 @@ sub args {
   $_[1] || ''
 }
 
+method decode(Str $data) {
+  return $self->encoder->decode($data);
+}
+
 method drop(Any @args) {
   $self->throw(error_not_implemented($self, 'drop'));
 }
 
-method encode(Any @args) {
-  $self->throw(error_not_implemented($self, 'encode'));
+method encode(HashRef $data) {
+  return $self->encoder->encode($data);
 }
 
 method keys(Any @args) {
   $self->throw(error_not_implemented($self, 'keys'));
-}
-
-method decode(Any @args) {
-  $self->throw(error_not_implemented($self, 'decode'));
 }
 
 method lpull(Any @args) {

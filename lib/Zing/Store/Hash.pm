@@ -35,17 +35,9 @@ method drop(Str $key) {
   return int(!!delete $self->data->{$key});
 }
 
-method encode(HashRef $data) {
-  return $self->encoder->encode($data);
-}
-
 method keys(Str $query) {
   $query =~ s/\*/.*/g;
   return [grep /$query/, keys %{$self->data}];
-}
-
-method decode(Str $data) {
-  return $self->encoder->decode($data);
 }
 
 method lpull(Str $key) {

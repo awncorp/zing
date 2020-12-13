@@ -40,16 +40,8 @@ method drop(Str $key) {
   return $self->client->del($key);
 }
 
-method encode(HashRef $data) {
-  return $self->encoder->encode($data);
-}
-
 method keys(Str $query) {
   return [map $self->client->keys($query)];
-}
-
-method decode(Str $data) {
-  return $self->encoder->decode($data);
 }
 
 method lpull(Str $key) {
