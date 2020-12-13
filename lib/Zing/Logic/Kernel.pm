@@ -32,6 +32,7 @@ method flow() {
 method handle_purge_event() {
   my $process = $self->process;
 
+  return $self if !$process->env->debug;
   return $self if !$process->can('journal');
 
   # check every minute (60 secs) not every tick

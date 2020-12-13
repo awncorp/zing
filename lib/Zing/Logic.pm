@@ -171,7 +171,7 @@ method handle_register_event() {
 method handle_reset_event() {
   my $process = $self->process;
 
-  if ($process->journal && $process->log->count) {
+  if ($process->journal && $process->log->count && $process->env->debug) {
     $process->journal->send({
       from => $process->name,
       data => {
