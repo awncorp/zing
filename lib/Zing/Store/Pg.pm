@@ -75,7 +75,7 @@ fun BUILD($self) {
     local $client->{RaiseError} = 0;
     local $client->{PrintError} = 0;
     eval {
-      $client->do("select 1 from "$table" where 1 = 1")
+      $client->do(qq{select 1 from "$table" where 1 = 1})
     }
   }));
   return $self;

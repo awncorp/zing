@@ -65,9 +65,9 @@ fun BUILD($self) {
   my $table = $self->table;
   do {
     $client->do(
-      "create table if not exists `$table` (
+      qq{create table if not exists `$table` (
         `key` varchar(255) primary key, `value` mediumtext not null
-      )"
+      )}
     );
   }
   unless (defined(do{
@@ -75,7 +75,7 @@ fun BUILD($self) {
     local $client->{RaiseError} = 0;
     local $client->{PrintError} = 0;
     eval {
-      $client->do("select 1 from `$table` where 1 = 1")
+      $client->do(qq{select 1 from `$table` where 1 = 1})
     }
   }));
   return $self;
