@@ -60,6 +60,12 @@ Zing::Types
 
 =cut
 
+=inherits
+
+Zing::Entity
+
+=cut
+
 =attributes
 
 cartridge: ro, req, Cartridge
