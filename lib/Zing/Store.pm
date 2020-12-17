@@ -24,7 +24,7 @@ has 'encoder' => (
 );
 
 fun new_encoder($self) {
-  require Zing::Encoder; Zing::Encoder->new;
+  $self->app->encoder
 }
 
 # METHODS

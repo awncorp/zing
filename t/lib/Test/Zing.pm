@@ -11,8 +11,11 @@ unless ($ENV{TEST_REDIS}) {
 package Test::Zing;
 
 BEGIN {
-  $ENV{ZING_HOST} = '0.0.0.0';
-  $ENV{ZING_STORE} = 'Zing::Store::Hash';
+  $ENV{ZING_HANDLE}  = 'main';
+  $ENV{ZING_HOST}    = '0.0.0.0';
+  $ENV{ZING_STORE}   = 'Zing::Store::Hash';
+  $ENV{ZING_ENCODER} = 'Zing::Encoder::Dump';
+  $ENV{ZING_TARGET}  = 'global';
 }
 
 use Zing::Daemon;
@@ -103,8 +106,8 @@ our $PIDS = $$ + 1;
     $space->load;
     $other->load;
     for my $routine (@{$other->routines}) {
-      next if $routine eq 'dump';
-      next if $routine eq 'load';
+      next if $routine eq 'decode';
+      next if $routine eq 'encode';
       $space->inject($routine, $other->package->can($routine));
     }
   }

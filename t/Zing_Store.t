@@ -231,7 +231,10 @@ decode(Str $data) : HashRef
 
   # given: synopsis
 
-  $store->decode('{"status":"ok"}');
+  $store->decode('{ status => "ok" }');
+
+  # e.g.
+  # $ENV{ZING_ENCODER} # Zing::Encoder::Dump
 
 =cut
 
