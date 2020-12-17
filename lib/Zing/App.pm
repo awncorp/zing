@@ -46,7 +46,7 @@ has name => (
 );
 
 fun new_name($self) {
-  'Zing'
+  'zing'
 }
 
 has pid => (
