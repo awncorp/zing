@@ -32,6 +32,7 @@ Generic Store Abstraction
 =includes
 
 method: drop
+method: search
 method: term
 method: test
 
@@ -79,6 +80,23 @@ drop() : Int
   # given: synopsis
 
   $repo->drop('text-1');
+
+=cut
+
+=method search
+
+The search method returns a L<Zing::Search> object based on the current repo or
+L<Zing::Repo> derived object.
+
+=signature search
+
+search() : Search
+
+=example-1 search
+
+  # given: synopsis
+
+  my $search = $repo->search;
 
 =cut
 
@@ -136,6 +154,17 @@ $subs->synopsis(fun($tryable) {
 
 $subs->example(-1, 'drop', 'method', fun($tryable) {
   ok !(my $result = $tryable->result);
+
+  $result
+});
+
+$subs->example(-1, 'search', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is $result->bucket, 'text';
+  is $result->handle, 'main';
+  is $result->symbol, 'repo';
+  is $result->system, 'zing';
+  is $result->target, 'global';
 
   $result
 });
