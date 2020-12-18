@@ -221,7 +221,7 @@ method test(Str $key) {
     { Slice => {} },
     $key,
   );
-  return !!@$data;
+  return @$data ? 1 : 0;
 }
 
 method write(Str $key, Str $data) {
