@@ -12,6 +12,7 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 
 use Cwd ();
+use Sys::Hostname ();
 
 # VERSION
 
@@ -103,7 +104,7 @@ has host => (
 );
 
 fun new_host($self) {
-  $ENV{ZING_HOST}
+  $ENV{ZING_HOST} || Sys::Hostname::hostname
 }
 
 has piddir => (

@@ -12,8 +12,6 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 use Data::Object::Space;
 
-use Sys::Hostname ();
-
 # VERSION
 
 # ATTRIBUTES
@@ -36,7 +34,7 @@ has host => (
 );
 
 fun new_host($self) {
-  Sys::Hostname::hostname
+  $self->env->host
 }
 
 has name => (
