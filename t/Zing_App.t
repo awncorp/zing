@@ -2300,14 +2300,14 @@ $subs->example(-1, 'encoder', 'method', fun($tryable) {
 
 $subs->example(-1, 'encoder_namespace', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  is_deeply $result, [$ENV{ZING_ENCODER} || 'Zing::Encoder::Json'];
+  is_deeply $result, [$ENV{ZING_ENCODER} || 'Zing::Encoder::Dump'];
 
   $result
 });
 
 $subs->example(-1, 'encoder_specification', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  is_deeply $result, [[$ENV{ZING_ENCODER} || 'Zing::Encoder::Json'], []];
+  is_deeply $result, [[$ENV{ZING_ENCODER} || 'Zing::Encoder::Dump'], []];
 
   $result
 });
@@ -2770,7 +2770,7 @@ $subs->example(-1, 'store_specification', 'method', fun($tryable) {
   is $result->[1][0],
     'encoder';
   is ref($result->[1][1]),
-    $ENV{ZING_ENCODER} || 'Zing::Encoder::Json';
+    $ENV{ZING_ENCODER} || 'Zing::Encoder::Dump';
 
   $result
 });

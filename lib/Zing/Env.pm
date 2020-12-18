@@ -73,7 +73,7 @@ has encoder => (
 );
 
 fun new_encoder($self) {
-  $ENV{ZING_ENCODER} || 'Zing::Encoder::Json'
+  $ENV{ZING_ENCODER} || 'Zing::Encoder::Dump'
 }
 
 has handle => (
@@ -123,7 +123,7 @@ has store => (
 );
 
 fun new_store($self) {
-  $ENV{ZING_STORE} || 'Zing::Store::Redis'
+  $ENV{ZING_STORE} || 'Zing::Store::Hash'
 }
 
 has target => (

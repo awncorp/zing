@@ -50,10 +50,10 @@ method: test
 =synopsis
 
   use Zing::Store::Disk;
-  use Zing::Encoder::Json;
+  use Zing::Encoder::Dump;
 
   my $disk = Zing::Store::Disk->new(
-    encoder => Zing::Encoder::Json->new
+    encoder => Zing::Encoder::Dump->new
   );
 
   # $disk->drop;
@@ -221,7 +221,7 @@ decode(Str $data) : HashRef
 
   # given: synopsis
 
-  $disk->decode('{"status":"ok"}');
+  $disk->decode('{"status"=>"ok"}');
 
 =cut
 
@@ -392,7 +392,7 @@ $subs->example(-1, 'drop', 'method', fun($tryable) {
 
 $subs->example(-1, 'encode', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  like $result, qr/"status"\s*:\s*"ok"/;
+  like $result, qr/status.*=>.*ok/;
 
   $result
 });
@@ -529,7 +529,7 @@ $subs->example(-2, 'lpush', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is $result, 2;
   my $disk = Zing::Store::Disk->new(
-    encoder => Zing::Encoder::Json->new,
+    encoder => Zing::Encoder::Dump->new,
   );
   my $top = $disk->lpull('zing:main:global:model:items');
   is_deeply $top, { status => '0' };

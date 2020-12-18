@@ -1,13 +1,3 @@
-package Redis;
-
-# safety measure
-unless ($ENV{TEST_REDIS}) {
-  *{"Redis::new"} = $INC{'Redis.pm'} = sub {
-    require Carp;
-    Carp::croak "Redis disabaled while testing"; undef
-  };
-}
-
 package Test::Zing;
 
 BEGIN {
@@ -23,7 +13,6 @@ use Zing::Fork;
 use Zing::Logic;
 use Zing::Loop;
 use Zing::Process;
-use Zing::Store::Redis;
 use Zing::Timer;
 
 use Data::Object::Space;
@@ -92,25 +81,6 @@ our $PIDS = $$ + 1;
   $space->inject(_kill => sub {
     $ENV{ZING_TEST_KILL} || 0;
   });
-}
-
-# Zing::Store::Redis
-{
-  my $space = Data::Object::Space->new(
-    'Zing::Store::Redis'
-  );
-  my $other = Data::Object::Space->new(
-    'Zing::Store::Hash'
-  );
-  unless ($ENV{TEST_REDIS}) {
-    $space->load;
-    $other->load;
-    for my $routine (@{$other->routines}) {
-      next if $routine eq 'decode';
-      next if $routine eq 'encode';
-      $space->inject($routine, $other->package->can($routine));
-    }
-  }
 }
 
 # Zing::Timer
