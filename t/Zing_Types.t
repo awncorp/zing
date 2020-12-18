@@ -150,6 +150,7 @@ Zing::Types
 
   # given: synopsis
 
+  use Zing::Cartridge;
   use Zing::Daemon;
 
   my $daemon = Zing::Daemon->new(
@@ -363,6 +364,30 @@ Zing::Types
 
 =cut
 
+=type Key
+
+  Key
+
+=type-library Key
+
+Zing::Types
+
+=type-composite Key
+
+  StrMatch[qr(^[^\:\*]+:[^\:\*]+:[^\:\*]+:[^\:\*]+:[^\:\*]+$)]
+
+=type-parent Key
+
+  Str
+
+=type-example-1 Key
+
+  # given: synopsis
+
+  "zing:main:global:repo:random"
+
+=cut
+
 =type KeyVal
 
   KeyVal
@@ -521,6 +546,30 @@ Zing::Types
   use Zing::Meta;
 
   my $meta = Zing::Meta->new(name => '$process');
+
+=cut
+
+=type Name
+
+  Name
+
+=type-library Name
+
+Zing::Types
+
+=type-composite Name
+
+  StrMatch[qr(^[^\:\*]+$)]
+
+=type-parent Name
+
+  Str
+
+=type-example-1 Name
+
+  # given: synopsis
+
+  "main"
 
 =cut
 
@@ -789,6 +838,30 @@ Zing::Types
   use Zing::Store;
 
   my $store = Zing::Store->new;
+
+=cut
+
+=type Term
+
+  Term
+
+=type-library Term
+
+Zing::Types
+
+=type-composite Term
+
+  InstanceOf["Zing::Term"]
+
+=type-parent Term
+
+  Object
+
+=type-example-1 Term
+
+  # given: synopsis
+
+  bless {}, 'Zing::Term';
 
 =cut
 
