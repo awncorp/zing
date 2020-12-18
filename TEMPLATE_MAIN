@@ -33,6 +33,10 @@ L<Zing::KeyVal>: Key/Value Store
 
 =item *
 
+L<Zing::Lookup>: Domain Index
+
+=item *
+
 L<Zing::Mailbox>: Process Mailbox
 
 =item *
@@ -110,6 +114,42 @@ L<Zing::Watcher>: Watcher Process
 =item *
 
 L<Zing::Worker>: Worker Process
+
+=back
+
+=head2 stores
+
+These classes handle data persistence for all messaging abstractions:
+
+=over 4
+
+=item *
+
+L<Zing::Store::Disk>: File-based Persistence
+
+=item *
+
+L<Zing::Store::Hash>: In-Memory Persistence
+
+=item *
+
+L<Zing::Store::Mysql>: MySQL Persistence
+
+=item *
+
+L<Zing::Store::Pg>: PostgreSQL Persistence
+
+=item *
+
+L<Zing::Store::Redis>: Redis Persistence
+
+=item *
+
+L<Zing::Store::SQLite>: SQLite Persistence
+
+=item *
+
+L<Zing::Store::Temp>: Temporary File-based Persistence
 
 =back
 
