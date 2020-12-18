@@ -104,6 +104,60 @@ Zing::Types
 
 =cut
 
+=type Cli
+
+  Cli
+
+=type-library Cli
+
+Zing::Types
+
+=type-composite Cli
+
+  InstanceOf["Zing::Cli"]
+
+=type-parent Cli
+
+  Object
+
+=type-example-1 Cli
+
+  # given: synopsis
+
+  use Zing::Cli;
+
+  my $cli = Zing::Cli->new;
+
+=cut
+
+=type Daemon
+
+  Daemon
+
+=type-library Daemon
+
+Zing::Types
+
+=type-composite Daemon
+
+  InstanceOf["Zing::Daemon"]
+
+=type-parent Daemon
+
+  Object
+
+=type-example-1 Daemon
+
+  # given: synopsis
+
+  use Zing::Daemon;
+
+  my $daemon = Zing::Daemon->new(
+    cartridge => Zing::Cartridge->new(name => 'myapp')
+  );
+
+=cut
+
 =type Data
 
   Data
