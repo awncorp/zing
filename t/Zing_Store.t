@@ -59,6 +59,18 @@ method: test
 
 =cut
 
+=attributes
+
+encoder: ro, opt, Encoder
+
+=cut
+
+=inherits
+
+Zing::Entity
+
+=cut
+
 =libraries
 
 Zing::Types
