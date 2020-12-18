@@ -43,7 +43,6 @@ method: rpush
 method: send
 method: size
 method: slot
-method: term
 method: test
 
 =cut
@@ -51,8 +50,11 @@ method: test
 =synopsis
 
   use Zing::Store::Redis;
+  use Zing::Encoder::Json;
 
-  my $redis = Zing::Store::Redis->new;
+  my $redis = Zing::Store::Redis->new(
+    encoder => Zing::Encoder::Json->new
+  );
 
   # $redis->drop;
 
@@ -66,13 +68,19 @@ Zing::Types
 
 =attributes
 
-client: ro, opt, Store
+client: ro, opt, InstanceOf["Redis"]
+
+=cut
+
+=inherits
+
+Zing::Store
 
 =cut
 
 =description
 
-This package provides a L<Redis> storage adapter for use with data storage
+This package provides a L<Redis> storage adapter for use with data persistence
 abstractions.
 
 =cut
@@ -89,7 +97,7 @@ drop(Str $key) : Int
 
   # given: synopsis
 
-  $redis->drop('model');
+  $redis->drop('zing:main:global:model:temp');
 
 =cut
 
@@ -122,15 +130,15 @@ keys(Str @keys) : ArrayRef[Str]
 
   # given: synopsis
 
-  my $keys = $redis->keys('nodel');
+  my $keys = $redis->keys('zing:main:global:model:temp');
 
 =example-2 keys
 
   # given: synopsis
 
-  $redis->send('model', { status => 'ok' });
+  $redis->send('zing:main:global:model:temp', { status => 'ok' });
 
-  my $keys = $redis->keys('model');
+  my $keys = $redis->keys('zing:main:global:model:temp');
 
 =cut
 
@@ -146,16 +154,16 @@ rpull(Str $key) : Maybe[HashRef]
 
   # given: synopsis
 
-  $redis->rpull('collection');
+  $redis->rpull('zing:main:global:model:items');
 
 =example-2 rpull
 
   # given: synopsis
 
-  $redis->rpush('collection', { status => 1 });
-  $redis->rpush('collection', { status => 2 });
+  $redis->rpush('zing:main:global:model:items', { status => 1 });
+  $redis->rpush('zing:main:global:model:items', { status => 2 });
 
-  $redis->rpull('collection');
+  $redis->rpull('zing:main:global:model:items');
 
 =cut
 
@@ -171,15 +179,15 @@ lpull(Str $key) : Maybe[HashRef]
 
   # given: synopsis
 
-  $redis->lpull('collection');
+  $redis->lpull('zing:main:global:model:items');
 
 =example-2 lpull
 
   # given: synopsis
 
-  $redis->rpush('collection', { status => 'ok' });
+  $redis->rpush('zing:main:global:model:items', { status => 'ok' });
 
-  $redis->lpull('collection');
+  $redis->lpull('zing:main:global:model:items');
 
 =cut
 
@@ -195,15 +203,15 @@ rpush(Str $key, HashRef $val) : Int
 
   # given: synopsis
 
-  $redis->rpush('collection', { status => 'ok' });
+  $redis->rpush('zing:main:global:model:items', { status => 'ok' });
 
 =example-2 rpush
 
   # given: synopsis
 
-  $redis->rpush('collection', { status => 'ok' });
+  $redis->rpush('zing:main:global:model:items', { status => 'ok' });
 
-  $redis->rpush('collection', { status => 'ok' });
+  $redis->rpush('zing:main:global:model:items', { status => 'ok' });
 
 =cut
 
@@ -235,15 +243,15 @@ recv(Str $key) : Maybe[HashRef]
 
   # given: synopsis
 
-  $redis->recv('model');
+  $redis->recv('zing:main:global:model:temp');
 
 =example-2 recv
 
   # given: synopsis
 
-  $redis->send('model', { status => 'ok' });
+  $redis->send('zing:main:global:model:temp', { status => 'ok' });
 
-  $redis->recv('model');
+  $redis->recv('zing:main:global:model:temp');
 
 =cut
 
@@ -259,7 +267,7 @@ send(Str $key, HashRef $val) : Str
 
   # given: synopsis
 
-  $redis->send('model', { status => 'ok' });
+  $redis->send('zing:main:global:model:temp', { status => 'ok' });
 
 =cut
 
@@ -275,15 +283,15 @@ size(Str $key) : Int
 
   # given: synopsis
 
-  my $size = $redis->size('collection');
+  my $size = $redis->size('zing:main:global:model:items');
 
 =example-2 size
 
   # given: synopsis
 
-  $redis->rpush('collection', { status => 'ok' });
+  $redis->rpush('zing:main:global:model:items', { status => 'ok' });
 
-  my $size = $redis->size('collection');
+  my $size = $redis->size('zing:main:global:model:items');
 
 =cut
 
@@ -299,31 +307,15 @@ slot(Str $key, Int $pos) : Maybe[HashRef]
 
   # given: synopsis
 
-  my $model = $redis->slot('collection', 0);
+  my $model = $redis->slot('zing:main:global:model:items', 0);
 
 =example-2 slot
 
   # given: synopsis
 
-  $redis->rpush('collection', { status => 'ok' });
+  $redis->rpush('zing:main:global:model:items', { status => 'ok' });
 
-  my $model = $redis->slot('collection', 0);
-
-=cut
-
-=method term
-
-The term method generates a term (safe string) for the datastore.
-
-=signature term
-
-term(Str @keys) : Str
-
-=example-1 term
-
-  # given: synopsis
-
-  $redis->term('model');
+  my $model = $redis->slot('zing:main:global:model:items', 0);
 
 =cut
 
@@ -339,17 +331,17 @@ test(Str $key) : Int
 
   # given: synopsis
 
-  $redis->rpush('collection', { status => 'ok' });
+  $redis->rpush('zing:main:global:model:items', { status => 'ok' });
 
-  $redis->test('collection');
+  $redis->test('zing:main:global:model:items');
 
 =example-2 test
 
   # given: synopsis
 
-  $redis->drop('collection');
+  $redis->drop('zing:main:global:model:items');
 
-  $redis->test('collection');
+  $redis->test('zing:main:global:model:items');
 
 =cut
 
@@ -365,13 +357,13 @@ lpush(Str $key, HashRef $val) : Int
 
   # given: synopsis
 
-  $redis->lpush('collection', { status => '1' });
+  $redis->lpush('zing:main:global:model:items', { status => '1' });
 
 =example-2 lpush
 
   # given: synopsis
 
-  $redis->lpush('collection', { status => '0' });
+  $redis->lpush('zing:main:global:model:items', { status => '0' });
 
 =cut
 
@@ -510,13 +502,6 @@ $subs->example(-2, 'slot', 'method', fun($tryable) {
   $result
 });
 
-$subs->example(-1, 'term', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-  like $result, qr/^model$/;
-
-  $result
-});
-
 $subs->example(-1, 'test', 'method', fun($tryable) {
   ok my $result = $tryable->result;
 
@@ -539,8 +524,10 @@ $subs->example(-1, 'lpush', 'method', fun($tryable) {
 $subs->example(-2, 'lpush', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   is $result, 2;
-  my $redis = Zing::Store::Redis->new;
-  my $top = $redis->lpull('collection');
+  my $redis = Zing::Store::Redis->new(
+    encoder => Zing::Encoder::Json->new,
+  );
+  my $top = $redis->lpull('zing:main:global:model:items');
   is_deeply $top, { status => '0' };
 
   $result

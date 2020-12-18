@@ -41,7 +41,7 @@ method drop(Str $key) {
 }
 
 method keys(Str $query) {
-  return [map $self->client->keys($query)];
+  return [$self->client->keys($query)];
 }
 
 method lpull(Str $key) {
@@ -84,7 +84,7 @@ method slot(Str $key, Int $pos) {
 }
 
 method test(Str $key) {
-  return int $self->client->exists($key);
+  return $self->client->exists($key) ? 1 : 0;
 }
 
 1;
