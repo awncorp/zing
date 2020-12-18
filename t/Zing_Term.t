@@ -34,8 +34,10 @@ method: data
 method: domain
 method: kernel
 method: keyval
+method: lookup
 method: mailbox
 method: meta
+method: object
 method: process
 method: pubsub
 method: queue
@@ -169,6 +171,24 @@ keyval() : Str
 
 =cut
 
+=method lookup
+
+The lookup method validates and returns a "lookup" resource identifier.
+
+=signature lookup
+
+lookup() : Str
+
+=example-1 lookup
+
+  use Zing::Lookup;
+
+  Zing::Term->new(Zing::Lookup->new(name => 'employees'));
+
+  # $term->lookup;
+
+=cut
+
 =method mailbox
 
 The mailbox method validates and returns a "mailbox" resource identifier.
@@ -203,6 +223,24 @@ meta() : Str
   Zing::Term->new(Zing::Meta->new(name => 'random'));
 
   # $term->meta;
+
+=cut
+
+=method object
+
+The object method reifies an object from its resource identifier.
+
+=signature object
+
+object() : Object
+
+=example-1 object
+
+  use Zing::Process;
+
+  my $term = Zing::Term->new(Zing::Process->new);
+
+  $term->object;
 
 =cut
 
@@ -419,6 +457,26 @@ $subs->example(-1, 'keyval', 'method', fun($tryable) {
   "$result"
 });
 
+$subs->example(-1, 'lookup', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+
+  my $system = $result->system;
+  my $handle = $result->handle;
+  my $target = $result->target;
+  my $symbol = $result->symbol;
+  my $bucket = $result->bucket;
+
+  is $system, 'zing';
+  is $handle, 'main';
+  is $target, 'global';
+  is $symbol, 'lookup';
+  is $bucket, 'employees';
+
+  is "$result", 'zing:main:global:lookup:employees';
+
+  "$result"
+});
+
 $subs->example(-1, 'mailbox', 'method', fun($tryable) {
   ok my $result = $tryable->result;
 
@@ -457,6 +515,13 @@ $subs->example(-1, 'meta', 'method', fun($tryable) {
   is "$result", 'zing:main:global:meta:random';
 
   "$result"
+});
+
+$subs->example(-1, 'object', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is ref($result), 'Zing::Process';
+
+  $result
 });
 
 $subs->example(-1, 'process', 'method', fun($tryable) {
