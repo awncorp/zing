@@ -32,7 +32,7 @@ fun new_root($self) {
 # BUILDERS
 
 fun new_encoder($self) {
-  require Zing::Encoder::Dump; Zing::Encoder::Dump->new;
+  require Zing::Encoder::Json; Zing::Encoder::Json->new;
 }
 
 # METHODS
@@ -41,9 +41,9 @@ method drop(Str $key) {
   return int(!!unlink $self->path($key));
 }
 
-method keys(Str $query) {
+method keys(Key $query) {
   my @paths = glob(File::Spec->catfile(
-    $self->root, (map +($_ || '*'), (split(':', $query))[0..3]), '*'
+    $self->root, (map +($_ || '*'), (split(':', $query))[0..4])
   ));
   return [
     map {
@@ -83,7 +83,7 @@ method lpush(Str $key, HashRef $val) {
   }
 }
 
-method path(Str $key) {
+method path(Key $key) {
   my $dir = $self->root;
   mkdir $dir;
   for my $next ((split(':', $key))[0..3]) {
@@ -166,7 +166,7 @@ method slot(Str $key, Int $pos) {
 }
 
 method test(Str $key) {
-  return !!-f $self->path($key);
+  return -f $self->path($key) ? 1 : 0;
 }
 
 method write(Str $file, Str $data) {
