@@ -83,7 +83,7 @@ fun new_time($self) {
 # METHODS
 
 method string() {
-  require Digest::SHA1; return Digest::SHA1::sha1_hex(
+  require Digest::SHA; return Digest::SHA::sha1_hex(
     join('-', map $self->$_, qw(host pid time iota salt))
   );
 }
