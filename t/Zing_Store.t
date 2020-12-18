@@ -19,13 +19,13 @@ Zing::Store
 
 =tagline
 
-Storage Interface
+Storage Abstraction
 
 =cut
 
 =abstract
 
-Data Storage Interface
+Data Storage Abstraction
 
 =cut
 
@@ -44,7 +44,6 @@ method: rpush
 method: send
 method: size
 method: slot
-method: term
 method: test
 
 =cut
@@ -153,15 +152,7 @@ keys(Str @keys) : ArrayRef[Str]
 
   # given: synopsis
 
-  my $keys = $store->keys('nodel');
-
-=example-2 keys
-
-  # given: synopsis
-
-  # $store->send('model', { status => 'ok' });
-
-  my $keys = $store->keys('model');
+  my $keys = $store->keys('zing:main:global:model:temp');
 
 =cut
 
@@ -177,16 +168,7 @@ rpull(Str $key) : Maybe[HashRef]
 
   # given: synopsis
 
-  $store->rpull('collection');
-
-=example-2 rpull
-
-  # given: synopsis
-
-  # $store->rpush('collection', { status => 1 });
-  # $store->rpush('collection', { status => 2 });
-
-  $store->rpull('collection');
+  $store->rpull('zing:main:global:model:items');
 
 =cut
 
@@ -202,15 +184,7 @@ lpull(Str $key) : Maybe[HashRef]
 
   # given: synopsis
 
-  $store->lpull('collection');
-
-=example-2 lpull
-
-  # given: synopsis
-
-  # $store->rpush('collection', { status => 'ok' });
-
-  $store->lpull('collection');
+  $store->lpull('zing:main:global:model:items');
 
 =cut
 
@@ -226,7 +200,7 @@ rpush(Str $key, HashRef $val) : Int
 
   # given: synopsis
 
-  $store->rpush('collection', { status => 'ok' });
+  $store->rpush('zing:main:global:model:items', { status => 'ok' });
 
 =cut
 
@@ -262,15 +236,7 @@ recv(Str $key) : Maybe[HashRef]
 
   # given: synopsis
 
-  $store->recv('model');
-
-=example-2 recv
-
-  # given: synopsis
-
-  # $store->send('model', { status => 'ok' });
-
-  $store->recv('model');
+  $store->recv('zing:main:global:model:temp');
 
 =cut
 
@@ -287,7 +253,7 @@ send(Str $key, HashRef $val) : Str
 
   # given: synopsis
 
-  $store->send('model', { status => 'ok' });
+  $store->send('zing:main:global:model:temp', { status => 'ok' });
 
 =cut
 
@@ -303,15 +269,7 @@ size(Str $key) : Int
 
   # given: synopsis
 
-  my $size = $store->size('collection');
-
-=example-2 size
-
-  # given: synopsis
-
-  # $store->rpush('collection', { status => 'ok' });
-
-  my $size = $store->size('collection');
+  my $size = $store->size('zing:main:global:model:items');
 
 =cut
 
@@ -328,32 +286,7 @@ slot(Str $key, Int $pos) : Maybe[HashRef]
 
   # given: synopsis
 
-  my $model = $store->slot('collection', 0);
-
-=example-2 slot
-
-  # given: synopsis
-
-  # $store->rpush('collection', { status => 'ok' });
-
-  my $model = $store->slot('collection', 0);
-
-=cut
-
-=method term
-
-The term method generates a term (safe string) for the datastore. This method
-doesn't need to be implemented.
-
-=signature term
-
-term(Str @keys) : Str
-
-=example-1 term
-
-  # given: synopsis
-
-  $store->term('model');
+  my $model = $store->slot('zing:main:global:model:items', 0);
 
 =cut
 
@@ -370,17 +303,9 @@ test(Str $key) : Int
 
   # given: synopsis
 
-  # $store->rpush('collection', { status => 'ok' });
+  # $store->rpush('zing:main:global:model:items', { status => 'ok' });
 
-  $store->test('collection');
-
-=example-2 test
-
-  # given: synopsis
-
-  # $store->drop('collection');
-
-  $store->test('collection');
+  $store->test('zing:main:global:model:items');
 
 =cut
 
@@ -396,10 +321,10 @@ lpush(Str $key) : Int
 
   # given: synopsis
 
-  # $store->rpush('collection', { status => '1' });
-  # $store->rpush('collection', { status => '2' });
+  # $store->rpush('zing:main:global:model:items', { status => '1' });
+  # $store->rpush('zing:main:global:model:items', { status => '2' });
 
-  $store->lpush('collection', { status => '0' });
+  $store->lpush('zing:main:global:model:items', { status => '0' });
 
 =cut
 
@@ -456,15 +381,6 @@ $subs->example(-1, 'keys', 'method', fun($tryable) {
   []
 });
 
-$subs->example(-2, 'keys', 'method', fun($tryable) {
-  $tryable->default(fun ($error) {
-    like $error, qr/"keys" not implemented/;
-  });
-  ok my $result = $tryable->result;
-
-  []
-});
-
 $subs->example(-1, 'rpull', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
     like $error, qr/"rpull" not implemented/;
@@ -474,25 +390,7 @@ $subs->example(-1, 'rpull', 'method', fun($tryable) {
   {}
 });
 
-$subs->example(-2, 'rpull', 'method', fun($tryable) {
-  $tryable->default(fun ($error) {
-    like $error, qr/"rpull" not implemented/;
-  });
-  ok my $result = $tryable->result;
-
-  {}
-});
-
 $subs->example(-1, 'lpull', 'method', fun($tryable) {
-  $tryable->default(fun ($error) {
-    like $error, qr/"lpull" not implemented/;
-  });
-  ok my $result = $tryable->result;
-
-  {}
-});
-
-$subs->example(-2, 'lpull', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
     like $error, qr/"lpull" not implemented/;
   });
@@ -528,15 +426,6 @@ $subs->example(-1, 'recv', 'method', fun($tryable) {
   {}
 });
 
-$subs->example(-2, 'recv', 'method', fun($tryable) {
-  $tryable->default(fun ($error) {
-    like $error, qr/"recv" not implemented/;
-  });
-  ok my $result = $tryable->result;
-
-  {}
-});
-
 $subs->example(-1, 'send', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
     like $error, qr/"send" not implemented/;
@@ -555,15 +444,6 @@ $subs->example(-1, 'size', 'method', fun($tryable) {
   1
 });
 
-$subs->example(-2, 'size', 'method', fun($tryable) {
-  $tryable->default(fun ($error) {
-    like $error, qr/"size" not implemented/;
-  });
-  ok my $result = $tryable->result;
-
-  1
-});
-
 $subs->example(-1, 'slot', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
     like $error, qr/"slot" not implemented/;
@@ -573,32 +453,7 @@ $subs->example(-1, 'slot', 'method', fun($tryable) {
   {}
 });
 
-$subs->example(-2, 'slot', 'method', fun($tryable) {
-  $tryable->default(fun ($error) {
-    like $error, qr/"slot" not implemented/;
-  });
-  ok my $result = $tryable->result;
-
-  {}
-});
-
-$subs->example(-1, 'term', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-  like $result, qr/^model$/;
-
-  $result
-});
-
 $subs->example(-1, 'test', 'method', fun($tryable) {
-  $tryable->default(fun ($error) {
-    like $error, qr/"test" not implemented/;
-  });
-  ok my $result = $tryable->result;
-
-  1
-});
-
-$subs->example(-2, 'test', 'method', fun($tryable) {
   $tryable->default(fun ($error) {
     like $error, qr/"test" not implemented/;
   });
