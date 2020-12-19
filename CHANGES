@@ -1,1 +1,130 @@
 Changelog for Zing
+
+0.20 2020-12-19T01:06:11
+ - Add release updates
+ - Fix Zing::Cursor#count bug in Perl 5.18+
+ - Refactor and Implement Dependency Injection (#231)
+ - Add merge operation to Zing::Domain (#227)
+ - Implement Zing::Lookup (#226)
+
+0.13 2020-07-11T13:53:10
+ - Built release version 0.13
+ - Add release updates
+ - Update "emit" signature in Zing/Domain
+ - Update zing synopsis
+ - Implement Zing::Domain "subscriptions" (#217)
+ - Allow Zing::Domain events to send metadata (#215)
+ - Refactor "resources" command as "terms" (#213)
+ - Implement "service" and service importing (#211)
+ - Implement "resources" command in Zing/Cli (#209)
+ - Update TEMPLATE_MAIN "features" ordering
+ - Update TEMPLATE_MAIN "actor-model" explanation
+ - Zing/Domain subclasses Zing/Channel (#207)
+ - Document ZING_TARGET configuration (#205)
+
+0.12 2020-07-07T02:36:28
+ - Built release version 0.12
+ - Add release updates
+ - Update documentation in "zing" application (#202)
+ - Implement "monitor" CLI command (#196)
+ - Rename internal store "list" methods (#198)
+ - Leverage snapshotting to build domains faster (#200)
+
+0.11 2020-07-05T21:34:34
+ - Built release version 0.11
+ - Add release updates
+ - Tweak documentation
+ - Fix "once per minute" timer execution (#193)
+ - Fix Zing/Store args parser (#191)
+ - Fix Zing/Domain false start issue (#190)
+ - Allow log search using backlog (#187)
+ - Allow log search by pattern(s) (#185)
+ - Allow "tapping" the "global" journal channel (#183)
+ - Optimize Zing (main module) (#181)
+ - Simply send, recv, reply for processes (#176)
+ - Document actor-model "deviations" (#177)
+ - Allow ZING_STORE to define a custom backend (#179)
+
+0.10 2020-07-02T20:20:02
+ - Built release version 0.10
+ - Add release updates
+ - Fix hot-reloading in Zing/Fork (#172)
+
+0.09 2020-07-02T06:38:04
+ - Built release version 0.09
+ - Add release updates
+ - Address ambiguous use of "ref"
+ - Update POD Template
+ - Add "trace" to Zing::Timer (#167)
+ - Add Domain to Types (#168)
+ - Replace "die" with "confess"
+ - Add "trace" to Zing::Timer
+ - Implement Zing::Timer (#156)
+ - Add "ping" method to Zing/Process (#155)
+ - Implement Zing::Term (#164)
+ - Implement Zing::Domain (#157)
+ - Include missing class examples (#160)
+ - Include support for lifo queues (#158)
+ - Document ZING_DEBUG, ZING_APPDIR, and ZING_PIDDIR (#152)
+ - Prevent fork-bombing in Spawner (#151)
+ - Include logic debug statements (#154)
+ - Implement Zing::Poll (#150)
+ - Update stability and contributing docs (#149)
+
+0.08 2020-06-27T22:38:48
+ - Built release version 0.08
+ - Add release updates
+ - Implement Zing::Ringer (#133)
+ - Implement log filtering by name (#136)
+ - Implement log filtering by tag (#135)
+ - Implement verbose log output (#138)
+ - Cleanup dependencies (#131)
+ - Describe virtual-actors feature (#132)
+ - Implement registry cleanup (#134)
+ - Use init_arg to ignore "name" attr overrides (#124)
+ - Fix log tap output error (#123)
+
+0.07 2020-06-25T17:33:48
+ - Built release version 0.07
+ - Add release updates
+ - Implement internal naming strategy (#119)
+
+0.06 2020-06-25T08:21:14
+ - Built release version 0.06
+ - Add release updates
+ - Update main template
+ - Establish multi-Perl/Redis test CI instances (#116)
+ - Update documentation (#115)
+ - Add transient data store (#114)
+
+0.05 2020-06-24T02:50:22
+ - Built release version 0.05
+ - Add release updates
+ - Fix definitions in release
+
+0.04 2020-06-24T02:19:04
+ - Built release version 0.04
+ - Add release updates
+ - Update main module POD (#108)
+ - Implement Zing::Zang::Watcher (#107)
+ - Remove multiple-inheritance (#106)
+ - Implement Zing::Zang::Worker (#104)
+ - Implement Zing::Zang::Spawner (#103)
+ - Implement Zing::Zang::Launcher (#102)
+ - Implement Zing::Zang::Simple (#101)
+ - Implement Zing::Zang::Single (#100)
+ - Update manifest.skip
+ - Reorganize examples (#92)
+ - Remove "log" attribute handlers (#90)
+
+0.03 2020-06-22T21:15:08
+ - Built release version 0.03
+ - Add release updates
+ - Add "zing" command-line tool
+
+0.02 2020-06-22T20:50:31
+ - Built release version 0.02
+ - Add release updates
+ - Adjust release version
+ - Include examples in release
+ - Initial commit
