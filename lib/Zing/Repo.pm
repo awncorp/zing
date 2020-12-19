@@ -43,10 +43,6 @@ method drop() {
   return $self->store->drop($self->term);
 }
 
-method keys(Str $query) {
-  return $self->store->keys($query);
-}
-
 method search() {
   $self->app->search(store => $self->store)->using($self);
 }

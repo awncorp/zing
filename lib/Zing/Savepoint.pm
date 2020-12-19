@@ -56,7 +56,7 @@ method metadata() {
 }
 
 method name() {
-  return join('$', $self->lookup->name, 'savepoint');
+  return join('#', $self->lookup->name, 'savepoint');
 }
 
 method repo() {

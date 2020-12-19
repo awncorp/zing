@@ -309,7 +309,7 @@ $subs->example(-1, 'metadata', 'method', fun($tryable) {
 
 $subs->example(-1, 'name', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  is $result, 'users$savepoint';
+  is $result, 'users#savepoint';
 
   $result
 });
