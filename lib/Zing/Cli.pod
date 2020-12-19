@@ -1,0 +1,119 @@
+
+=encoding utf8
+
+=head1 NAME
+
+Zing::Cli - Command-line Interface
+
+=cut
+
+=head1 ABSTRACT
+
+Command-line Process Management
+
+=cut
+
+=head1 SYNOPSIS
+
+  use Zing::Cli;
+
+  my $cli = Zing::Cli->new;
+
+  # $cli->handle('main');
+
+=cut
+
+=head1 DESCRIPTION
+
+This package provides a command-line interface for managing L<Zing>
+applications. See the L<zing> documentation for interface arguments and
+options.
+
+=cut
+
+=head1 INHERITS
+
+This package inherits behaviors from:
+
+L<Data::Object::Cli>
+
+=cut
+
+=head1 LIBRARIES
+
+This package uses type constraints from:
+
+L<Zing::Types>
+
+=cut
+
+=head1 METHODS
+
+This package implements the following methods:
+
+=cut
+
+=head2 main
+
+  main() : Any
+
+The main method executes the command-line interface and displays help text or
+launches applications.
+
+=over 4
+
+=item main example #1
+
+  # given: synopsis
+
+  # e.g.
+  # zing start once -I t/lib -a t/app
+  # pass
+
+  $cli->handle('main');
+
+=back
+
+=over 4
+
+=item main example #2
+
+  # given: synopsis
+
+  # e.g.
+  # zing start unce -I t/lib -a t/app
+  # fail (not exist)
+
+  $cli->handle('main');
+
+=back
+
+=cut
+
+=head1 AUTHOR
+
+Al Newkirk, C<awncorp@cpan.org>
+
+=head1 LICENSE
+
+Copyright (C) 2011-2019, Al Newkirk, et al.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the The Apache License, Version 2.0, as elucidated in the L<"license
+file"|https://github.com/iamalnewkirk/zing/blob/master/LICENSE>.
+
+=head1 PROJECT
+
+L<Wiki|https://github.com/iamalnewkirk/zing/wiki>
+
+L<Project|https://github.com/iamalnewkirk/zing>
+
+L<Initiatives|https://github.com/iamalnewkirk/zing/projects>
+
+L<Milestones|https://github.com/iamalnewkirk/zing/milestones>
+
+L<Contributing|https://github.com/iamalnewkirk/zing/blob/master/CONTRIBUTE.md>
+
+L<Issues|https://github.com/iamalnewkirk/zing/issues>
+
+=cut
