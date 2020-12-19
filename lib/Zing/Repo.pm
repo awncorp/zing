@@ -12,7 +12,8 @@ use Data::Object::Class;
 use Data::Object::ClassHas;
 use Data::Object::Space;
 
-use Zing::Server;
+extends 'Zing::Entity';
+
 use Zing::Store;
 use Zing::Term;
 
@@ -22,19 +23,9 @@ use Zing::Term;
 
 has 'name' => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Name',
   req => 1,
 );
-
-has 'server' => (
-  is => 'ro',
-  isa => 'Server',
-  new => 1,
-);
-
-fun new_server($self) {
-  Zing::Server->new
-}
 
 has 'store' => (
   is => 'ro',
@@ -43,35 +34,25 @@ has 'store' => (
 );
 
 fun new_store($self) {
-  Data::Object::Space->new($ENV{ZING_STORE} || 'Zing::Redis')->build
-}
-
-has 'target' => (
-  is => 'ro',
-  isa => 'Enum[qw(global local)]',
-  new => 1,
-);
-
-fun new_target($self) {
-  $ENV{ZING_TARGET} || 'local'
+  $self->app->store
 }
 
 # METHODS
 
-method drop(Str @keys) {
-  return $self->store->drop($self->term(@keys));
+method drop() {
+  return $self->store->drop($self->term);
 }
 
-method keys() {
-  return $self->store->keys($self->term);
+method search() {
+  $self->app->search(store => $self->store)->using($self);
 }
 
-method term(Str @keys) {
-  return Zing::Term->new($self, @keys)->repo;
+method term() {
+  return $self->app->term($self)->repo;
 }
 
 method test(Str @keys) {
-  return $self->store->test($self->term(@keys));
+  return $self->store->test($self->term);
 }
 
 1;

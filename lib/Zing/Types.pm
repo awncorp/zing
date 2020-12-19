@@ -14,15 +14,39 @@ extends 'Types::Standard';
 # VERSION
 
 register {
+  name => 'App',
+  parent => 'Object',
+  validation => is_instance_of('Zing::App'),
+};
+
+register {
+  name => 'Cartridge',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Cartridge'),
+};
+
+register {
   name => 'Channel',
   parent => 'Object',
   validation => is_instance_of('Zing::Channel'),
 };
 
 register {
+  name => 'Cli',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Cli'),
+};
+
+register {
   name => 'Cursor',
   parent => 'Object',
   validation => is_instance_of('Zing::Cursor'),
+};
+
+register {
+  name => 'Daemon',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Daemon'),
 };
 
 register {
@@ -35,6 +59,24 @@ register {
   name => 'Domain',
   parent => 'Object',
   validation => is_instance_of('Zing::Domain'),
+};
+
+register {
+  name => 'Encoder',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Encoder'),
+};
+
+register {
+  name => 'Entity',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Entity'),
+};
+
+register {
+  name => 'Env',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Env'),
 };
 
 register {
@@ -59,15 +101,39 @@ declare 'Interupt',
   as Enum([qw(CHLD HUP INT QUIT TERM USR1 USR2)]);
 
 register {
+  name => 'ID',
+  parent => 'Object',
+  validation => is_instance_of('Zing::ID'),
+};
+
+register {
+  name => 'Journal',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Journal'),
+};
+
+register {
   name => 'Kernel',
   parent => 'Object',
   validation => is_instance_of('Zing::Kernel'),
 };
 
+declare 'Key',
+  as Str(),
+  where {
+    $_ =~ qr(^[^\:\*]+:[^\:\*]+:[^\:\*]+:[^\:\*]+:[^\:\*]+$)
+  };
+
 register {
   name => 'KeyVal',
   parent => 'Object',
   validation => is_instance_of('Zing::KeyVal'),
+};
+
+register {
+  name => 'Launcher',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Launcher'),
 };
 
 register {
@@ -101,10 +167,16 @@ register {
 };
 
 register {
-  name => 'Node',
+  name => 'Meta',
   parent => 'Object',
-  validation => is_instance_of('Zing::Node'),
+  validation => is_instance_of('Zing::Meta'),
 };
+
+declare 'Name',
+  as Str(),
+  where {
+    $_ =~ qr(^[^\:\*]+$)
+  };
 
 register {
   name => 'Poll',
@@ -131,21 +203,27 @@ register {
 };
 
 register {
-  name => 'Registry',
-  parent => 'Object',
-  validation => is_instance_of('Zing::Registry'),
-};
-
-register {
-  name => 'Redis',
-  parent => 'Object',
-  validation => is_instance_of('Redis'),
-};
-
-register {
   name => 'Repo',
   parent => 'Object',
   validation => is_instance_of('Zing::Repo'),
+};
+
+register {
+  name => 'Ring',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Ring'),
+};
+
+register {
+  name => 'Scheduler',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Scheduler'),
+};
+
+register {
+  name => 'Search',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Search'),
 };
 
 declare 'Schedule',
@@ -161,15 +239,27 @@ register {
 };
 
 register {
-  name => 'Server',
+  name => 'Simple',
   parent => 'Object',
-  validation => is_instance_of('Zing::Server'),
+  validation => is_instance_of('Zing::Simple'),
+};
+
+register {
+  name => 'Single',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Single'),
 };
 
 register {
   name => 'Space',
   parent => 'Object',
   validation => is_instance_of('Data::Object::Space'),
+};
+
+register {
+  name => 'Spawner',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Spawner'),
 };
 
 register {
@@ -182,6 +272,18 @@ register {
   name => 'Task',
   parent => 'Object',
   validation => is_instance_of('Zing::Task'),
+};
+
+register {
+  name => 'Term',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Term'),
+};
+
+register {
+  name => 'Timer',
+  parent => 'Object',
+  validation => is_instance_of('Zing::Timer'),
 };
 
 register {

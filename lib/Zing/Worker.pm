@@ -9,6 +9,7 @@ use registry 'Zing::Types';
 use routines;
 
 use Data::Object::Class;
+
 use Zing::Logic::Worker;
 
 extends 'Zing::Process';
@@ -18,7 +19,8 @@ extends 'Zing::Process';
 # BUILDERS
 
 fun new_logic($self) {
-  Zing::Logic::Worker->new(process => $self)
+  my $debug = $self->env->debug;
+  Zing::Logic::Worker->new(debug => $debug, process => $self)
 }
 
 1;

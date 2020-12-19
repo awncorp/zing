@@ -13,14 +13,7 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Domain';
 
-use Zing::Cursor;
-use Zing::Domain;
-use Zing::Savepoint;
-use Zing::Term;
-
-use Digest::MD5;
-
-use Carp ();
+use Digest::SHA ();
 
 # VERSION
 
@@ -43,11 +36,11 @@ fun BUILD($self) {
 # METHODS
 
 method cursor() {
-  return Zing::Cursor->new(lookup => $self);
+  return $self->app->cursor(lookup => $self);
 }
 
 method decr(Any @args) {
-  Carp::confess(sprintf('Method decr() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'decr'));
 }
 
 around del($key) {
@@ -72,13 +65,13 @@ around del($key) {
     $self->change('set', $prev, { %{$self->state->{$prev}}, next => undef });
   }
   $self->$orig($name);
-  Zing::Domain->new(name => $item->{name})->drop;
+  $self->app->domain(name => $item->{name})->drop;
   return $self;
 }
 
 around drop() {
   for my $value (values %{$self->state}) {
-    Zing::Domain->new(name => $value->{name})->drop;
+    $self->app->domain(name => $value->{name})->drop;
   }
   return $self->$orig;
 }
@@ -86,7 +79,7 @@ around drop() {
 method get(Str $key) {
   my $data = $self->apply->state->{$self->hash($key)};
   return undef if !$data;
-  return Zing::Domain->new(name => $data->{name});
+  return $self->app->domain(name => $data->{name});
 }
 
 method head() {
@@ -94,23 +87,19 @@ method head() {
 }
 
 method incr(Any @args) {
-  Carp::confess(sprintf('Method incr() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'incr'));
 }
 
-method hash(Str @args) {
-  return Digest::MD5::md5_hex($self->key(@args));
-}
-
-method key(Str @args) {
-  return join('.', @args);
+method hash(Str $key) {
+  return Digest::SHA::sha1_hex($key);
 }
 
 method pop(Any @args) {
-  Carp::confess(sprintf('Method pop() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'pop'));
 }
 
 method push(Any @args) {
-  Carp::confess(sprintf('Method push() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'push'));
 }
 
 method restore(HashRef $data) {
@@ -119,8 +108,8 @@ method restore(HashRef $data) {
 
 method set(Str $key) {
   my $hash = $self->hash($key);
-  my $name = join('-', $self->name, $hash);
-  my $domain = Zing::Domain->new(name => $name);
+  my $name = join('#', $self->name, $hash);
+  my $domain = $self->app->domain(name => $name);
   my $prev = $self->apply->head;
   if ($prev && $self->state->{$prev}) {
     $self->change('set', $prev, { %{$self->state->{$prev}}, next => $hash });
@@ -132,11 +121,11 @@ method set(Str $key) {
 }
 
 method shift(Any @args) {
-  Carp::confess(sprintf('Method shift() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'shift'));
 }
 
 method savepoint() {
-  return Zing::Savepoint->new(lookup => $self);
+  return $self->app->savepoint(lookup => $self);
 }
 
 method snapshot() {
@@ -148,11 +137,18 @@ method tail() {
 }
 
 method term() {
-  return Zing::Term->new($self)->lookup;
+  return $self->app->term($self)->lookup;
 }
 
 method unshift(Any @args) {
-  Carp::confess(sprintf('Method unshift() not supported for %s', ref($self)));
+  $self->throw(error_not_supported($self, 'unshift'));
+}
+
+# ERRORS
+
+fun error_not_supported(Object $object, Str $method) {
+  code => 'error_not_implemented',
+  message => "@{[ref($object)]} method \"$method\" not supported",
 }
 
 1;

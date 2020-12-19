@@ -11,84 +11,168 @@ use routines;
 use Data::Object::Class;
 use Data::Object::ClassHas;
 
-use Carp ();
+extends 'Zing::Entity';
 
 use Config;
 use File::Spec;
+use FlightRecorder;
 use POSIX;
 
 # VERSION
 
 # ATTRIBUTES
 
-has 'app' => (
+has cartridge => (
   is => 'ro',
-  isa => 'Zing',
+  isa => 'Cartridge',
   req => 1,
 );
 
-has 'name' => (
-  is => 'ro',
-  isa => 'Str',
-  req => 1,
-);
-
-has 'log' => (
+has logger => (
   is => 'ro',
   isa => 'Logger',
   new => 1,
 );
 
-fun new_log($self) {
-  FlightRecorder->new(level => 'info')
+fun new_logger($self) {
+  $self->app->logger
 }
 
-has 'pid_dir' => (
+has journal => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Journal',
   new => 1,
 );
 
-fun new_pid_dir($self) {
-  -w $ENV{ZING_PIDDIR} ? $ENV{ZING_PIDDIR} :
-  -w $ENV{ZING_HOME} ? $ENV{ZING_HOME} :
-  -w File::Spec->curdir ? File::Spec->curdir : File::Spec->tmpdir
+fun new_journal($self) {
+  $self->app->journal(
+    level => $self->log_level,
+    verbose => $self->log_verbose,
+  )
 }
 
-has 'pid_file' => (
+has kernel => (
   is => 'ro',
-  isa => 'Str',
+  isa => 'Zing',
   new => 1,
 );
 
-fun new_pid_file($self) {
-  join '.', $self->name, 'pid'
+fun new_kernel($self) {
+  $self->app->zing(scheme => $self->cartridge->scheme)
 }
 
-has 'pid_path' => (
+has log_filter_from => (
   is => 'ro',
   isa => 'Str',
-  new => 1,
+  opt => 1,
 );
 
-fun new_pid_path($self) {
-  File::Spec->catfile($self->pid_dir, $self->pid_file)
-}
+has log_filter_queries => (
+  is => 'ro',
+  isa => 'ArrayRef[Str]',
+  opt => 1,
+);
+
+has log_filter_tag => (
+  is => 'ro',
+  isa => 'Str',
+  opt => 1,
+);
+
+has log_level => (
+  is => 'ro',
+  isa => 'Str',
+  def => 'debug',
+);
+
+has log_reset => (
+  is => 'ro',
+  isa => 'Bool',
+  def => 0,
+);
+
+has log_verbose => (
+  is => 'ro',
+  isa => 'Bool',
+  def => 0,
+);
 
 # METHODS
 
-method execute() {
-  my $app = $self->app;
-  my $file = $self->pid_path;
+method fork() {
+  if ($Config{d_pseudofork}) {
+    $self->throw(error_fork("emulation not supported"));
+  }
+
+  my $pid = fork;
+
+  if (!defined $pid) {
+    $self->throw(error_fork("$!"));
+  }
+  elsif ($pid == 0) {
+    $self->throw(error_fork("terminal detach failed")) if POSIX::setsid() < 0;
+    $self->kernel->start; # child
+    unlink $self->cartridge->pidfile;
+    POSIX::_exit(0);
+  }
+
+  return $pid;
+}
+
+method logs(CodeRef $callback) {
+  my $journal = $self->journal;
+
+  if ($self->log_reset) {
+    $journal->reset;
+  }
+
+  $journal->stream(fun ($info, $data, $lines) {
+    my $cont = 1;
+
+    my $from = $info->{from};
+    my $tag = $info->{data}{tag} || '--';
+
+    if (my $filter = $self->log_filter_from) {
+      $cont = 0 unless $from =~ /$filter/;
+    }
+
+    if (my $filter = $self->log_filter_tag) {
+      $cont = 0 unless $tag =~ /$filter/;
+    }
+
+    if (my $queries = $self->log_filter_queries) {
+      for my $query (@$queries) {
+        @$lines = grep /$query/, @$lines;
+      }
+    }
+
+    if ($cont) {
+      for my $line (@$lines) {
+        $callback->(join ' ', $from, ' ', $tag, ' ', $line);
+      }
+    }
+  });
+
+  return 1;
+}
+
+method restart() {
+  return $self->stop && $self->start;
+}
+
+method start() {
+  my $logger = $self->logger;
+  my $cartridge = $self->cartridge;
+  my $file = $cartridge->pidfile;
 
   if (-e $file) {
-    $self->log->fatal("pid file exists: $file");
-    return 1;
+    $logger->fatal("pid file exists: $file");
+    return 0;
   }
 
   open(my $fh, ">", "$file") or do {
-    $self->log->fatal("pid file error: $!");
-    return 1;
+    $logger->fatal("pid file error: $!");
+    return 0;
   };
 
   my ($cnt, $err) = do {
@@ -96,47 +180,62 @@ method execute() {
     (eval{chmod(0644, $file)}, $@)
   };
   if ($err) {
-    $self->log->fatal("pid file error: $err");
-    return 1;
+    $logger->fatal("pid file error: $err");
+    return 0;
   }
 
-  # launch app
   my $pid = $self->fork;
-  my $name = $self->name;
+  my $name = $cartridge->name;
 
   print $fh "$pid\n";
   close $fh;
 
-  $self->log->info("app created: $name");
-  $self->log->info("pid file created: $file");
+  $logger->info("app created: $name");
+  $logger->info("pid file created: $file");
 
-  return 0;
+  return 1;
 }
 
-method fork() {
-  my $app = $self->app;
+method stop() {
+  my $logger = $self->logger;
+  my $cartridge = $self->cartridge;
+  my $file = $cartridge->pidfile;
+  my $pid = $cartridge->pid;
 
-  if ($Config{d_pseudofork}) {
-    Carp::confess "Error on fork: fork emulation not supported";
+  unlink $file;
+
+  if (!$pid) {
+    $logger->warn("no pid in file: $file");
+  }
+  else {
+    kill 'TERM', $pid;
   }
 
-  my $pid = fork;
-
-  if (!defined $pid) {
-    Carp::confess "Error on fork: $!";
-  }
-  elsif ($pid == 0) {
-    Carp::confess "Error in fork: terminal detach failed" if POSIX::setsid() < 0;
-    $self->app->start; # child
-    unlink $self->pid_path;
-    POSIX::_exit(0);
-  }
-
-  return $pid;
+  return 1;
 }
 
-method start() {
-  exit($self->execute);
+method update() {
+  my $logger = $self->logger;
+  my $cartridge = $self->cartridge;
+  my $file = $cartridge->pidfile;
+  my $pid = $cartridge->pid;
+
+  if (!$pid) {
+    $logger->fatal("no pid in file: $file");
+    return 0;
+  }
+  else {
+    kill 'USR2', $pid;
+  }
+
+  return 1;
+}
+
+# ERRORS
+
+fun error_fork(Str $reason) {
+  code => 'error_fork',
+  message => "Error on fork: $reason",
 }
 
 1;

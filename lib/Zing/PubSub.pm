@@ -13,26 +13,25 @@ use Data::Object::Class;
 extends 'Zing::Repo';
 
 use Zing::Poll;
-use Zing::Term;
 
 # VERSION
 
 # METHODS
 
-method poll(Str $key) {
-  return Zing::Poll->new(repo => $self, name => $key);
+method poll() {
+  return Zing::Poll->new(repo => $self);
 }
 
-method recv(Str $key) {
-  return $self->store->lpull($self->term($key));
+method recv() {
+  return $self->store->lpull($self->term);
 }
 
-method send(Str $key, HashRef $val) {
-  return $self->store->rpush($self->term($key), $val);
+method send(HashRef $value) {
+  return $self->store->rpush($self->term, $value);
 }
 
-method term(Str @keys) {
-  return Zing::Term->new($self, @keys)->pubsub;
+method term() {
+  return $self->app->term($self)->pubsub;
 }
 
 1;

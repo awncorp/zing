@@ -17,7 +17,7 @@ extends 'Zing::Launcher';
 # METHODS
 
 method queues() {
-  ['scheduled']
+  ['$scheduled']
 }
 
 1;

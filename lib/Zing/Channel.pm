@@ -12,8 +12,6 @@ use Data::Object::Class;
 
 extends 'Zing::PubSub';
 
-use Zing::Term;
-
 # VERSION
 
 # BUILDERS
@@ -42,8 +40,8 @@ method reset() {
   return !($self->{position} = 0);
 }
 
-method send(HashRef $val) {
-  return $self->store->rpush($self->term, $val);
+method send(HashRef $value) {
+  return $self->store->rpush($self->term, $value);
 }
 
 method size() {
@@ -51,7 +49,7 @@ method size() {
 }
 
 method term() {
-  return Zing::Term->new($self)->channel;
+  return $self->app->term($self)->channel;
 }
 
 1;

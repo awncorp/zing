@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Channel';
 
-use Zing::Term;
-
 use Scalar::Util ();
 
 # VERSION
@@ -95,7 +93,7 @@ method apply() {
   while (my $data = $self->recv) {
     my $op = $data->{op};
     my $key = $data->{key};
-    my $val = $data->{val};
+    my $val = $data->{value};
 
     if ((not defined $self->{state}) && %{$data->{snapshot}}) {
       $self->restore($data);
@@ -141,13 +139,13 @@ method apply() {
   return $self;
 }
 
-method change(Str $op, Str $key, Any @val) {
+method change(Str $op, Str $key, Any @value) {
   my %fields = (
     key => $key,
     metadata => $self->metadata,
     snapshot => $self->snapshot,
     time => time,
-    val => [@val],
+    value => [@value],
   );
 
   if ($op eq 'decr') {
@@ -184,8 +182,8 @@ method change(Str $op, Str $key, Any @val) {
   return $self->apply;
 }
 
-method decr(Str $key, Int $val = 1) {
-  return $self->apply->change('decr', $key, $val);
+method decr(Str $key, Int $value = 1) {
+  return $self->apply->change('decr', $key, $value);
 }
 
 method del(Str $key) {
@@ -226,28 +224,28 @@ method ignore(Str $key, Maybe[CodeRef] $sub) {
   return $self;
 }
 
-method incr(Str $key, Int $val = 1) {
-  return $self->apply->change('incr', $key, $val);
+method incr(Str $key, Int $value = 1) {
+  return $self->apply->change('incr', $key, $value);
 }
 
-method merge(Str $key, HashRef $val) {
-  return $self->apply->change('merge', $key, $val);
+method merge(Str $key, HashRef $value) {
+  return $self->apply->change('merge', $key, $value);
 }
 
 method pop(Str $key) {
   return $self->apply->change('pop', $key);
 }
 
-method push(Str $key, Any @val) {
-  return $self->apply->change('push', $key, @val);
+method push(Str $key, Any @value) {
+  return $self->apply->change('push', $key, @value);
 }
 
 method restore(HashRef $data) {
   return $self->{state} = _copy($data->{snapshot});
 }
 
-method set(Str $key, Any $val) {
-  return $self->apply->change('set', $key, $val);
+method set(Str $key, Any $value) {
+  return $self->apply->change('set', $key, $value);
 }
 
 method shift(Str $key) {
@@ -271,11 +269,11 @@ method listen(Str $key, CodeRef $sub) {
 }
 
 method term() {
-  return Zing::Term->new($self)->domain;
+  return $self->app->term($self)->domain;
 }
 
-method unshift(Str $key, Any @val) {
-  return $self->apply->change('unshift', $key, @val);
+method unshift(Str $key, Any @value) {
+  return $self->apply->change('unshift', $key, @value);
 }
 
 1;
