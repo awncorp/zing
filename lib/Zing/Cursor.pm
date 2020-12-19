@@ -32,7 +32,7 @@ has 'lookup' => (
 # METHODS
 
 method count() {
-  return scalar(%{$self->lookup->state});
+  return int keys %{$self->lookup->state};
 }
 
 method fetch(Int $size = 1) {

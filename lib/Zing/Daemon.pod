@@ -1,0 +1,278 @@
+
+=encoding utf8
+
+=head1 NAME
+
+Zing::Daemon - Process Daemon
+
+=cut
+
+=head1 ABSTRACT
+
+Daemon Process Management
+
+=cut
+
+=head1 SYNOPSIS
+
+  use Zing::Cartridge;
+  use Zing::Daemon;
+
+  my $daemon = Zing::Daemon->new(
+    cartridge => Zing::Cartridge->new(
+      name => 'example',
+      scheme => ['MyApp', [], 1],
+    )
+  );
+
+  # $daemon->start;
+
+=cut
+
+=head1 DESCRIPTION
+
+This package provides the mechanisms for running a L<Zing> application
+as a daemon process.
+
+=cut
+
+=head1 INHERITS
+
+This package inherits behaviors from:
+
+L<Zing::Entity>
+
+=cut
+
+=head1 LIBRARIES
+
+This package uses type constraints from:
+
+L<Zing::Types>
+
+=cut
+
+=head1 ATTRIBUTES
+
+This package has the following attributes:
+
+=cut
+
+=head2 cartridge
+
+  cartridge(Cartridge)
+
+This attribute is read-only, accepts C<(Cartridge)> values, and is required.
+
+=cut
+
+=head2 journal
+
+  journal(Journal)
+
+This attribute is read-only, accepts C<(Journal)> values, and is optional.
+
+=cut
+
+=head2 kernel
+
+  kernel(Zing)
+
+This attribute is read-only, accepts C<(Zing)> values, and is optional.
+
+=cut
+
+=head2 log_filter_from
+
+  log_filter_from(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 log_filter_queries
+
+  log_filter_queries(ArrayRef[Str])
+
+This attribute is read-only, accepts C<(ArrayRef[Str])> values, and is optional.
+
+=cut
+
+=head2 log_filter_tag
+
+  log_filter_tag(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 log_level
+
+  log_level(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 log_reset
+
+  log_reset(Bool)
+
+This attribute is read-only, accepts C<(Bool)> values, and is optional.
+
+=cut
+
+=head2 log_verbose
+
+  log_verbose(Bool)
+
+This attribute is read-only, accepts C<(Bool)> values, and is optional.
+
+=cut
+
+=head2 logger
+
+  logger(Logger)
+
+This attribute is read-only, accepts C<(Logger)> values, and is optional.
+
+=cut
+
+=head1 METHODS
+
+This package implements the following methods:
+
+=cut
+
+=head2 fork
+
+  fork() : Int
+
+The fork method forks the application and returns a pid.
+
+=over 4
+
+=item fork example #1
+
+  # given: synopsis
+
+  my $pid = $daemon->fork;
+
+=back
+
+=cut
+
+=head2 restart
+
+  restart() : Bool
+
+The restart method stops and then starts the application and creates a pid file
+under the L<Zing::Cartridge/pidfile>.
+
+=over 4
+
+=item restart example #1
+
+  use FlightRecorder;
+  use Zing::Cartridge;
+  use Zing::Daemon;
+
+  my $daemon = Zing::Daemon->new(
+    logger => FlightRecorder->new(auto => undef),
+    cartridge => Zing::Cartridge->new(
+      name => 'example',
+      scheme => ['MyApp', [], 1],
+    )
+  );
+
+  $daemon->restart;
+
+=back
+
+=cut
+
+=head2 start
+
+  start() : Bool
+
+The start method forks the application and creates a pid file under the
+L<Zing::Cartridge/pidfile>.
+
+=over 4
+
+=item start example #1
+
+  use FlightRecorder;
+  use Zing::Cartridge;
+  use Zing::Daemon;
+
+  my $daemon = Zing::Daemon->new(
+    logger => FlightRecorder->new(auto => undef),
+    cartridge => Zing::Cartridge->new(
+      name => 'example',
+      scheme => ['MyApp', [], 1],
+    )
+  );
+
+  $daemon->start;
+
+=back
+
+=cut
+
+=head2 stop
+
+  stop() : Bool
+
+The stop method stops the application and removes the pid file under the
+L<Zing::Cartridge/pidfile>.
+
+=over 4
+
+=item stop example #1
+
+  use FlightRecorder;
+  use Zing::Cartridge;
+  use Zing::Daemon;
+
+  my $daemon = Zing::Daemon->new(
+    logger => FlightRecorder->new(auto => undef),
+    cartridge => Zing::Cartridge->new(
+      name => 'example',
+      scheme => ['MyApp', [], 1],
+    )
+  );
+
+  $daemon->stop;
+
+=back
+
+=cut
+
+=head1 AUTHOR
+
+Al Newkirk, C<awncorp@cpan.org>
+
+=head1 LICENSE
+
+Copyright (C) 2011-2019, Al Newkirk, et al.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the The Apache License, Version 2.0, as elucidated in the L<"license
+file"|https://github.com/iamalnewkirk/zing/blob/master/LICENSE>.
+
+=head1 PROJECT
+
+L<Wiki|https://github.com/iamalnewkirk/zing/wiki>
+
+L<Project|https://github.com/iamalnewkirk/zing>
+
+L<Initiatives|https://github.com/iamalnewkirk/zing/projects>
+
+L<Milestones|https://github.com/iamalnewkirk/zing/milestones>
+
+L<Contributing|https://github.com/iamalnewkirk/zing/blob/master/CONTRIBUTE.md>
+
+L<Issues|https://github.com/iamalnewkirk/zing/issues>
+
+=cut

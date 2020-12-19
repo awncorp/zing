@@ -1,6 +1,13 @@
 Changelog for Zing
 
-0.13 2020-07-11T13:53:04
+0.20 2020-12-19T00:45:40
+ - Add release updates
+ - Refactor and Implement Dependency Injection (#231)
+ - Add merge operation to Zing::Domain (#227)
+ - Implement Zing::Lookup (#226)
+
+0.13 2020-07-11T13:53:10
+ - Built release version 0.13
  - Add release updates
  - Update "emit" signature in Zing/Domain
  - Update zing synopsis
