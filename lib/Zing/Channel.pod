@@ -25,7 +25,7 @@ Multi-process Communication Mechanism
 
 =head1 DESCRIPTION
 
-This package provides represents a mechanism of interprocess communication and
+This package represents a mechanism of interprocess communication and
 synchronization via message passing.
 
 =cut

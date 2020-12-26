@@ -3,13 +3,13 @@
 
 =head1 NAME
 
-Zing::ID - Globally Unique Identifier
+Zing::ID - Conditionally Unique Identifier
 
 =cut
 
 =head1 ABSTRACT
 
-Globally Unique Identifier
+Conditionally Unique Identifier
 
 =cut
 
