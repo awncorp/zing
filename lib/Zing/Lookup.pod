@@ -120,6 +120,20 @@ The drop method deletes all data associated with the lookup.
 
 =back
 
+=over 4
+
+=item drop example #2
+
+  # given: synopsis
+
+  $lookup->set('user-12345', 'me@example.com');
+
+  $lookup->savepoint->send;
+
+  $lookup->drop;
+
+=back
+
 =cut
 
 =head2 get
