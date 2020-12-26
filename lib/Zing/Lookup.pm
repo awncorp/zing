@@ -70,6 +70,9 @@ around del($key) {
 }
 
 around drop() {
+  if (my $savepoint = $self->savepoint) {
+    $savepoint->drop if $savepoint->test;
+  }
   for my $value (values %{$self->state}) {
     $self->app->domain(name => $value->{name})->drop;
   }
