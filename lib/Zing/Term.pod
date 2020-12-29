@@ -255,7 +255,7 @@ The meta method validates and returns a "meta" resource identifier.
 
 =head2 object
 
-  object() : Object
+  object(Maybe[Env] $env) : Object
 
 The object method reifies an object from its resource identifier.
 

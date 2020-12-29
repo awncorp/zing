@@ -1,6 +1,6 @@
 # NAME
 
-Zing - Multi-Process Management System
+Zing - Actor-Model Toolkit
 
 # ABSTRACT
 
@@ -109,7 +109,7 @@ These classes handle data persistence for all messaging abstractions:
 - [Zing::Store::Mysql](https://metacpan.org/pod/Zing%3A%3AStore%3A%3AMysql): MySQL Persistence
 - [Zing::Store::Pg](https://metacpan.org/pod/Zing%3A%3AStore%3A%3APg): PostgreSQL Persistence
 - [Zing::Store::Redis](https://metacpan.org/pod/Zing%3A%3AStore%3A%3ARedis): Redis Persistence
-- [Zing::Store::SQLite](https://metacpan.org/pod/Zing%3A%3AStore%3A%3ASQLite): SQLite Persistence
+- [Zing::Store::Sqlite](https://metacpan.org/pod/Zing%3A%3AStore%3A%3ASqlite): SQLite Persistence
 - [Zing::Store::Temp](https://metacpan.org/pod/Zing%3A%3AStore%3A%3ATemp): Temporary File-based Persistence
 
 ## ready-made
