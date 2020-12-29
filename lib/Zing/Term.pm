@@ -223,10 +223,11 @@ method meta() {
   return $self->string;
 }
 
-method object() {
+method object(Maybe[Env] $env) {
   require Zing::Env;
 
-  my $env = Zing::Env->new(
+  $env = Zing::Env->new(
+    ($env ? %{$env} : ()),
     handle => $self->handle,
     target => $self->target,
   );
