@@ -47,7 +47,7 @@ fun BUILD($self) {
     $self->state;
   }
 
-  return $self->apply;
+  return $self;
 }
 
 # SHIMS
