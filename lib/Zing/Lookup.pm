@@ -20,8 +20,6 @@ use Digest::SHA ();
 # BUILDERS
 
 fun BUILD($self) {
-  $self->reset;
-
   my $savepoint = $self->savepoint;
 
   if ($savepoint->test) {
@@ -57,12 +55,12 @@ around del($key) {
   elsif ($next && !$prev) {
     # next.prev = undef
     $self->metadata->{tail} = $next;
-    $self->change('set', $next, { %{$self->state->{$next}}, prev => undef });
+    $self->change('set', $next, {%{$self->state->{$next}}, prev => undef});
   }
   elsif (!$next && $prev) {
     # prev.next = undef
     $self->metadata->{head} = $prev;
-    $self->change('set', $prev, { %{$self->state->{$prev}}, next => undef });
+    $self->change('set', $prev, {%{$self->state->{$prev}}, next => undef});
   }
   $self->$orig($name);
   $self->app->domain(name => $item->{name})->drop;
@@ -115,11 +113,11 @@ method set(Str $key) {
   my $domain = $self->app->domain(name => $name);
   my $prev = $self->apply->head;
   if ($prev && $self->state->{$prev}) {
-    $self->change('set', $prev, { %{$self->state->{$prev}}, next => $hash });
+    $self->change('set', $prev, {%{$self->state->{$prev}}, next => $hash});
   }
   $self->metadata->{head} = $hash;
   $self->metadata->{tail} = $hash if !$self->metadata->{tail};
-  $self->change('set', $hash, { name => $name, next => undef, prev => $prev });
+  $self->change('set', $hash, {name => $name, next => undef, prev => $prev});
   return $domain;
 }
 
