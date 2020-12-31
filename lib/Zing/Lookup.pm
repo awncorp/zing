@@ -19,18 +19,18 @@ use Digest::SHA ();
 
 # BUILDERS
 
-fun BUILD($self) {
-  $self->reset;
-
+around BUILD() {
   my $savepoint = $self->savepoint;
 
   if ($savepoint->test) {
     $self->{state} = $savepoint->snapshot;
     $self->{position} = $savepoint->position;
     $self->{metadata} = $savepoint->metadata;
+    return $self->apply;
   }
-
-  return $self->apply;
+  else {
+    return $self->$orig;
+  }
 }
 
 # METHODS

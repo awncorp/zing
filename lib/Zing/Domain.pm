@@ -29,12 +29,23 @@ fun new_metadata($self) {
   {}
 }
 
+has 'snapshots' => (
+  is => 'ro',
+  isa => 'Bool',
+  def => 0,
+);
+
 # BUILDERS
 
 fun BUILD($self) {
-  $self->{position} = $self->size;
-
-  $self->{position}-- if $self->{position};
+  if ($self->snapshots) {
+    $self->{position} = $self->size;
+    $self->{position}-- if $self->{position};
+  }
+  else {
+    $self->reset;
+    $self->state;
+  }
 
   return $self->apply;
 }
@@ -253,7 +264,7 @@ method shift(Str $key) {
 }
 
 method snapshot() {
-  return _copy($self->state);
+  return $self->snapshots ? _copy($self->state) : {};
 }
 
 method state() {
