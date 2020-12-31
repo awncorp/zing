@@ -1,6 +1,11 @@
 Changelog for Zing
 
-0.22 2020-12-29T17:32:02
+0.23 2020-12-31T18:33:59
+ - Add release updates
+ - Refactor Zing::Domain snapshotting (#257)
+
+0.22 2020-12-29T17:32:08
+ - Built release version 0.22
  - Add release updates
  - Update tagline
  - Optionally inflate object via env from term (#252)
