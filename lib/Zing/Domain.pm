@@ -47,7 +47,7 @@ fun BUILD($self) {
     $self->state;
   }
 
-  return $self;
+  return !$self->isa('Zing::Lookup') ? $self->apply : $self;
 }
 
 # SHIMS
