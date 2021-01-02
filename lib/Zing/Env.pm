@@ -137,4 +137,14 @@ fun new_target($self) {
   $ENV{ZING_TARGET}
 }
 
+has system => (
+  is => 'ro',
+  isa => 'Name',
+  new => 1,
+);
+
+fun new_system($self) {
+  'zing'
+}
+
 1;
