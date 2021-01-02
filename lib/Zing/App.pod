@@ -2024,6 +2024,70 @@ args, for the reifier.
 
 =cut
 
+=head2 table
+
+  table(Any @args) : Table
+
+The table method returns a new L<Zing::Table> object based on the currenrt C<env>.
+
+=over 4
+
+=item table example #1
+
+  # given: synopsis
+
+  my $table = $app->table(
+    name => 'people',
+  );
+
+  # Zing::Table->new(...)
+
+=back
+
+=cut
+
+=head2 table_namespace
+
+  table_namespace() : ArrayRef[Str]
+
+The table_namespace method returns a wordlist that represents a I<table> class
+name.
+
+=over 4
+
+=item table_namespace example #1
+
+  # given: synopsis
+
+  $app->table_namespace;
+
+  # ['zing', 'table']
+
+=back
+
+=cut
+
+=head2 table_specification
+
+  table_specification(Any @args) : Tuple[ArrayRef, ArrayRef]
+
+The table_specification method returns a I<table> specification, class name and
+args, for the reifier.
+
+=over 4
+
+=item table_specification example #1
+
+  # given: synopsis
+
+  $app->table_specification;
+
+  # [['zing', 'table'], [@args]]
+
+=back
+
+=cut
+
 =head2 term
 
   term(Any @args) : Term
