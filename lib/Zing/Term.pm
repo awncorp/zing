@@ -67,6 +67,7 @@ state $symbols = {
   'Zing::PubSub'   => 'pubsub',
   'Zing::Queue'    => 'queue',
   'Zing::Repo'     => 'repo',
+  'Zing::Table'    => 'table',
 };
 
 fun BUILDARGS($self, $item, @data) {
@@ -83,6 +84,10 @@ fun BUILDARGS($self, $item, @data) {
     }
     elsif ($item->isa('Zing::Domain')) {
       $args->{symbol} = $symbols->{'Zing::Domain'};
+      $args->{bucket} = $item->name;
+    }
+    elsif ($item->isa('Zing::Table')) {
+      $args->{symbol} = $symbols->{'Zing::Table'};
       $args->{bucket} = $item->name;
     }
     elsif ($item->isa('Zing::Channel')) {
@@ -279,6 +284,14 @@ method string() {
   my $bucket = $self->bucket;
 
   return lc join ':', $system, $handle, $target, $symbol, $bucket;
+}
+
+method table() {
+  unless ($self->symbol eq 'table') {
+    $self->throw(error_term_invalid('table'));
+  }
+
+  return $self->string;
 }
 
 # ERRORS

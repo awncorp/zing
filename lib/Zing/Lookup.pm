@@ -13,8 +13,6 @@ use Data::Object::ClassHas;
 
 extends 'Zing::Domain';
 
-use Digest::SHA ();
-
 # VERSION
 
 # BUILDERS
@@ -48,17 +46,14 @@ around del($key) {
   my $next = $item->{next};
   my $prev = $item->{prev};
   if ($next && $prev) {
-    # prev.next = item.next AND next.prev = item.prev
     $self->change('set', $prev, {%{$self->state->{$prev}}, next => $next});
     $self->change('set', $next, {%{$self->state->{$next}}, prev => $prev});
   }
   elsif ($next && !$prev) {
-    # next.prev = undef
     $self->metadata->{tail} = $next;
     $self->change('set', $next, {%{$self->state->{$next}}, prev => undef});
   }
   elsif (!$next && $prev) {
-    # prev.next = undef
     $self->metadata->{head} = $prev;
     $self->change('set', $prev, {%{$self->state->{$prev}}, next => undef});
   }
@@ -92,7 +87,7 @@ method incr(Any @args) {
 }
 
 method hash(Str $key) {
-  return Digest::SHA::sha1_hex($key);
+  require Digest::SHA; Digest::SHA::sha1_hex($key);
 }
 
 method pop(Any @args) {

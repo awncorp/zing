@@ -269,10 +269,13 @@ register {
 };
 
 register {
-  name => 'Task',
+  name => 'Table',
   parent => 'Object',
-  validation => is_instance_of('Zing::Task'),
+  validation => is_instance_of('Zing::Table'),
 };
+
+declare 'TableType',
+  as Enum([qw(channel domain keyval lookup queue repo table)]);
 
 register {
   name => 'Term',
