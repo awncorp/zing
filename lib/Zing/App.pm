@@ -425,6 +425,18 @@ method store_specification(Any @args) {
   return [$self->store_namespace, [encoder => $self->encoder, @args]];
 }
 
+method table(Any @args) {
+  return $self->reify($self->table_specification(@args));
+}
+
+method table_namespace() {
+  return [$self->name, 'table'];
+}
+
+method table_specification(Any @args) {
+  return [$self->table_namespace, [@args]];
+}
+
 method term(Any @args) {
   require Zing::Term; Zing::Term->new(@args);
 }

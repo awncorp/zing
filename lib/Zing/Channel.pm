@@ -17,7 +17,7 @@ extends 'Zing::PubSub';
 # BUILDERS
 
 fun BUILD($self) {
-  $self->{position} = $self->size;
+  $self->{position} = $self->size if !$self->isa('Zing::Table');
 
   return $self;
 }
