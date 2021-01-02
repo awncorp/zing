@@ -131,7 +131,7 @@ fun BUILDARGS($self, $item, @data) {
     }
     $args->{target} = ($item->env->target || 'global');
     $args->{handle} = ($item->env->handle || 'main');
-    $args->{system} = 'zing';
+    $args->{system} = ($item->env->system || 'zing');
   }
   elsif(defined $item && !ref $item) {
     my $schema = [split /:/, "$item", 5];
@@ -142,9 +142,6 @@ fun BUILDARGS($self, $item, @data) {
     my $symbol = $schema->[3];
     my $bucket = $schema->[4];
 
-    unless ($system eq 'zing') {
-      $self->throw(error_term_unknow_system("$item"));
-    }
     unless (grep {$_ eq $symbol} values %$symbols) {
       $self->throw(error_term_unknow_symbol("$item"));
     }
@@ -314,11 +311,6 @@ fun error_term_unknow_object(Object $item) {
 fun error_term_unknow_symbol(Str $term) {
   code => 'error_term_unknow_symbol',
   message => qq(Error in term: Unrecognizable "symbol" in: $term),
-}
-
-fun error_term_unknow_system(Str $term) {
-  code => 'error_term_unknow_system',
-  message => qq(Error in term: Unrecognizable "system" in: $term),
 }
 
 1;
