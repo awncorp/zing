@@ -246,6 +246,26 @@ next() : Maybe[Repo]
 
   $table->next;
 
+=example-2 next
+
+  # given: synopsis
+
+  $table->position(undef);
+
+  $table->prev;
+  $table->prev;
+  $table->next;
+
+=example-3 next
+
+  # given: synopsis
+
+  $table->position($table->size);
+
+  $table->prev;
+  $table->next;
+  $table->prev;
+
 =cut
 
 =method prev
@@ -268,8 +288,27 @@ prev() : Maybe[Repo]
 
   $table->next;
   $table->next;
-
   $table->prev;
+
+=example-3 prev
+
+  # given: synopsis
+
+  $table->position($table->size);
+
+  $table->next;
+  $table->next;
+  $table->prev;
+
+=example-4 prev
+
+  # given: synopsis
+
+  $table->position(undef);
+
+  $table->next;
+  $table->prev;
+  $table->next;
 
 =cut
 
@@ -452,6 +491,22 @@ $subs->example(-1, 'next', 'method', fun($tryable) {
   $result
 });
 
+$subs->example(-2, 'next', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  ok $result->isa('Zing::Domain');
+  is $result->name, 'user-12345';
+
+  $result
+});
+
+$subs->example(-3, 'next', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  ok $result->isa('Zing::Domain');
+  is $result->name, 'user-12347';
+
+  $result
+});
+
 $subs->example(-1, 'prev', 'method', fun($tryable) {
   ok !(my $result = $tryable->result);
 
@@ -459,6 +514,22 @@ $subs->example(-1, 'prev', 'method', fun($tryable) {
 });
 
 $subs->example(-2, 'prev', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  ok $result->isa('Zing::Domain');
+  is $result->name, 'user-12345';
+
+  $result
+});
+
+$subs->example(-3, 'prev', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  ok $result->isa('Zing::Domain');
+  is $result->name, 'user-12347';
+
+  $result
+});
+
+$subs->example(-4, 'prev', 'method', fun($tryable) {
   ok my $result = $tryable->result;
   ok $result->isa('Zing::Domain');
   is $result->name, 'user-12345';

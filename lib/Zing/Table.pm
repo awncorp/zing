@@ -102,6 +102,7 @@ method next() {
     return $self->app->term($data->{term})->object;
   }
   else {
+    $self->position($position) if $position == $self->size;
     return undef;
   }
 }
