@@ -36,10 +36,6 @@ method count() {
 }
 
 method drop() {
-  $self->reset;
-  while (my $domain = $self->next) {
-    $domain->drop;
-  }
   return $self->store->drop($self->term);
 }
 
