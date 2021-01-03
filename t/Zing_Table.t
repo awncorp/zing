@@ -111,8 +111,8 @@ count() : Int
 
 =method drop
 
-The drop method returns truthy if the table and all of its objects were removed
-from the store.
+The drop method returns truthy if the table has been destroyed. This operation
+does not cascade.
 
 =signature drop
 
