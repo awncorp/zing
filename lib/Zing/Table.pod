@@ -108,8 +108,8 @@ The count method returns the number of L<Zing::Repo> objects in the table.
 
   drop() : Int
 
-The drop method returns truthy if the table and all of its objects were removed
-from the store.
+The drop method returns truthy if the table has been destroyed. This operation
+does not cascade.
 
 =over 4
 
@@ -261,6 +261,34 @@ The next method returns the next L<Zing::Repo> object created in the table.
 
 =back
 
+=over 4
+
+=item next example #2
+
+  # given: synopsis
+
+  $table->position(undef);
+
+  $table->prev;
+  $table->prev;
+  $table->next;
+
+=back
+
+=over 4
+
+=item next example #3
+
+  # given: synopsis
+
+  $table->position($table->size);
+
+  $table->prev;
+  $table->next;
+  $table->prev;
+
+=back
+
 =cut
 
 =head2 prev
@@ -287,8 +315,35 @@ The prev method returns the previous L<Zing::Repo> object created in the table.
 
   $table->next;
   $table->next;
-
   $table->prev;
+
+=back
+
+=over 4
+
+=item prev example #3
+
+  # given: synopsis
+
+  $table->position($table->size);
+
+  $table->next;
+  $table->next;
+  $table->prev;
+
+=back
+
+=over 4
+
+=item prev example #4
+
+  # given: synopsis
+
+  $table->position(undef);
+
+  $table->next;
+  $table->prev;
+  $table->next;
 
 =back
 

@@ -73,9 +73,10 @@ These classes facilitate message-passing and communications:
 
 - [Zing::Channel](https://metacpan.org/pod/Zing%3A%3AChannel): Shared Communication
 - [Zing::Data](https://metacpan.org/pod/Zing%3A%3AData): Process Data
-- [Zing::Domain](https://metacpan.org/pod/Zing%3A%3ADomain): Shared State Management
+- [Zing::Domain](https://metacpan.org/pod/Zing%3A%3ADomain): Shared State
 - [Zing::KeyVal](https://metacpan.org/pod/Zing%3A%3AKeyVal): Key/Value Store
 - [Zing::Lookup](https://metacpan.org/pod/Zing%3A%3ALookup): Domain Index
+- [Zing::Table](https://metacpan.org/pod/Zing%3A%3ATable): Generic Index
 - [Zing::Mailbox](https://metacpan.org/pod/Zing%3A%3AMailbox): Process Mailbox
 - [Zing::PubSub](https://metacpan.org/pod/Zing%3A%3APubSub): Pub/Sub Store
 - [Zing::Queue](https://metacpan.org/pod/Zing%3A%3AQueue): Message Queue

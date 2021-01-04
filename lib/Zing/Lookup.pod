@@ -106,7 +106,8 @@ The del method deletes the L<Zing::Domain> associated with a specific key.
 
   drop() : Int
 
-The drop method deletes all data associated with the lookup.
+The drop method returns truthy if the lookup has been destroyed. This operation
+does not cascade.
 
 =over 4
 

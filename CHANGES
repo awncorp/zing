@@ -1,6 +1,12 @@
 Changelog for Zing
 
-0.24 2021-01-02T20:42:34
+0.25 2021-01-03T19:09:43
+ - Add release updates
+ - Ensure no "drop" operation cascades (#269)
+ - Fix Zing::Table next/prev sol/eol cycling (#268)
+
+0.24 2021-01-02T20:42:40
+ - Built release version 0.24
  - Add release updates
  - Allow setting "system" in Zing::Term (#262)
  - Implement Zing::Table for large collections (#261)
