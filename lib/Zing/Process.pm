@@ -110,6 +110,18 @@ fun new_name($self) {
   $self->app->id->string
 }
 
+has 'on_perform' => (
+  is => 'ro',
+  isa => 'Maybe[CodeRef]',
+  opt => 1,
+);
+
+has 'on_receive' => (
+  is => 'ro',
+  isa => 'Maybe[CodeRef]',
+  opt => 1,
+);
+
 has 'parent' => (
   is => 'ro',
   isa => 'Maybe[Process]',
@@ -232,6 +244,22 @@ method metadata() {
     process => $self->pid,
     tag => $self->tag,
   }
+}
+
+method perform(@args) {
+  return $self if !$self->on_perform;
+
+  $self->on_perform->($self, @args);
+
+  return $self;
+}
+
+method receive(@args) {
+  return $self if !$self->on_receive;
+
+  $self->on_receive->($self, @args);
+
+  return $self;
 }
 
 method recv() {

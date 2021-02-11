@@ -35,6 +35,7 @@ method: exercise
 method: execute
 method: metadata
 method: ping
+method: receive
 method: recv
 method: reply
 method: send
@@ -73,6 +74,8 @@ loop: ro, opt, Loop
 mailbox: ro, opt, Mailbox
 meta: ro, opt, Meta
 name: ro, opt, Name
+on_perform: ro, opt, Maybe[CodeRef]
+on_receive: ro, opt, Maybe[CodeRef]
 parent: ro, opt, Maybe[Process]
 pid: ro, opt, Int
 signals: ro, opt, HashRef[Str|CodeRef]
@@ -184,6 +187,47 @@ ping(Int $pid) : Bool
   # given: synopsis
 
   $process->ping(12345);
+
+=cut
+
+=method receive
+
+The receive method, when not overloaded, executes the callback in the
+L</on_receive> attribute for each cycle of the event loop.
+
+=signature receive
+
+receive(Str $from, HashRef $data) : Any
+
+=example-1 receive
+
+  # given: synopsis
+
+  $process = Zing::Process->new(
+    on_receive => sub {
+      my ($self, $from, $data) = @_;
+      $self->{message} = [$from, $data];
+    },
+  );
+
+  $process->exercise; # calls receive
+
+=example-2 receive
+
+  # given: synopsis
+
+  $process = Zing::Process->new(
+    on_receive => sub {
+      my ($self, $from, $data) = @_;
+      $self->{message} = [$from, $data];
+    },
+  );
+
+  my $peer = Zing::Process->new;
+
+  $peer->send($process, { note => 'ehlo' });
+
+  $process->exercise; # calls receive
 
 =cut
 
@@ -424,6 +468,20 @@ $subs->example(-1, 'ping', 'method', fun($tryable) {
 
   local $ENV{ZING_TEST_KILL} = 1;
   ok $result = $tryable->result;
+
+  $result
+});
+
+$subs->example(-1, 'receive', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  ok not exists $result->{message};
+
+  $result
+});
+
+$subs->example(-2, 'receive', 'method', fun($tryable) {
+  ok my $result = $tryable->result;
+  is_deeply $result->{message}[1], { note => 'ehlo' };
 
   $result
 });
