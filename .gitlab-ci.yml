@@ -1,0 +1,16 @@
+image: "cpanery/perl-slim:latest"
+
+stages:
+  - test
+
+variables:
+  HARNESS_OPTIONS: j9
+
+Perl-0000:
+  stage: test
+  script:
+    - cpm install -v
+    - perlcritic lib t
+    - prove -Ilib -Ilocal/lib/perl5 -r t
+  only:
+    - merge_requests
