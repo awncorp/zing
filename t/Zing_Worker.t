@@ -154,32 +154,11 @@ handle(Str $queue, HashRef $data) : Any
   my $worker = Zing::Worker->new(
     on_handle => sub {
       my ($self, $queue, $data) = @_;
-      $self->{message} = [$queue, $data];
-    },
-    on_queues => sub {
-      ['todos'];
+      [$queue, $data];
     },
   );
 
-  $worker->exercise; # calls handle
-
-=example-2 handle
-
-  my $worker = Zing::Worker->new(
-    on_handle => sub {
-      my ($self, $queue, $data) = @_;
-      $self->{message} = [$queue, $data];
-    },
-    on_queues => sub {
-      ['todos'];
-    },
-  );
-
-  my $queue = Zing::Queue->new(name => 'todos');
-
-  $queue->send({ note => 'ehlo' });
-
-  $worker->exercise; # calls handle
+  $worker->handle('todos', {});
 
 =method queues
 
@@ -253,14 +232,8 @@ $subs->scenario('receive', fun($tryable) {
 
 $subs->example(-1, 'handle', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  ok not exists $result->{message};
-
-  $result
-});
-
-$subs->example(-2, 'handle', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-  is_deeply $result->{message}, ['todos', { note => 'ehlo' }];
+  is $result->[0], 'todos';
+  is_deeply $result->[1], {};
 
   $result
 });

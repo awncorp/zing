@@ -249,17 +249,17 @@ method metadata() {
 method perform(@args) {
   return $self if !$self->on_perform;
 
-  $self->on_perform->($self, @args);
+  my $performed = $self->on_perform->($self, @args);
 
-  return $self;
+  return $performed;
 }
 
 method receive(@args) {
   return $self if !$self->on_receive;
 
-  $self->on_receive->($self, @args);
+  my $received = $self->on_receive->($self, @args);
 
-  return $self;
+  return $received;
 }
 
 method recv() {

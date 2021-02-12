@@ -174,6 +174,27 @@ metadata() : HashRef
 
 =cut
 
+=method perform
+
+The perform method, when not overloaded, executes the callback in the
+L</on_perform> attribute for each cycle of the event loop.
+
+=signature perform
+
+perform() : Any
+
+=example-1 perform
+
+  # given: synopsis
+
+  $process = Zing::Process->new(
+    on_perform => sub {
+      rand;
+    },
+  );
+
+  $process->perform;
+
 =method ping
 
 The ping method returns truthy if the process of the PID provided is active.
@@ -206,28 +227,11 @@ receive(Str $from, HashRef $data) : Any
   $process = Zing::Process->new(
     on_receive => sub {
       my ($self, $from, $data) = @_;
-      $self->{message} = [$from, $data];
+      [$from, $data];
     },
   );
 
-  $process->exercise; # calls receive
-
-=example-2 receive
-
-  # given: synopsis
-
-  $process = Zing::Process->new(
-    on_receive => sub {
-      my ($self, $from, $data) = @_;
-      $self->{message} = [$from, $data];
-    },
-  );
-
-  my $peer = Zing::Process->new;
-
-  $peer->send($process, { note => 'ehlo' });
-
-  $process->exercise; # calls receive
+  $process->receive($process->term, { ping => 1 });
 
 =cut
 
@@ -474,14 +478,8 @@ $subs->example(-1, 'ping', 'method', fun($tryable) {
 
 $subs->example(-1, 'receive', 'method', fun($tryable) {
   ok my $result = $tryable->result;
-  ok not exists $result->{message};
-
-  $result
-});
-
-$subs->example(-2, 'receive', 'method', fun($tryable) {
-  ok my $result = $tryable->result;
-  is_deeply $result->{message}[1], { note => 'ehlo' };
+  is ref($result), 'ARRAY';
+  is_deeply $result->[1], { ping => 1 };
 
   $result
 });

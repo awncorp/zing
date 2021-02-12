@@ -43,9 +43,9 @@ fun new_logic($self) {
 method handle(@args) {
   return $self if !$self->on_handle;
 
-  $self->on_handle->($self, @args);
+  my $handled = $self->on_handle->($self, @args);
 
-  return $self;
+  return $handled;
 }
 
 method queues(@args) {
