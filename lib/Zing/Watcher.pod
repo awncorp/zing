@@ -104,6 +104,49 @@ automatically invoked when the process is executed.
 
 =cut
 
+=head1 ATTRIBUTES
+
+This package has the following attributes:
+
+=cut
+
+=head2 on_scheme
+
+  on_scheme(Maybe[CodeRef])
+
+This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
+=head1 METHODS
+
+This package implements the following methods:
+
+=cut
+
+=head2 scheme
+
+  scheme(Any @args) : Scheme
+
+The scheme method, when not overloaded, executes the callback in the
+L</on_scheme> attribute and expects a process scheme to be processed.
+
+=over 4
+
+=item scheme example #1
+
+  my $watcher = Zing::Watcher->new(
+    on_scheme => sub {
+      ['MyApp::Handler', [], 1]
+    },
+  );
+
+  $watcher->scheme;
+
+=back
+
+=cut
+
 =head1 AUTHOR
 
 Al Newkirk, C<awncorp@cpan.org>

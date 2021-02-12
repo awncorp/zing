@@ -73,7 +73,7 @@ This package supports the following scenarios:
   # schedule structure
   # [$interval, $queues, $message, $adjustment]
 
-  # predefined schedules
+  # predefined intervals
 
   # @annually is at 00:00 on day-of-month 1 in january
   # @daily is at 00:00 every day
@@ -101,6 +101,50 @@ schedules. A single schedule takes the form of C<[$interval, $queues,
 $message]> where C<$interval> is represented as a cron-expression or using one
 of the predefined interval name, e.g. C<@yearly>, C<@annually>, C<@monthly>,
 C<@weekly>, C<@weekend>, C<@daily>, C<@hourly>, or C<@minute>.
+
+=cut
+
+=head1 ATTRIBUTES
+
+This package has the following attributes:
+
+=cut
+
+=head2 on_schedules
+
+  on_schedules(Maybe[CodeRef])
+
+This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
+=head1 METHODS
+
+This package implements the following methods:
+
+=cut
+
+=head2 schedules
+
+  schedules(Any @args) : ArrayRef[Schedule]
+
+The schedules method, when not overloaded, executes the callback in the
+L</on_schedules> attribute and expects a list of crontab schedules to be
+processed.
+
+=over 4
+
+=item schedules example #1
+
+  my $timer = Zing::Timer->new(
+    on_schedules => sub {
+      [['@hourly', ['tasks'], { do => 1 }]]
+    },
+  );
+
+  $timer->schedules;
+
+=back
 
 =cut
 

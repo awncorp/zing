@@ -116,6 +116,22 @@ This attribute is read-only, accepts C<(Name)> values, and is optional.
 
 =cut
 
+=head2 on_perform
+
+  on_perform(Maybe[CodeRef])
+
+This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
+=head2 on_receive
+
+  on_receive(Maybe[CodeRef])
+
+This attribute is read-only, accepts C<(Maybe[CodeRef])> values, and is optional.
+
+=cut
+
 =head2 parent
 
   parent(Maybe[Process])
@@ -275,6 +291,32 @@ The ping method returns truthy if the process of the PID provided is active.
   # given: synopsis
 
   $process->ping(12345);
+
+=back
+
+=cut
+
+=head2 receive
+
+  receive(Str $from, HashRef $data) : Any
+
+The receive method, when not overloaded, executes the callback in the
+L</on_receive> attribute for each cycle of the event loop.
+
+=over 4
+
+=item receive example #1
+
+  # given: synopsis
+
+  $process = Zing::Process->new(
+    on_receive => sub {
+      my ($self, $from, $data) = @_;
+      [$from, $data];
+    },
+  );
+
+  $process->receive($process->term, { ping => 1 });
 
 =back
 
